@@ -1,0 +1,22 @@
+mark_current{ 
+    background-color: rgb(59,178,157);
+    color: rgb(49, 48, 48);
+}
+
+mark_available{ 
+    background-color: rgb(232, 238, 144);
+    color: rgb(49, 48, 48);
+}
+
+.cut-text {
+    height: 40px;
+    width: 140px;
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+    display: inline-block;
+    margin: 0 5px 0 5px;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
