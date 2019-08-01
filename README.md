@@ -7,7 +7,7 @@ Flux-web is used for manuall actions against flux api:
 * Workload's version promotion or rollback
 * Dynamic namespaces overview
 
-<img src="https://gfycat.com/equatorialacclaimedjaeger" width="40" height="40" />
+<div style='position:relative; padding-bottom:calc(62.40% + 44px)'><iframe src='https://gfycat.com/ifr/EquatorialAcclaimedJaeger' frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allowfullscreen></iframe></div>
 
 ## Usage
 
