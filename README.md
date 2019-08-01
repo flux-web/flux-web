@@ -7,7 +7,7 @@ Flux-web is used for manuall actions against flux api:
 * Workload's version promotion or rollback
 * Dynamic namespaces overview
 
-<a href="https://youtu.be/FTHxTS-TV5U" target="_blank"><img src="http://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg" alt="Flux-web Demo" width="240" height="180" border="10" /></a>
+<img src="https://gfycat.com/equatorialacclaimedjaeger" width="40" height="40" />
 
 ## Usage
 
