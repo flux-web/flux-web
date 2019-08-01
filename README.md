@@ -1,6 +1,7 @@
 # Flux-web
 
-> If you don't know what "GitOps" is then I highly encourage you to read [Weavework blog](https://www.weave.works/technologies/gitops/) and [Flux](https://github.com/fluxcd/flux) to implement it.
+> If you don't know what *GitOps* is then I highly encourage you to read [Weavework blog](https://www.weave.works/technologies/gitops/) and [Flux](https://github.com/fluxcd/flux) for the implemention.
+
 Flux-web is used for manuall actions against flux api:
 * List current workload
 * Workload's version promotion or rollback
