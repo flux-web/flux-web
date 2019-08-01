@@ -9,24 +9,22 @@ Flux-web is used for manuall actions against flux api:
 
 <img src="flux-web-01.gif"/>
 
-## Usage
+# Setup
 
-```sh
-$ git url <path_to_file> [remote]
+Please see the [Weave Flux setup documentation](https://github.com/weaveworks/flux/blob/master/site/standalone/installing.md) for setting up Flux.
+
+To use Flux-web, you should deploy flux-web a seperate deployment.
+
+To deploy independently, see `deploy/flux-web-deploy.yaml`.
+
+Set the following environment variables in your chosen deployment:
+
+* `FLUX_URL`: endpoint for the fluxd.
+* `DEFAULT_NAMESPACE`: default namespace to show in the home page.
+* `NAMESPACES`: namespaces list to show in the navigation bar.
+
+And then apply the configuration:
+
 ```
-
-## Example
-
-```sh
-$ git clone git@github.com:maorfr/git-url.git && cd git-url
-Cloning into 'git-url'...
-
-$ git url README.md
-https://github.com/maorfr/git-url/blob/master/README.md
+kubectl apply -f deploy/flux-web-deploy.yaml
 ```
-
-# Install
-
-1. Clone this repository.
-2. Copy `git-url` to your $PATH.
-3. Add git alias - `git config --global alias.url '!git-url'`.
