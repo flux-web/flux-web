@@ -3,9 +3,9 @@
 > If you don't know what *GitOps* is then I highly encourage you to read [Weavework blog](https://www.weave.works/technologies/gitops/) and [Flux](https://github.com/fluxcd/flux) for the implemention.
 
 Flux-web is used for manuall actions against flux api:
-* List current workload
-* Workload's version promotion or rollback
+* List current workloads
 * Dynamic namespaces overview
+* Workload's version promotion or rollback
 
 <img src="flux-web-01.gif"/>
 
@@ -13,9 +13,7 @@ Flux-web is used for manuall actions against flux api:
 
 Please see the [Weave Flux setup documentation](https://github.com/weaveworks/flux/blob/master/site/standalone/installing.md) for setting up Flux.
 
-To use Flux-web, you should deploy flux-web a seperate deployment.
-
-To deploy independently, see `deploy/flux-web-deploy.yaml`.
+To use Flux-web, you should deploy flux-web a seperate deploymenty, see `deploy/flux-web-deploy.yaml`.
 
 Set the following environment variables in your chosen deployment:
 
