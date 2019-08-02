@@ -26,3 +26,21 @@ And then apply the configuration:
 ```
 kubectl apply -f deploy/flux-web-deploy.yaml
 ```
+# Built With
+
+* [beego](https://beego.me/) - Web framework
+* [go](https://golang.org/) - Programing language
+* [docker](https://www.docker.com/) - Packaged with docker
+
+
+# Project Roadmap
+* Filter workloads
+* Use socket
+
+# Contributing
+
+Code contributions are very welcome. If you are interested in helping make flux-web great then feel free!
+
+## Authors
+
+* **Ido Braunstain** - *Initial work*
