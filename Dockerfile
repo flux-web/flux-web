@@ -1,10 +1,7 @@
+FROM library/golang as builder
 
-FROM library/golang
-
-# Godep for vendoring
 RUN go get github.com/tools/godep
 
-# Recompile the standard library without CGO
 RUN CGO_ENABLED=0 go install -a std
 
 ENV APP_DIR $GOPATH/src/flux-web
@@ -14,7 +11,18 @@ ADD . $APP_DIR
 
 WORKDIR $GOPATH/src/flux-web
 
-# Compile the binary and statically link
 RUN CGO_ENABLED=0 godep get
 
-CMD [ "go run main.go" ]
+RUN CGO_ENABLED=0 go build -ldflags '-w -s' -o /flux-web && \
+    cp -r views/ /views && \
+    cp -r static/ /static
+
+WORKDIR $GOPATH/src/flux-web
+
+FROM alpine:3.8
+RUN adduser -D -u 1000 flux-web
+COPY --from=builder /flux-web /flux-web
+COPY --from=builder /views /views
+COPY --from=builder /static /static
+USER 1000
+ENTRYPOINT ["/flux-web"]
