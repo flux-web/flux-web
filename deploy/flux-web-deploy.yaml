@@ -14,11 +14,7 @@ spec:
         app: flux-web
     spec:
       containers:
-      - command:
-        - go
-        - run
-        - main.go
-        env:
+      - env:
         - name: NAMESPACES
           value: namespace-a;namespace-b;namespace-c
         - name: FLUX_URL
