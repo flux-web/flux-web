@@ -12,10 +12,10 @@
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">
               <div class="navbar-header">
-                <a class="navbar-brand" href="#">FluxWeb</a>
+                <a class="navbar-brand" href="/">FluxWeb</a>
               </div>
               <ul class="nav navbar-nav">
-                <li class="active"><a href="#">Home</a></li>
+                <li class="active"><a href="/">Home</a></li>
                 {{if lt 0 (len .namespaces)}}
                 {{range $ns := .namespaces}}
                   <li><a href="/workload/{{$ns}}">{{$ns}}</a></li>
@@ -29,6 +29,12 @@
             </form> 
             </div>
         </nav>
+        <form id="filter_form" class="navbar-form"> 
+          <div class="form-group">
+            <input id="filter_input" type="text" name="filter" placeholder="filter workloads">
+          </div>
+          <!--<button id="filter_btn" type="submit" class="btn btn-default">Filter</button>-->
+      </form> 
         <div class="row form-group col-xs-12">
         <table class="table table-sm col-xs-12">
             <thead>
@@ -99,7 +105,7 @@
                               {
                                 "Cause": {
                                   "Message": "",
-                                  "User": "idobry"
+                                  "User": "Flux-web"
                                 },
                                 "Spec": {
                                   "ContainerSpecs": $.parseJSON(spec),
@@ -111,23 +117,23 @@
                           console.log(release);
                           $("#icon_{{$c.Name}}_{{$i}}").attr("src","/static/img/spinner.gif");
                           $.ajax({
-                                  url: '/release',
-                                  type: 'POST',
-                                  contentType: "application/json;",
-                                  data: release,
-                                  success: function () {
-                                    $("#icon_{{$c.Name}}_{{$i}}").attr("src","/static/img/equal.png");
-                                    $("#current_{{$c.Name}}").attr("src","/static/img/not-equal.png");
-                                    alert("Request sent to flux api");
-                                  },
-                                  fail: function () {
-                                    $("#icon_{{$c.Name}}_{{$i}}").attr("src","/static/img/not-equal.png");
-                                    alert("Error in upgrade to " + aid);
-                                  }, 
-                                  error: function () {
-                                    $("#icon_{{$c.Name}}_{{$i}}").attr("src","/static/img/not-equal.png");
-                                    alert("Error in upgrade to " + aid);
-                                  }  
+                              url: '/release',
+                              type: 'POST',
+                              contentType: "application/json;",
+                              data: release,
+                              success: function () {
+                                $("#icon_{{$c.Name}}_{{$i}}").attr("src","/static/img/equal.png");
+                                $("#current_{{$c.Name}}").attr("src","/static/img/not-equal.png");
+                                alert("Request sent to flux api");
+                              },
+                              fail: function () {
+                                $("#icon_{{$c.Name}}_{{$i}}").attr("src","/static/img/not-equal.png");
+                                alert("Error in upgrade to " + aid);
+                              }, 
+                              error: function () {
+                                $("#icon_{{$c.Name}}_{{$i}}").attr("src","/static/img/not-equal.png");
+                                alert("Error in upgrade to " + aid);
+                              }  
                           });
                       });
                   </script>
@@ -150,6 +156,19 @@
     $("#submit_btn").on("click",function(){
         window.location.href = "/workload/" + $("#namespace_input").val();
     });
+    
+    var typingTimer;
+    var doneTypingInterval = 1000;
+    $('#filter_input').keyup(function(){
+        clearTimeout(typingTimer);
+        if ($('#filter_input').val()) {
+            typingTimer = setTimeout(doneTyping, doneTypingInterval);
+        }
+    });
+
+    function doneTyping () {
+      window.location.href = window.location.pathname + "?filter=" + $("#filter_input").val();
+    }
     $("#form").submit(function(event) {
         event.preventDefault();
     });
