@@ -26,7 +26,7 @@ func (this *WorkloadController) ListWorkloads() {
 	l.Printf("in ListWorkloads ns="+ns)
 	this.Data["namespaces"] = strings.Split(os.Getenv("NAMESPACES"), ";")
 	this.Data["fluxUrl"] = os.Getenv("FLUX_URL")
-	this.Data["workloads"] = GetImages(ns)
+	this.Data["workloads"] = GetImages(ns, this.Input().Get("filter"))
 	this.TplName = "main.tpl"
 }
 
@@ -125,6 +125,16 @@ func GetImages(params ...string) []models.Image{
 	images, err := models.NewImages(res)
 	if err != nil {
 		l.Panic(err.Error)
+	}
+	if len(params) > 1 {
+		filter := params[1]
+		l.Printf(filter)
+		for i := 0; i < len(images); i++ {
+			if !strings.Contains(images[i].ID, filter) {
+				images = append(images[:i], images[i+1:]...)
+				i-- 
+			}
+		}
 	}
 	return images
 }

@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	beego.Router("/", &controllers.MainController{})
+	beego.Router("/", &controllers.WorkloadController{}, "get:ListWorkloads")
 	beego.Router("/workload/:ns", &controllers.WorkloadController{}, "get:ListWorkloads")
 	beego.Router("/release", &controllers.WorkloadController{}, "post:ReleaseWorkloads")
 	beego.Run()
