@@ -13,7 +13,7 @@ flux-web is used for manuall actions against flux api:
 
 Please see the [Weave Flux setup documentation](https://github.com/weaveworks/flux/blob/master/site/standalone/installing.md) for setting up Flux.
 
-To use flux-web, you should deploy a seperate deploymenty, see `deploy/flux-web-deploy.yaml`.
+To use flux-web, you should deploy a seperate deployment, see `deploy/flux-web-deploy.yaml`.
 
 Set the following environment variables in your chosen deployment:
 
