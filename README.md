@@ -9,7 +9,7 @@ Flux-web is used for manuall actions against flux api:
 
 <img src="flux-web-01.gif"/>
 
-# Setup
+## Setup
 
 Please see the [Weave Flux setup documentation](https://github.com/weaveworks/flux/blob/master/site/standalone/installing.md) for setting up Flux.
 
@@ -26,19 +26,19 @@ And then apply the configuration:
 ```
 kubectl apply -f deploy/flux-web-deploy.yaml
 ```
-# Built With
+## Built With
 
 * [beego](https://beego.me/) - Web framework
 * [go](https://golang.org/) - Programing language
 * [docker](https://www.docker.com/) - Packaged with docker
 
 
-# Project Roadmap
+## Project Roadmap
 * Filter workloads - Done
 * Select multiple workloads
 * Use socket
 
-# Contributing
+## Contributing
 
 Code contributions are very welcome. If you are interested in helping make flux-web great then feel free!
 
