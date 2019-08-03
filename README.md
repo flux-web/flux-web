@@ -34,7 +34,8 @@ kubectl apply -f deploy/flux-web-deploy.yaml
 
 
 # Project Roadmap
-* Filter workloads
+* Filter workloads - Done
+* Select multiple workloads
 * Use socket
 
 # Contributing
