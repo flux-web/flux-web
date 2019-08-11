@@ -124,7 +124,6 @@
                               success: function () {
                                 $("#icon_{{$c.Name}}_{{$i}}").attr("src","/static/img/equal.png");
                                 $("#current_{{$c.Name}}").attr("src","/static/img/not-equal.png");
-                                alert("Request sent to flux api");
                               },
                               fail: function () {
                                 $("#icon_{{$c.Name}}_{{$i}}").attr("src","/static/img/not-equal.png");
