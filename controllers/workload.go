@@ -23,15 +23,13 @@ var l = logs.GetLogger()
 
 func (this *WorkloadController) ListWorkloads() {
 	ns := this.Ctx.Input.Param(":ns")
-	l.Printf("in ListWorkloads ns="+ns)
 	this.Data["namespaces"] = strings.Split(os.Getenv("NAMESPACES"), ";")
 	this.Data["fluxUrl"] = os.Getenv("FLUX_URL")
 	this.Data["workloads"] = GetImages(ns, this.Input().Get("filter"))
 	this.TplName = "main.tpl"
 }
 
-func (this *WorkloadController) ReleaseWorkloads() {
-	jobID, err := triggerJob(this.Ctx.Input.RequestBody)
+func (this *WorkloadController) ReleaseWorkloads() {jobID, err := triggerJob(this.Ctx.Input.RequestBody)
 	if err != nil {
 		l.Printf(err.Error())
 		this.Ctx.Output.SetStatus(500)
@@ -47,7 +45,7 @@ func (this *WorkloadController) ReleaseWorkloads() {
 }
 
 func waitForSync(syncID string) int{
-	l.Printf("waiting for syncID " + syncID)
+	l.Printf("waiting for sync: " + syncID)
 
 	for true {
 		resp, err := httplib.Get(os.Getenv("FLUX_URL")+"/api/flux/v6/sync?ref="+syncID).String()
@@ -76,14 +74,14 @@ func getSyncID(jobID string) (string, error){
 		}
 		job, err := models.NewJob(resp)
 		if err != nil {
-			l.Panic(err.Error)
+			l.Panic("Error_getSyncID_01: "+ err.Error())
 			return "", errors.New(err.Error())
 		}
 		if job.Result.Revision != "" {
-			l.Printf(job.Result.Revision)
+			l.Printf("got syncID: "+job.Result.Revision)
 			return job.Result.Revision,nil
 		} else if job.Err != "" {
-			l.Printf("Error: " + job.Err)
+			l.Printf("Error_getSyncID_02: " + job.Err)
 			return job.Err, errors.New(job.Err)
 		} else {
 			l.Printf("job status: " + job.StatusString)
@@ -96,19 +94,25 @@ func getSyncID(jobID string) (string, error){
 func triggerJob(requestBody []byte) (string, error){
 	resp, err := http.Post(os.Getenv("FLUX_URL")+"/api/flux/v9/update-manifests", "application/json", bytes.NewBuffer(requestBody))
 	if err != nil {
-		l.Printf(err.Error())
+		l.Printf("Error_triggerJob_01: "+err.Error())
 		return "", errors.New(err.Error())
 	}
-	defer resp.Body.Close();
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		l.Panic(err.Error)
-		return "", errors.New(err.Error())
-	}
-	jobID := strings.Replace(string(body), "\"", "", -1)
-	l.Printf("job "+ jobID + " triggered")
 
-	return string(jobID), nil
+	defer resp.Body.Close();
+
+	if resp.StatusCode == http.StatusOK {
+		bodyBytes, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			l.Panic(err.Error)
+			return "", errors.New(err.Error())
+		}
+		l.Printf(string(bodyBytes))
+		jobID := strings.Replace(string(bodyBytes), "\"", "", -1)
+		l.Printf("job "+ jobID + " triggered")
+		return string(jobID), nil
+	} else{
+		return "", errors.New("Job request statuscode is: "+ string(resp.StatusCode))
+	}
 }
 
 func GetImages(params ...string) []models.Image{
