@@ -32,7 +32,7 @@ kubectl apply -f deploy/flux-web-deploy.yaml
 
 When using `flux` your pipelines, or, to be more precise your Continues Deployments are fully automated and that's great.
 But, sometimes we would like to have more stable environments with fewer deployments and with more control, for example, production.
-That's mean we need to do some manual actions against flux which have his own CLI tool `fluxctl`.
+That's mean we need to do some manual actions against `flux` which have his own CLI tool `fluxctl`.
 
 flux-web is intended to be the UI approach to this problem. With flux-web you can view at our workloads per namespace and the available versions for each and with a single click we can promote a workload or to perform a rollback.
 
