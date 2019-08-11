@@ -19,7 +19,7 @@ To use flux-web, you should deploy a seperate deployment, see `deploy/flux-web-d
 Set the following environment variables in your chosen deployment:
 
 - `FLUX_URL`: fluxd's endpoint
-- `DEFAULT_NAMESPACE`: default namespace to show in the home page
+- `DEFAULT_NAMESPACE`: default namespace to be set as home page
 - `NAMESPACES`: namespaces list to show in the navigation bar
 
 And then apply the configuration:
