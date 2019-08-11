@@ -1,30 +1,30 @@
-$(document).ready(function() {
-    
-    var navListItems = $('ul.setup-panel li a'),
-        allWells = $('.setup-content');
+$(document).ready(function(){
+    $('[data-container="body"]').tooltip({ container: 'body' })  
+});
+$("#submit_btn").on("click",function(){
+  //TODO: make header div independent 
+  window.location.href = "/workload/" + $("#namespace_input").val();
+  //$.get("/workload/" + $("#namespace_input").val(), function(data) {
+  //  $('#main').html(data);
+  //});
+});
 
-    allWells.hide();
+var typingTimer;
+var doneTypingInterval = 1000;
+$('#filter_input').keyup(function(){
+    clearTimeout(typingTimer);
+    if ($('#filter_input').val()) {
+        typingTimer = setTimeout(doneTyping, doneTypingInterval);
+    }
+});
 
-    navListItems.click(function(e)
-    {
-        e.preventDefault();
-        var $target = $($(this).attr('href')),
-            $item = $(this).closest('li');
-        
-        if ($item.hasClass('disabled')) {
-            navListItems.closest('li').removeClass('disabled');
-            $item.addClass('active');
-            allWells.hide();
-            $target.show();
-        }
-    });
-    
-    $('ul.setup-panel li.active a').trigger('click');
-    
-    // DEMO ONLY //
-    $('#activate-step-2').on('click', function(e) {
-        $('ul.setup-panel li:eq(1)').removeClass('disabled');
-        $('ul.setup-panel li a[href="#step-2"]').trigger('click');
-        $(this).remove();
-    })    
+function doneTyping () {
+  //TODO: make workloads div independent 
+  //$.get("/?filter=" + $("#filter_input").val(), function(data) {
+  //  $('#main').html(data);
+  //});
+  window.location.href = window.location.pathname + "?filter=" + $("#filter_input").val();
+}
+$("#form").submit(function(event) {
+    event.preventDefault();
 });

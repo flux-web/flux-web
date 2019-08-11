@@ -21,15 +21,24 @@ type WorkloadController struct {
 
 var l = logs.GetLogger()
 
+var flux = models.Flux{
+	FluxUrl: os.Getenv("FLUX_URL"),
+	SyncApi: "/api/flux/v6/sync?ref=",
+	JobApi: "/api/flux/v6/jobs?id=",
+	UpdateManifestsApi: "/api/flux/v9/update-manifests",
+	ListImagesApi: "/api/flux/v10/images?namespace=",
+}
+
 func (this *WorkloadController) ListWorkloads() {
 	ns := this.Ctx.Input.Param(":ns")
 	this.Data["namespaces"] = strings.Split(os.Getenv("NAMESPACES"), ";")
-	this.Data["fluxUrl"] = os.Getenv("FLUX_URL")
+	this.Data["fluxUrl"] = flux.FluxUrl
 	this.Data["workloads"] = GetImages(ns, this.Input().Get("filter"))
 	this.TplName = "main.tpl"
 }
 
-func (this *WorkloadController) ReleaseWorkloads() {jobID, err := triggerJob(this.Ctx.Input.RequestBody)
+func (this *WorkloadController) ReleaseWorkloads() {
+	jobID, err := triggerJob(this.Ctx.Input.RequestBody)
 	if err != nil {
 		l.Printf(err.Error())
 		this.Ctx.Output.SetStatus(500)
@@ -48,10 +57,9 @@ func waitForSync(syncID string) int{
 	l.Printf("waiting for sync: " + syncID)
 
 	for true {
-		resp, err := httplib.Get(os.Getenv("FLUX_URL")+"/api/flux/v6/sync?ref="+syncID).String()
+		resp, err := httplib.Get(flux.FluxUrl+flux.SyncApi+syncID).String()
 		if err != nil {
 			l.Printf(err.Error())
-			return 500
 			break
 		}
 		if resp == "[]"{
@@ -60,14 +68,14 @@ func waitForSync(syncID string) int{
 		}
 		time.Sleep(time.Second)
 	}
-	 return 500
+	return 500
 }
 
 func getSyncID(jobID string) (string, error){
 	l.Printf("getting syncID...")
 
 	for true {
-		resp, err := httplib.Get(os.Getenv("FLUX_URL")+"/api/flux/v6/jobs?id="+jobID).Bytes()
+		resp, err := httplib.Get(flux.FluxUrl+flux.JobApi+jobID).Bytes()
 		if err != nil {
 			l.Printf(err.Error())
 			return "", errors.New(err.Error())
@@ -79,7 +87,7 @@ func getSyncID(jobID string) (string, error){
 		}
 		if job.Result.Revision != "" {
 			l.Printf("got syncID: "+job.Result.Revision)
-			return job.Result.Revision,nil
+			return job.Result.Revision, nil
 		} else if job.Err != "" {
 			l.Printf("Error_getSyncID_02: " + job.Err)
 			return job.Err, errors.New(job.Err)
@@ -92,7 +100,7 @@ func getSyncID(jobID string) (string, error){
 }
 
 func triggerJob(requestBody []byte) (string, error){
-	resp, err := http.Post(os.Getenv("FLUX_URL")+"/api/flux/v9/update-manifests", "application/json", bytes.NewBuffer(requestBody))
+	resp, err := http.Post(flux.FluxUrl+flux.UpdateManifestsApi, "application/json", bytes.NewBuffer(requestBody))
 	if err != nil {
 		l.Printf("Error_triggerJob_01: "+err.Error())
 		return "", errors.New(err.Error())
@@ -121,7 +129,7 @@ func GetImages(params ...string) []models.Image{
 		namespace = params[0]
 		l.Printf(namespace)
 	}
-	res, err := httplib.Get(os.Getenv("FLUX_URL")+"/api/flux/v10/images?namespace="+namespace).Debug(true).Bytes()
+	res, err := httplib.Get(flux.FluxUrl+flux.ListImagesApi+namespace).Debug(true).Bytes()
 	if err != nil {
 		l.Panic(err.Error)
 	}
