@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/astaxie/beego"
 	"flux-web/controllers"
+
+	"github.com/astaxie/beego"
 )
 
 func main() {
@@ -11,3 +12,4 @@ func main() {
 	beego.Router("/release", &controllers.WorkloadController{}, "post:ReleaseWorkloads")
 	beego.Run()
 }
+
