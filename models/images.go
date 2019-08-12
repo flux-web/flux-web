@@ -52,4 +52,3 @@ func NewImages(data []byte) ([]Image, error) {
 	err := json.Unmarshal(data, &i)
 	return i, err
 }
-
