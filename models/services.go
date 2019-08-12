@@ -28,4 +28,3 @@ func NewServices(data []byte) ([]Service, error) {
 	err := json.Unmarshal(data, &s)
 	return s, err
 }
-
