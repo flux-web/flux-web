@@ -1,7 +1,7 @@
 package models
 
 import (
-//"encoding/json"
+	//"encoding/json"
 	"time"
 )
 
@@ -42,4 +42,3 @@ type Workload struct {
 //	return w, er
 //	return []Workload
 //}
-
