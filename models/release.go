@@ -1,10 +1,9 @@
-
 package models
 
 import (
 	"encoding/json"
 )
-	
+
 type Release struct {
 	Cause struct {
 		Message string `json:"Message"`
