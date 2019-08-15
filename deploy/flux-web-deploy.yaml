@@ -21,7 +21,7 @@ spec:
           value: http://flux-api
         - name: DEFAULT_NAMESPACE
           value: yadata-stg
-        image: idobry/flux-web
+        image: idobry/flux-web:0.1.79
         imagePullPolicy: IfNotPresent
         name: flux-web
         ports:
