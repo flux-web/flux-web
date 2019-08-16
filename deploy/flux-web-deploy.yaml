@@ -18,7 +18,7 @@ spec:
         - name: NAMESPACES
           value: namespace-a;namespace-b;namespace-c
         - name: FLUX_URL
-          value: http://flux-api
+          value: http://flux-api:3030
         - name: DEFAULT_NAMESPACE
           value: yadata-stg
         image: idobry/flux-web:0.1.79
