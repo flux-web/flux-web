@@ -15,6 +15,10 @@ spec:
     spec:
       containers:
       - env:
+        ##READ_ONLY = String
+        # default value false
+        - name: READ_ONLY
+          value: ""
         - name: NAMESPACES
           value: namespace-a;namespace-b;namespace-c
         - name: FLUX_URL
