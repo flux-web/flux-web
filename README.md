@@ -21,6 +21,7 @@ Set the following environment variables in your chosen deployment:
 - `FLUX_URL`: fluxd's endpoint
 - `DEFAULT_NAMESPACE`: default namespace to be set as home page
 - `NAMESPACES`: namespaces list to show in the navigation bar
+- `READ_ONLY`: restric flux-web to read-only mode
 
 And then apply the configuration:
 
