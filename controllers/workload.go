@@ -32,6 +32,7 @@ var flux = models.Flux{
 
 func (this *WorkloadController) ListWorkloads() {
 	ns := this.Ctx.Input.Param(":ns")
+	this.Data["read_only"] = os.Getenv("READ_ONLY")
 	this.Data["namespaces"] = strings.Split(os.Getenv("NAMESPACES"), ";")
 	this.Data["fluxUrl"] = flux.FluxUrl
 	this.Data["workloads"] = GetImages(ns, this.Input().Get("filter"))

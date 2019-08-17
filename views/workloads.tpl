@@ -26,26 +26,31 @@
                                 <td><img id="current_{{$c.Name}}" src="/static/img/equal.png" width="30" height="30"/></td>
                                 <td class="cut-text" title="{{ $a.ID }}" container="{{ $a.ID }}" data-container="body" data-placement="top">{{ $a.ID }}</td>
                             {{else}}
+                                {{ if eq $.read_only "true" }}
+                                    <td><img  id="icon_{{$c.Name}}_{{$i}}" data-toggle="modal" data-target="#{{$c.Name}}_{{$i}}" src="/static/img/not-equal.png" width="30" height="30"/></td>
+                                    <td class="cut-text" title="{{ $a.ID }}" container="{{ $a.ID }}" data-container="body" data-placement="top">{{ $a.ID }}</td>
+                                {{ else }}
                                 <td><img  id="icon_{{$c.Name}}_{{$i}}" data-toggle="modal" data-target="#{{$c.Name}}_{{$i}}" src="/static/img/not-equal.png" width="30" height="30" style="cursor: pointer;"/></td>
-                                <td class="cut-text" title="{{ $a.ID }}" container="{{ $a.ID }}" data-container="body" data-placement="top">{{ $a.ID }}</td>
-                                <!-- Modal -->
-                                <div class="modal fade" id="{{$c.Name}}_{{$i}}" role="dialog">
-                                  <div class="modal-dialog modal-sm">
-                                    <div class="modal-content">
-                                      <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        <h4 class="modal-title">Promote {{$c.Name}}</h4>
-                                      </div>
-                                      <div class="modal-body">
-                                        <p>{{$c.Current.ID}} --> {{$a.ID}}</p>
-                                      </div>
-                                      <div class="modal-footer {{$c.Name}}_{{$i}}">
-                                        <button id="approve_{{$c.Name}}_{{$i}}" container-name="{{$c.Name}}" workload-id="{{$w.ID}}" current-id="{{$c.Current.ID}}" available-id="{{$a.ID}}" type="button" class="btn btn-default" data-dismiss="modal">Approve</button>
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <td class="cut-text" title="{{ $a.ID }}" container="{{ $a.ID }}" data-container="body" data-placement="top">{{ $a.ID }}</td>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="{{$c.Name}}_{{$i}}" role="dialog">
+                                      <div class="modal-dialog modal-sm">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                            <h4 class="modal-title">Promote {{$c.Name}}</h4>
+                                          </div>
+                                          <div class="modal-body">
+                                            <p>{{$c.Current.ID}} --> {{$a.ID}}</p>
+                                          </div>
+                                          <div class="modal-footer {{$c.Name}}_{{$i}}">
+                                            <button id="approve_{{$c.Name}}_{{$i}}" container-name="{{$c.Name}}" workload-id="{{$w.ID}}" current-id="{{$c.Current.ID}}" available-id="{{$a.ID}}" type="button" class="btn btn-default" data-dismiss="modal">Approve</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                          </div>
+                                        </div>
                                       </div>
                                     </div>
-                                  </div>
-                                </div>
+                                {{end}}
                             {{end}}
                             <td>{{ $a.CreatedAt }}</td>
                             </div>
