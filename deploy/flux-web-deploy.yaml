@@ -18,14 +18,14 @@ spec:
         ##READ_ONLY = String
         # default value false
         - name: READ_ONLY
-          value: ""
+          value: "false"
         - name: NAMESPACES
           value: namespace-a;namespace-b;namespace-c
         - name: FLUX_URL
           value: http://flux-api:3030
         - name: DEFAULT_NAMESPACE
           value: yadata-stg
-        image: idobry/flux-web:0.1.79
+        image: idobry/flux-web:0.1.v1-06
         imagePullPolicy: IfNotPresent
         name: flux-web
         ports:
