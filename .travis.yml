@@ -1,0 +1,10 @@
+sudo: required
+services:
+- docker
+language: bash
+script:
+- docker build -t ybaruchel/flux-web .
+- echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin &&
+  docker tag ybaruchel/flux-web ybaruchel/flux-web:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
+  docker push ybaruchel/flux-web:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
+  docker push ybaruchel/flux-web:latest
