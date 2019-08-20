@@ -1,33 +1,17 @@
-#
-# Stage 1
-#
-FROM library/golang as builder
+FROM node:alpine as builder
 
-RUN go get github.com/tools/godep
+WORKDIR /app
 
-RUN CGO_ENABLED=0 go install -a std
+COPY package*.json ./
 
-ENV APP_DIR $GOPATH/src/flux-web
-RUN mkdir -p $APP_DIR
+RUN npm i
 
-ADD . $APP_DIR
+COPY . .
 
-WORKDIR $GOPATH/src/flux-web
+RUN npm run build
 
-RUN CGO_ENABLED=0 godep get
+FROM nginx:alpine
 
-RUN CGO_ENABLED=0 go build -ldflags '-w -s' -o /flux-web && \
-    cp -r views/ /views && \
-    cp -r static/ /static  && \
-    cp -r conf/ /conf
-#
-# Stage 2
-#
-FROM alpine:3.8
-RUN adduser -D -u 1000 flux-web
-COPY --from=builder /flux-web /flux-web
-COPY --from=builder /views /views
-COPY --from=builder /static /static
-COPY --from=builder /conf /conf
-USER 1000
-ENTRYPOINT ["/flux-web"]
+COPY .docker/default.conf /etc/nginx/conf.d/default.conf
+
+COPY --from=builder /app/dist /app

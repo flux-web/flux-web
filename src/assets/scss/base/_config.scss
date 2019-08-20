@@ -1,0 +1,36 @@
+// Breakpoints
+$breakpoints: (
+        'nomedia':  4000px,
+        'xxlarge':  1400px,
+        'xlarge':   1140px,
+        'mlarge':   1024px,
+        'large':    992px,
+        'XLmedium': 920px,
+        'Lmedium':  845px,
+        'medium':   768px,
+        'Smedium':  600px,
+        'Lsmall' :  560px,
+        'small':    540px,
+        'XMsmall':  500px,
+        'Xsmall':   385px,
+);
+
+// Set Colors
+$gray-light-color: #b2b2b2;
+$gray-light-background: #f6f6f6;
+$cr-green: #29bdad;
+
+
+// Set typography
+$text-sizing: (
+        'navbar-icons': (
+                'nomedia': (
+                        'font-size': 12px,
+                        'line-height': 20px,
+                ),
+                'Lmedium': (
+                        'font-size': 8px,
+                        'line-height': 0px,
+                )
+        ),
+);

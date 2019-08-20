@@ -1,0 +1,65 @@
+// =============================================================================
+// Typography
+// =============================================================================
+
+// Get text breakpoint
+@function text-breakpoints-for($text-size) {
+  $text-breakpoints: map-get($text-sizing, $text-size);
+
+  @if $text-breakpoints {
+    @return $text-breakpoints;
+  }
+
+  @warn "Text size '#{$text-size}' not found in $text-sizing";
+}
+
+// Get text properties
+@function text-properties-for($text-size, $breakpoint-name) {
+  $text-breakpoints: text-breakpoints-for($text-size);
+  $text-properties: map-get($text-breakpoints, $breakpoint-name);
+
+  @if $text-properties {
+    @return $text-properties;
+  }
+
+  @warn "Breakpoint '#{$breakpoint-name}' for text size '#{$text-size}' was not found";
+}
+
+// mixin properties
+@mixin text-size($text-size, $breakpoint-name: 'nomedia') {
+  $text-size-properties: text-properties-for($text-size, $breakpoint-name);
+
+  @if $text-size-properties {
+    font-family: map-get($text-size-properties, 'font-family');
+    font-size:   map-get($text-size-properties, 'font-size');
+    line-height: map-get($text-size-properties, 'line-height');
+  }
+}
+
+// mixin responsive properties
+@mixin responsive-text-size($text-size, $default-breakpoint: 'nomedia') {
+  @include text-size($text-size, $default-breakpoint);
+
+  $text-breakpoints-map: text-breakpoints-for($text-size);
+  $text-breakpoints-keys: map-keys($text-breakpoints-map);
+
+  @each $breakpoint-name in $text-breakpoints-keys {
+    @if $breakpoint-name != $default-breakpoint {
+      @include respond-above($breakpoint-name) {
+        @include text-size($text-size, $breakpoint-name);
+      }
+    }
+  }
+}
+
+// Get text size in percent from base
+@function font-percent($font-size) {
+  $remSize: $font-size / $base-font * 100 + '%';
+  @return #{$remSize};
+}
+
+// mixin font percent
+@mixin fontSize($size) {
+  font-size: font-percent($size);
+}
+
