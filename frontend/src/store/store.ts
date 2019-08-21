@@ -5,6 +5,7 @@ import { RootState } from './types/RootState';
 import {actions} from '@/store/root/actions';
 import {mutations} from '@/store/root/mutations';
 import {getters} from '@/store/root/getters';
+import { workloads } from './workloads/index';
 
 Vue.use(Vuex);
 
@@ -14,6 +15,7 @@ const store: StoreOptions<RootState> = {
     actions,
     mutations,
     modules: {
+        workloads,
     },
 };
 

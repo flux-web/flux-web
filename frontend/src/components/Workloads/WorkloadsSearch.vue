@@ -1,6 +1,15 @@
 <template>
   <div class="workloads-search">
-    <input type="text" name="search" class="text-input" placeholder="Search" autocomplete="off" />
+    <input
+      type="text"
+      name="search"
+      class="text-input"
+      placeholder="Search"
+      autocomplete="off"
+      v-model="searchTerm"
+      @input="searchTermChanged"
+    />
+    <button class="sync_button">Sync all</button>
   </div>
 </template>
 
@@ -15,7 +24,7 @@
     border-radius: 7px;
     background-color: #f0f0fb;
     border: none;
-    width: 100%;
+    width: calc(100% - 80px);
     box-sizing: border-box;
     padding: 0 0 0 30px;
     font-family: SpoilerHE;
@@ -32,6 +41,9 @@
       border: 1px solid #b6b9c3;
     }
   }
+  .sync_button {
+    float: right;
+  }
   .input-icon {
     position: absolute;
     right: 10px;
@@ -45,8 +57,17 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { StoreNamespaces } from "../../store/types/StoreNamespaces";
-import { Action, Getter } from "vuex-class";
+import { Action } from "vuex-class";
 
 @Component({})
-export default class WorkloadSearch extends Vue {}
+export default class WorkloadSearch extends Vue {
+  public searchTerm: string = "";
+
+  @Action("changeSearchTerm", { namespace: StoreNamespaces.workloads })
+  protected changeSearchTerm: any;
+
+  public searchTermChanged() {
+    this.changeSearchTerm(this.searchTerm);
+  }
+}
 </script>

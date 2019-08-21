@@ -16,6 +16,8 @@
     "register-service-worker": "^1.6.2",
     "vue": "^2.6.10",
     "vue-class-component": "^7.0.2",
+    "vue-good-table": "^2.18.0",
+    "vue-multiselect": "^2.1.6",
     "vue-property-decorator": "^8.1.0",
     "vue-router": "^3.0.3",
     "vuex": "^3.0.1",
