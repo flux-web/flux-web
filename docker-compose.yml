@@ -1,0 +1,25 @@
+version: "3.7"
+services: 
+  flux-web-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports: 
+      - 8080:8080
+    tty: true
+    environment: 
+      HOST: 0.0.0.0
+      PORT: 8080
+    volumes: 
+      - ./frontend:/app
+      - /app/node_modules
+  flux-web-backend:
+    build:
+      context: ./backend
+    ports: 
+      - 3000:3000
+    environment: 
+     FLUX_URL: http://flux:3030
+
+
+  

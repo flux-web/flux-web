@@ -37,7 +37,7 @@ func (this *WorkloadController) ListWorkloads() {
 	//this.Data["fluxUrl"] = flux.FluxUrl
 	//this.Data["workloads"] = GetImages(ns, this.Input().Get("filter"))
 	//this.TplName = "main.tpl"
-	res, err := httplib.Get(flux.FluxUrl + flux.ListImagesApi + namespace).Debug(true).Bytes()
+	res, err := httplib.Get(flux.FluxUrl + flux.ListImagesApi + ns).Debug(true).Bytes()
 	if err != nil {
 		l.Panic(err.Error)
 	}
@@ -158,46 +158,46 @@ func GetImages(params ...string) []models.Image {
 	return images
 }
 
-func (this *WebSocketController) Join() {
-	// Upgrade from http request to WebSocket.
-	ws, err := websocket.Upgrade(this.Ctx.ResponseWriter, this.Ctx.Request, nil, 1024, 1024)
-	if _, ok := err.(websocket.HandshakeError); ok {
-		http.Error(this.Ctx.ResponseWriter, "Not a websocket handshake", 400)
-		return
-	} else if err != nil {
-		beego.Error("Cannot setup WebSocket connection:", err)
-		return
-	}
-	// Message receive loop.
-	for {
-		mt, message, err := ws.ReadMessage()
-		if err != nil {
-			log.Println("read:", err)
-			break
-		}
-		log.Printf("recv: %s", message)
+// func (this *WebSocketController) Join() {
+// 	// Upgrade from http request to WebSocket.
+// 	ws, err := websocket.Upgrade(this.Ctx.ResponseWriter, this.Ctx.Request, nil, 1024, 1024)
+// 	if _, ok := err.(websocket.HandshakeError); ok {
+// 		http.Error(this.Ctx.ResponseWriter, "Not a websocket handshake", 400)
+// 		return
+// 	} else if err != nil {
+// 		beego.Error("Cannot setup WebSocket connection:", err)
+// 		return
+// 	}
+// 	// Message receive loop.
+// 	for {
+// 		mt, message, err := ws.ReadMessage()
+// 		if err != nil {
+// 			log.Println("read:", err)
+// 			break
+// 		}
+// 		log.Printf("recv: %s", message)
 
-		jobID, err := triggerJob(message)
-		if err != nil {
-			err = ws.WriteMessage(mt, message)
-			if err != nil {
-				log.Println("write:", err)
-				break
-			}
-		}
-		syncID, err := getSyncID(jobID)
-		if err != nil {
-			err = ws.WriteMessage(mt, message)
-			if err != nil {
-				log.Println("write:", err)
-				break
-			}
-		}
+// 		jobID, err := triggerJob(message)
+// 		if err != nil {
+// 			err = ws.WriteMessage(mt, message)
+// 			if err != nil {
+// 				log.Println("write:", err)
+// 				break
+// 			}
+// 		}
+// 		syncID, err := getSyncID(jobID)
+// 		if err != nil {
+// 			err = ws.WriteMessage(mt, message)
+// 			if err != nil {
+// 				log.Println("write:", err)
+// 				break
+// 			}
+// 		}
 
-		err = ws.WriteMessage(mt, message)
-		if err != nil {
-			log.Println("write:", err)
-			break
-		}
-	}
-}
+// 		err = ws.WriteMessage(mt, message)
+// 		if err != nil {
+// 			log.Println("write:", err)
+// 			break
+// 		}
+// 	}
+// }
