@@ -9,12 +9,14 @@
       @input="valueChanged"
     >
       <template slot="singleLabel" slot-scope="{ option }">
-        <strong>{{ option.tag }}</strong> -
-        <strong>{{ moment(option.date).fromNow() }}</strong>
+        <strong>{{ option.tag }}</strong>
       </template>
       <template slot="option" slot-scope="props">
         <div class="option__desc">
           <span class="option__tag">{{ props.option.tag }}</span>
+          <span class="option__date">
+            <strong>{{ moment(props.option.date).fromNow() }}</strong>
+          </span>
         </div>
       </template>
     </multiselect>
@@ -23,6 +25,12 @@
 
 <style lang="scss">
 @import "../../assets/scss/include";
+
+.option__desc {
+  .option__date {
+    float: right;
+  }
+}
 </style>
 
 <script lang="ts">
