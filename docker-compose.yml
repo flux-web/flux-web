@@ -13,13 +13,12 @@ services:
     volumes: 
       - ./frontend:/app
       - /app/node_modules
+      
   flux-web-backend:
     build:
       context: ./backend
     ports: 
       - 3000:3000
     environment: 
-     FLUX_URL: http://flux:3030
-
-
+     FLUX_URL: http://host.docker.internal:3030
   

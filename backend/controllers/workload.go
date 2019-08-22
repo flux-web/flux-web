@@ -14,9 +14,13 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/httplib"
 	"github.com/astaxie/beego/logs"
+	"github.com/gorilla/websocket"
 )
 
 type WorkloadController struct {
+	beego.Controller
+}
+type WebSocketController struct {
 	beego.Controller
 }
 
@@ -37,6 +41,8 @@ func (this *WorkloadController) ListWorkloads() {
 	//this.Data["fluxUrl"] = flux.FluxUrl
 	//this.Data["workloads"] = GetImages(ns, this.Input().Get("filter"))
 	//this.TplName = "main.tpl"
+
+	l.Printf("in ListWorkloads, executing: " + flux.FluxUrl + flux.ListImagesApi + ns)
 	res, err := httplib.Get(flux.FluxUrl + flux.ListImagesApi + ns).Debug(true).Bytes()
 	if err != nil {
 		l.Panic(err.Error)
@@ -63,7 +69,7 @@ func (this *WorkloadController) ReleaseWorkloads() {
 func waitForSync(syncID string) int {
 	l.Printf("waiting for sync: " + syncID)
 
-	for true {
+	for {
 		resp, err := httplib.Get(flux.FluxUrl + flux.SyncApi + syncID).String()
 		if err != nil {
 			l.Printf(err.Error())
@@ -81,7 +87,7 @@ func waitForSync(syncID string) int {
 func getSyncID(jobID string) (string, error) {
 	l.Printf("getting syncID...")
 
-	for true {
+	for {
 		resp, err := httplib.Get(flux.FluxUrl + flux.JobApi + jobID).Bytes()
 		if err != nil {
 			l.Printf(err.Error())
@@ -158,46 +164,44 @@ func GetImages(params ...string) []models.Image {
 	return images
 }
 
-// func (this *WebSocketController) Join() {
-// 	// Upgrade from http request to WebSocket.
-// 	ws, err := websocket.Upgrade(this.Ctx.ResponseWriter, this.Ctx.Request, nil, 1024, 1024)
-// 	if _, ok := err.(websocket.HandshakeError); ok {
-// 		http.Error(this.Ctx.ResponseWriter, "Not a websocket handshake", 400)
-// 		return
-// 	} else if err != nil {
-// 		beego.Error("Cannot setup WebSocket connection:", err)
-// 		return
-// 	}
-// 	// Message receive loop.
-// 	for {
-// 		mt, message, err := ws.ReadMessage()
-// 		if err != nil {
-// 			log.Println("read:", err)
-// 			break
-// 		}
-// 		log.Printf("recv: %s", message)
-
-// 		jobID, err := triggerJob(message)
-// 		if err != nil {
-// 			err = ws.WriteMessage(mt, message)
-// 			if err != nil {
-// 				log.Println("write:", err)
-// 				break
-// 			}
-// 		}
-// 		syncID, err := getSyncID(jobID)
-// 		if err != nil {
-// 			err = ws.WriteMessage(mt, message)
-// 			if err != nil {
-// 				log.Println("write:", err)
-// 				break
-// 			}
-// 		}
-
-// 		err = ws.WriteMessage(mt, message)
-// 		if err != nil {
-// 			log.Println("write:", err)
-// 			break
-// 		}
-// 	}
-// }
+func (this *WebSocketController) Join() {
+	// Upgrade from http request to WebSocket.
+	ws, err := websocket.Upgrade(this.Ctx.ResponseWriter, this.Ctx.Request, nil, 1024, 1024)
+	if _, ok := err.(websocket.HandshakeError); ok {
+		http.Error(this.Ctx.ResponseWriter, "Not a websocket handshake", 400)
+		return
+	} else if err != nil {
+		beego.Error("Cannot setup WebSocket connection:", err)
+		return
+	}
+	// Message receive loop.
+	for {
+		mt, message, err := ws.ReadMessage()
+		if err != nil {
+			l.Println("read:", err)
+			break
+		}
+		l.Printf("recv: %s", message)
+		jobID, err := triggerJob(message)
+		if err != nil {
+			err = ws.WriteMessage(mt, message)
+			if err != nil {
+				l.Println("write:", err)
+				break
+			}
+		}
+		syncID, err := getSyncID(jobID)
+		if err != nil {
+			err = ws.WriteMessage(mt, message)
+			if err != nil {
+				l.Println("write:", err)
+				break
+			}
+		}
+		err = ws.WriteMessage(mt, []byte(syncID))
+		if err != nil {
+			l.Println("write:", err)
+			break
+		}
+	}
+}
