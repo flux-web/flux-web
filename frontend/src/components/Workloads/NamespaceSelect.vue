@@ -40,7 +40,14 @@ export default class NamespaceSelect extends Vue {
 
     this.loading = true;
 
-    await this.fetchWorkloads(this.currentNamespace);
+    try {
+      await this.fetchWorkloads(this.currentNamespace);
+    } catch (e) {
+      alert(
+        "Error when retrieving workloads for namespace: " +
+          this.currentNamespace
+      );
+    }
 
     this.loading = false;
   }
