@@ -1,0 +1,75 @@
+<template>
+  <div class="namespace-select">
+    <input type="text" placeholder="namespace" v-model="namespace" class="namespace-input" />
+    <button @click="selectNamespace" class="namespace-button">Select</button>
+  </div>
+</template>
+
+<script lang="ts">
+import { Component, Vue } from "vue-property-decorator";
+import { StoreNamespaces } from "../../store/types/StoreNamespaces";
+import { Action, Getter } from "vuex-class";
+
+@Component({})
+export default class NamespaceSelect extends Vue {
+  public namespace: string = "";
+
+  @Action("setCurrentNamespace", { namespace: StoreNamespaces.namespaces })
+  public setCurrentNamespace: any;
+
+  @Action("fetchWorkloads", { namespace: StoreNamespaces.workloads })
+  public fetchWorkloads: any;
+
+  @Getter("currentNamespace", { namespace: StoreNamespaces.namespaces })
+  public currentNamespace: any;
+
+  public selectNamespace() {
+    this.setCurrentNamespace(this.namespace);
+
+    this.fetchWorkloads(this.currentNamespace);
+  }
+}
+</script>
+
+<style scoped lang="scss">
+@import "../../assets/scss/include";
+
+.namespace-select {
+  margin-bottom: 10px;
+  .namespace-input {
+    height: 30px;
+    border-radius: 7px;
+    background-color: #f0f0fb;
+    border: none;
+    width: 200px;
+    box-sizing: border-box;
+    padding: 0 0 0 30px;
+    font-family: SpoilerHE;
+    font-weight: 300;
+    font-size: 13px;
+    color: #6a6c71;
+    &::placeholder {
+      color: #b6b9c3;
+    }
+    &:focus {
+      outline: none;
+      padding: 0 0 0 29px;
+      color: #6a6c71;
+      border: 1px solid #b6b9c3;
+    }
+  }
+
+  .namespace-button {
+    margin-left: 10px;
+    background-color: #f0f0fb;
+    border: none;
+    font-family: sans-serif;
+    font-weight: 100;
+    font-size: 13px;
+    color: #97989c;
+    height: 30px;
+    border-radius: 7px;
+    padding: 8px;
+  }
+}
+</style>

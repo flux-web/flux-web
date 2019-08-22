@@ -1,5 +1,6 @@
 <template>
   <div class="workloads-list">
+    <namespace-select></namespace-select>
     <vue-good-table
       :columns="columns"
       :rows="workloads"
@@ -28,13 +29,14 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { StoreNamespaces } from "../../store/types/StoreNamespaces";
 import WorkloadAvailableTags from "./WorkloadAvailableTags.vue";
+import NamespaceSelect from "./NamespaceSelect.vue";
 import { namespace } from "vuex-class";
-import { Getter } from "vuex-class";
+import { Getter, Action } from "vuex-class";
 import { Workload } from "../../store/types/Workloads/Workload";
 import { Tag } from "../../store/types/Workloads/Tag";
 
 @Component({
-  components: { WorkloadAvailableTags }
+  components: { WorkloadAvailableTags, NamespaceSelect }
 })
 export default class WorkloadsList extends Vue {
   public columns = [
@@ -61,10 +63,6 @@ export default class WorkloadsList extends Vue {
     {
       label: "Promote",
       field: "promote"
-    },
-    {
-      label: "Status",
-      field: "status"
     }
   ];
 
@@ -73,6 +71,9 @@ export default class WorkloadsList extends Vue {
 
   @Getter("searchTerm", { namespace: StoreNamespaces.workloads })
   protected searchTerm!: any;
+
+  @Action("fetchNamespaces", { namespace: StoreNamespaces.namespaces })
+  public fetchNamespaces: any;
 
   get workloads() {
     return this.storeWorkloads.map((workload: Workload) => {

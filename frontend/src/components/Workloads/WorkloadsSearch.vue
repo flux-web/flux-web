@@ -43,6 +43,15 @@
   }
   .sync_button {
     float: right;
+    background-color: #f0f0fb;
+    border: none;
+    font-family: sans-serif;
+    font-weight: 100;
+    font-size: 13px;
+    color: #97989c;
+    height: 42px;
+    border-radius: 7px;
+    padding: 10px;
   }
   .input-icon {
     position: absolute;

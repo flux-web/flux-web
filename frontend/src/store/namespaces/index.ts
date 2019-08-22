@@ -7,9 +7,7 @@ import { NamespacesState } from '@/store/types/Namespaces/NamespacesState';
 
 export const state: NamespacesState = {
     namespaces: [
-        {
-          name: 'production',
-        },
+        'production',
     ],
     currentNamespace: null,
 };
