@@ -6,4 +6,5 @@ type Flux struct {
 	JobApi             string
 	UpdateManifestsApi string
 	ListImagesApi      string
+	ListServices       string
 }

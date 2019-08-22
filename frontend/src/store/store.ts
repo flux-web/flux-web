@@ -6,6 +6,7 @@ import {actions} from '@/store/root/actions';
 import {mutations} from '@/store/root/mutations';
 import {getters} from '@/store/root/getters';
 import { workloads } from './workloads/index';
+import { namespaces } from './namespaces/index';
 
 Vue.use(Vuex);
 
@@ -16,6 +17,7 @@ const store: StoreOptions<RootState> = {
     mutations,
     modules: {
         workloads,
+        namespaces,
     },
 };
 

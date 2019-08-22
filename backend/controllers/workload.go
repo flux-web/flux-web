@@ -32,6 +32,16 @@ var flux = models.Flux{
 	JobApi:             "/api/flux/v6/jobs?id=",
 	UpdateManifestsApi: "/api/flux/v9/update-manifests",
 	ListImagesApi:      "/api/flux/v10/images?namespace=",
+	ListServices:      "/api/flux/v11/services",
+}
+
+func (this *WorkloadController) ListServices() {
+	l.Printf("in ListServices, executing: " + flux.FluxUrl + flux.ListServices)
+	res, err := httplib.Get(flux.FluxUrl + flux.ListServices).Debug(true).Bytes()
+	if err != nil {
+		l.Panic(err.Error)
+	}
+	this.Ctx.Output.Body(res)
 }
 
 func (this *WorkloadController) ListWorkloads() {
