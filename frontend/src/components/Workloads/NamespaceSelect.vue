@@ -1,7 +1,17 @@
 <template>
   <div class="namespace-select">
-    <input type="text" placeholder="namespace" v-model="namespace" class="namespace-input" />
-    <button @click="selectNamespace" class="namespace-button">Select</button>
+    <input
+      type="text"
+      placeholder="namespace"
+      v-model="namespace"
+      class="namespace-input"
+      @keyup.enter="selectNamespace"
+    />
+    <button
+      @click="selectNamespace"
+      class="namespace-button"
+      :disabled="loading"
+    >{{loading ? 'Loading, please wait' : 'Select'}}</button>
   </div>
 </template>
 
@@ -14,6 +24,8 @@ import { Action, Getter } from "vuex-class";
 export default class NamespaceSelect extends Vue {
   public namespace: string = "";
 
+  public loading: boolean = false;
+
   @Action("setCurrentNamespace", { namespace: StoreNamespaces.namespaces })
   public setCurrentNamespace: any;
 
@@ -23,10 +35,14 @@ export default class NamespaceSelect extends Vue {
   @Getter("currentNamespace", { namespace: StoreNamespaces.namespaces })
   public currentNamespace: any;
 
-  public selectNamespace() {
+  public async selectNamespace() {
     this.setCurrentNamespace(this.namespace);
 
-    this.fetchWorkloads(this.currentNamespace);
+    this.loading = true;
+
+    await this.fetchWorkloads(this.currentNamespace);
+
+    this.loading = false;
   }
 }
 </script>

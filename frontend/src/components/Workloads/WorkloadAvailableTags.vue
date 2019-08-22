@@ -10,12 +10,11 @@
     >
       <template slot="singleLabel" slot-scope="{ option }">
         <strong>{{ option.tag }}</strong> -
-        <strong>{{ option.date }}</strong>
+        <strong>{{ moment(option.date).fromNow() }}</strong>
       </template>
       <template slot="option" slot-scope="props">
         <div class="option__desc">
-          <span class="option__tag">{{ props.option.tag }} -</span>
-          <span class="option__date">{{ props.option.date }}</span>
+          <span class="option__tag">{{ props.option.tag }}</span>
         </div>
       </template>
     </multiselect>
@@ -29,6 +28,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import Multiselect from "vue-multiselect";
+import moment from "moment";
 
 @Component({
   components: {
@@ -40,6 +40,8 @@ export default class WorkloadAvailableTags extends Vue {
   @Prop() protected workload: any;
 
   protected value: any = null;
+
+  protected moment = moment;
 
   get options() {
     return this.optionsProp.map((option: any) => {

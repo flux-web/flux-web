@@ -67,22 +67,13 @@ export default class WorkloadsList extends Vue {
   ];
 
   @Getter("workloads", { namespace: StoreNamespaces.workloads })
-  protected storeWorkloads!: any;
+  protected workloads!: any;
 
   @Getter("searchTerm", { namespace: StoreNamespaces.workloads })
   protected searchTerm!: any;
 
   @Action("fetchNamespaces", { namespace: StoreNamespaces.namespaces })
   public fetchNamespaces: any;
-
-  get workloads() {
-    return this.storeWorkloads.map((workload: Workload) => {
-      workload.current_tag =
-        workload.available_tags.find(availableTag => availableTag.current) ||
-        null;
-      return workload;
-    });
-  }
 
   public tagChanged(workload: Workload, value: Tag) {
     const w = this.workloads.find((w: Workload) => (workload.id = w.id));

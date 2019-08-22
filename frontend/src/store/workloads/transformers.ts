@@ -14,22 +14,30 @@ export const workloadsTransformer = (workloads: any[]) => {
 
         return accWorkloads.concat(workload.Containers.reduce((containerWorkloads: any, container: any) => {
             const currentTag = container.Current.ID.split(':').pop() || 'latest';
-            containerWorkloads.push({
+
+            const availableTags = container.Available ? container.Available.map((available: any) => {
+                const availableTag = available.ID.split(':').pop();
+                return {
+                    tag: available.ID.split(':').pop(),
+                    date: available.CreatedAt,
+                    current: availableTag === currentTag,
+                  };
+            }) : [];
+
+            const temp = {
                 id: workload.ID,
                 workload: workload.ID.split(':').pop(),
                 container: container.Name,
                 image: getImageFromUrl(container.Current.ID),
                 status: WorkloadStatuses.upToDate,
-                current_tag: currentTag,
-                available_tags: container.Available ? container.Available.map((available: any) => {
-                    const availableTag = available.ID.split(':').pop();
-                    return {
-                        tag: available.ID.split(':').pop(),
-                        date: available.CreatedAt,
-                        current: availableTag == currentTag,
-                      };
-                }) : [],
-              });
+                available_tags: availableTags,
+                current_tag: {
+                    tag: currentTag,
+                    current: true,
+                    date: container.Current.CreatedAt || null,
+                },
+              };
+            containerWorkloads.push(temp);
             return containerWorkloads;
         }, []));
     }, []);
