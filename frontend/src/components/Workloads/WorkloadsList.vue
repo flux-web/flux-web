@@ -30,6 +30,8 @@ import { StoreNamespaces } from "../../store/types/StoreNamespaces";
 import WorkloadAvailableTags from "./WorkloadAvailableTags.vue";
 import { namespace } from "vuex-class";
 import { Getter } from "vuex-class";
+import { Workload } from "../../store/types/Workloads/Workload";
+import { Tag } from "../../store/types/Workloads/Tag";
 
 @Component({
   components: { WorkloadAvailableTags }
@@ -73,16 +75,16 @@ export default class WorkloadsList extends Vue {
   protected searchTerm!: any;
 
   get workloads() {
-    return this.storeWorkloads.map(workload => {
-      workload.current_tag = workload.available_tags.find(
-        availableTag => availableTag.current
-      );
+    return this.storeWorkloads.map((workload: Workload) => {
+      workload.current_tag =
+        workload.available_tags.find(availableTag => availableTag.current) ||
+        null;
       return workload;
     });
   }
 
-  public tagChanged(workload, value) {
-    const w = this.workloads.find(w => (workload.id = w.id));
+  public tagChanged(workload: Workload, value: Tag) {
+    const w = this.workloads.find((w: Workload) => (workload.id = w.id));
     w.selected_tag = value;
   }
 }

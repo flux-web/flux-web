@@ -15,6 +15,7 @@ export const state: WorkloadsState = {
           container: 'frontend',
           image: 'frontend',
           status: WorkloadStatuses.updating,
+          current_tag: null,
           available_tags: [
               {
                 tag: 'v1.1',
@@ -34,6 +35,7 @@ export const state: WorkloadsState = {
           container: 'backend',
           image: 'frontend',
           status: WorkloadStatuses.updating,
+          current_tag: null,
           available_tags: [
               {
                 tag: '3refkp',

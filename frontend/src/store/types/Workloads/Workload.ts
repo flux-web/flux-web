@@ -7,5 +7,6 @@ export interface Workload {
     container: string;
     image: string;
     status: WorkloadStatuses;
+    current_tag: Tag | null;
     available_tags: Tag[];
 }
