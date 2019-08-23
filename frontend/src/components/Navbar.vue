@@ -72,8 +72,14 @@ export default class Navbar extends Vue {
       list-style-type: none;
       padding: 0px;
       margin: 20px 0 0 0;
+      @include respond-above("Lmedium") {
+        margin: 10px 0 0 0;
+      }
       .icon {
         color: #99a9c2;
+        @include respond-above("Lmedium") {
+          display: inline-block;
+        }
         &:hover {
           color: #fff;
         }
@@ -81,14 +87,11 @@ export default class Navbar extends Vue {
           padding: 25px 0;
           display: block;
           color: inherit;
+          @include respond-above("Lmedium") {
+            padding: 0 15px;
+          }
         }
       }
-    }
-  }
-  .actions {
-    margin: 0 15px 0 auto;
-    @include respond-above("Smedium") {
-      margin: 15px 0 0 0;
     }
   }
 }

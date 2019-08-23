@@ -1,10 +1,5 @@
 <template>
   <div class="container">
-    <div class="top-left-circle">
-      <div class="inner-circle">
-        <div class="core-circle"></div>
-      </div>
-    </div>
     <div class="main-wrapper">
       <div class="left-side">
         <navbar></navbar>
@@ -40,37 +35,9 @@ export default class CallScreenLayout extends Vue {}
   position: relative;
   @include respond-above("Lmedium") {
     padding: 3vh 3vw;
-  }
-  .top-left-circle {
-    width: 600px;
-    height: 600px;
-    background-color: rgba(255, 255, 255, 0.02);
-    position: absolute;
-    top: -300px;
-    left: -300px;
-    border-radius: 300px;
-    .inner-circle {
-      width: 400px;
-      height: 400px;
-      top: 100px;
-      left: 100px;
-      border-radius: 200px;
-      position: absolute;
-      background-color: rgba(255, 255, 255, 0.02);
-      .core-circle {
-        width: 200px;
-        height: 200px;
-        top: 100px;
-        left: 100px;
-        border-radius: 100px;
-        position: absolute;
-        background-color: rgba(255, 255, 255, 0.02);
-      }
-    }
-  }
-  @include respond-above("Lmedium") {
     flex-direction: column;
   }
+
   .main-wrapper {
     display: flex;
     flex-direction: row;
@@ -87,7 +54,7 @@ export default class CallScreenLayout extends Vue {}
     }
     .left-side {
       @include respond-above("Lmedium") {
-        height: 50px;
+        height: 60px;
         border-radius: 13px 13px 0 0;
         width: 100%;
       }
@@ -103,8 +70,6 @@ export default class CallScreenLayout extends Vue {}
     .right-side {
       @include respond-above("Lmedium") {
         border-radius: 0 0 13px 13px;
-      }
-      @include respond-above("Lmedium") {
       }
       border-radius: 0 13px 13px 0;
       position: relative;
