@@ -55,7 +55,6 @@ export default class Navbar extends Vue {
       display: flex;
       align-items: center;
       justify-content: center;
-
       .cr__label {
         color: $gray-light-color;
         border-radius: 15px;
