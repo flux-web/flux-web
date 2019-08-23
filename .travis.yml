@@ -3,12 +3,12 @@ services:
   - docker
 language: bash
 script:
-  - docker build -t ybaruchel/flux-web-frontend ./frontend
-  - docker build -t ybaruchel/flux-web-backend ./backend
+  - docker build -t fluxweb/frontend ./frontend
+  - docker build -t fluxweb/backend ./backend
   - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
-  - docker tag ybaruchel/flux-web-frontend ybaruchel/flux-web-frontend:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
-    docker push ybaruchel/flux-web-frontend:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
-    docker push ybaruchel/flux-web-frontend:latest
-  - docker tag ybaruchel/flux-web-backend ybaruchel/flux-web-backend:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
-    docker push ybaruchel/flux-web-backend:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
-    docker push ybaruchel/flux-web-backend:latest
+  - docker tag fluxweb/frontend fluxweb/frontend:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
+    docker push fluxweb/frontend:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
+    docker push fluxweb/frontend:latest
+  - docker tag fluxweb/backend fluxweb/backend:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
+    docker push fluxweb/backend:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
+    docker push fluxweb/backend:latest
