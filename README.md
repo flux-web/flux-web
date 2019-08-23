@@ -70,3 +70,4 @@ Code contributions are very welcome. If you are interested in helping make flux-
 ## Authors
 
 * **Ido Braunstain** - *Initial work*
+* **Yohanan Baruchel** - *Initial work*
