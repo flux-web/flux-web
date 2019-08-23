@@ -1,10 +1,14 @@
 sudo: required
 services:
-- docker
+  - docker
 language: bash
 script:
-- docker build -t ybaruchel/flux-web-frontend ./frontend
-- echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin &&
-  docker tag ybaruchel/flux-web-frontend ybaruchel/flux-web-frontend:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
-  docker push ybaruchel/flux-web-frontend:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
-  docker push ybaruchel/flux-web-frontend:latest
+  - docker build -t ybaruchel/flux-web-frontend ./frontend
+  - docker build -t ybaruchel/flux-web-backend ./backend
+  - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+  - docker tag ybaruchel/flux-web-frontend ybaruchel/flux-web-frontend:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
+    docker push ybaruchel/flux-web-frontend:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
+    docker push ybaruchel/flux-web-frontend:latest
+  - docker tag ybaruchel/flux-web-backend ybaruchel/flux-web-backend:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
+    docker push ybaruchel/flux-web-backend:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
+    docker push ybaruchel/flux-web-backend:latest
