@@ -4,15 +4,35 @@
       <div class="details">
         <span class="details__item details__label cr__label">Flux Web</span>
       </div>
+      <ul class="icons">
+        <li class="icon">
+          <router-link to="/">
+            <i class="fas fa-rocket"></i>
+          </router-link>
+        </li>
+        <li class="icon">
+          <router-link to="/about">
+            <i class="fas fa-info"></i>
+          </router-link>
+        </li>
+        <li class="icon">
+          <a :href="githubUrl" target="__blank">
+            <i class="fab fa-github"></i>
+          </a>
+        </li>
+      </ul>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
+import config from "@/config";
 
 @Component({})
-export default class Navbar extends Vue {}
+export default class Navbar extends Vue {
+  public githubUrl = config.githubUrl;
+}
 </script>
 
 <style scoped lang="scss">
@@ -20,11 +40,10 @@ export default class Navbar extends Vue {}
 
 .navbar {
   padding: 20px;
-  height: 10%;
+  height: 100%;
   align-items: center;
   box-sizing: border-box;
   display: flex;
-  justify-content: center;
   flex-direction: column;
   text-align: center;
   @include respond-above("Lmedium") {
@@ -47,6 +66,22 @@ export default class Navbar extends Vue {}
         margin: 0 0 0 15px;
         color: #bbc7dc;
         font-family: SpoilerHE;
+      }
+    }
+    .icons {
+      list-style-type: none;
+      padding: 0px;
+      margin: 20px 0 0 0;
+      .icon {
+        color: #99a9c2;
+        &:hover {
+          color: #fff;
+        }
+        a {
+          padding: 25px 0;
+          display: block;
+          color: inherit;
+        }
       }
     }
   }

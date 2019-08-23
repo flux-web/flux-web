@@ -23,7 +23,5 @@ import { Action, Getter } from "vuex-class";
 @Component({
   components: { WorkloadsSearch, WorkloadsList }
 })
-export default class Workloads extends Vue {
-  private TAG = `[${Workloads.name}]`;
-}
+export default class Workloads extends Vue {}
 </script>

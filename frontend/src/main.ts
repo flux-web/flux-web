@@ -11,11 +11,11 @@ axios.defaults.baseURL = config.apiBaseUrl;
 
 // import the styles
 import 'vue-good-table/dist/vue-good-table.css';
+Vue.use(VueGoodTablePlugin);
 
 require('./assets/scss/_main.scss');
 
 Vue.config.productionTip = false;
-Vue.use(VueGoodTablePlugin);
 
 new Vue({
   router,
