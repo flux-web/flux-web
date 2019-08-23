@@ -33,8 +33,9 @@ export default class CallScreenLayout extends Vue {}
 @import "../assets/scss/include";
 
 .container {
+  height: 100vh;
+  box-sizing: border-box;
   padding: 5vh 5vw;
-  min-height: 94vh;
   box-shadow: 15px 20px 99px 0 rgba(82, 80, 94, 0.33);
   position: relative;
   @include respond-above("Lmedium") {
