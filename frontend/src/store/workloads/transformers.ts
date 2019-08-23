@@ -2,7 +2,9 @@ import { WorkloadStatuses } from '../types/Workloads/WorkloadStatuses';
 
 function getImageFromUrl(url: any) {
     url = url.split(':');
-    url.pop();
+    if (url.length > 1) {
+        url.pop();
+    }
     return url.join(':');
 }
 
