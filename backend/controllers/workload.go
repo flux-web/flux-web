@@ -14,15 +14,12 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/httplib"
 	"github.com/astaxie/beego/logs"
-	"github.com/gorilla/websocket"
 )
 
 type WorkloadController struct {
 	beego.Controller
 }
-type WebSocketController struct {
-	beego.Controller
-}
+
 
 var l = logs.GetLogger()
 
@@ -31,27 +28,11 @@ var flux = models.Flux{
 	SyncApi:            "/api/flux/v6/sync?ref=",
 	JobApi:             "/api/flux/v6/jobs?id=",
 	UpdateManifestsApi: "/api/flux/v9/update-manifests",
-	ListImagesApi:      "/api/flux/v10/images?namespace=",
-	ListServices:      "/api/flux/v11/services",
-}
-
-func (this *WorkloadController) ListServices() {
-	l.Printf("in ListServices, executing: " + flux.FluxUrl + flux.ListServices)
-	res, err := httplib.Get(flux.FluxUrl + flux.ListServices).Debug(true).Bytes()
-	if err != nil {
-		l.Panic(err.Error)
-	}
-	this.Ctx.Output.Body(res)
+	ListImagesApi:      "/api/flux/v10/images?namespace=", 
 }
 
 func (this *WorkloadController) ListWorkloads() {
 	ns := this.Ctx.Input.Param(":ns")
-	//this.Data["read_only"] = os.Getenv("READ_ONLY")
-	//this.Data["namespaces"] = strings.Split(os.Getenv("NAMESPACES"), ";")
-	//this.Data["fluxUrl"] = flux.FluxUrl
-	//this.Data["workloads"] = GetImages(ns, this.Input().Get("filter"))
-	//this.TplName = "main.tpl"
-
 	l.Printf("in ListWorkloads, executing: " + flux.FluxUrl + flux.ListImagesApi + ns)
 	res, err := httplib.Get(flux.FluxUrl + flux.ListImagesApi + ns).Debug(true).Bytes()
 	if err != nil {
@@ -172,46 +153,4 @@ func GetImages(params ...string) []models.Image {
 		}
 	}
 	return images
-}
-
-func (this *WebSocketController) Join() {
-	// Upgrade from http request to WebSocket.
-	ws, err := websocket.Upgrade(this.Ctx.ResponseWriter, this.Ctx.Request, nil, 1024, 1024)
-	if _, ok := err.(websocket.HandshakeError); ok {
-		http.Error(this.Ctx.ResponseWriter, "Not a websocket handshake", 400)
-		return
-	} else if err != nil {
-		beego.Error("Cannot setup WebSocket connection:", err)
-		return
-	}
-	// Message receive loop.
-	for {
-		mt, message, err := ws.ReadMessage()
-		if err != nil {
-			l.Println("read:", err)
-			break
-		}
-		l.Printf("recv: %s", message)
-		jobID, err := triggerJob(message)
-		if err != nil {
-			err = ws.WriteMessage(mt, message)
-			if err != nil {
-				l.Println("write:", err)
-				break
-			}
-		}
-		syncID, err := getSyncID(jobID)
-		if err != nil {
-			err = ws.WriteMessage(mt, message)
-			if err != nil {
-				l.Println("write:", err)
-				break
-			}
-		}
-		err = ws.WriteMessage(mt, []byte(syncID))
-		if err != nil {
-			l.Println("write:", err)
-			break
-		}
-	}
 }

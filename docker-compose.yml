@@ -20,6 +20,8 @@ services:
       context: ./backend
     environment:
       FLUX_URL: http://host.docker.internal:3030
+    ports:
+      - 3000:3000
 
   nginx:
     image: nginx:alpine
