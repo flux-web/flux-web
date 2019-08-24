@@ -14,7 +14,7 @@ ADD . $APP_DIR
 
 WORKDIR $GOPATH/src/flux-web
 
-RUN CGO_ENABLED=0 godep get
+RUN CGO_ENABLED=0 godep get -v
 
 RUN CGO_ENABLED=0 go build -ldflags '-w -s' -o /flux-web && \
     cp -r views/ /views && \
