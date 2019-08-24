@@ -36,6 +36,9 @@ export default class NamespaceSelect extends Vue {
   public currentNamespace: any;
 
   public async selectNamespace() {
+    if (this.loading) {
+      return;
+    }
     this.setCurrentNamespace(this.namespace);
 
     this.loading = true;
