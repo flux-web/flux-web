@@ -4,6 +4,10 @@
 FROM library/golang as builder
 
 RUN go get github.com/tools/godep
+RUN go get github.com/astaxie/beego
+RUN go get github.com/ericchiang/k8s
+RUN go get github.com/ghodss/yaml
+RUN go get github.com/gorilla/websocket
 
 RUN CGO_ENABLED=0 go install -a std
 

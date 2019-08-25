@@ -20,8 +20,11 @@ services:
       context: ./backend
     environment:
       FLUX_URL: http://host.docker.internal:3030
+      KUBE_CONFIG_PATH: /usr/src/.kubeconfig
     ports:
       - 3000:3000
+    volumes:
+      - ./backend/.kubeconfig:/usr/src/.kubeconfig
 
   nginx:
     image: nginx:alpine

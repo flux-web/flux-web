@@ -8,6 +8,7 @@ import (
 
 func main() {
 	beego.Router("/api/v1", &controllers.WorkloadController{}, "get:ListWorkloads")
+	beego.Router("/namespaces", &controllers.NamespaceController{}, "get:ListNamespaces")
 	beego.Router("/workloads/:ns", &controllers.WorkloadController{}, "get:ListWorkloads")
 	beego.Router("/release", &controllers.WorkloadController{}, "post:ReleaseWorkloads")
 

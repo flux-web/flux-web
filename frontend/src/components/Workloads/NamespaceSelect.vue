@@ -1,12 +1,12 @@
 <template>
   <div class="namespace-select">
-    <input
-      type="text"
-      placeholder="namespace"
-      v-model="namespace"
-      class="namespace-input"
-      @keyup.enter="selectNamespace"
-    />
+    <select v-model="namespace" class="namespace-input">
+      <option
+        v-for="namespace in namespaces"
+        v-bind:value="namespace"
+        :key="namespace"
+      >{{namespace}}</option>
+    </select>
     <button
       @click="selectNamespace"
       class="namespace-button"
@@ -29,11 +29,21 @@ export default class NamespaceSelect extends Vue {
   @Action("setCurrentNamespace", { namespace: StoreNamespaces.namespaces })
   public setCurrentNamespace: any;
 
+  @Action("fetchNamespaces", { namespace: StoreNamespaces.namespaces })
+  public fetchNamespaces: any;
+
   @Action("fetchWorkloads", { namespace: StoreNamespaces.workloads })
   public fetchWorkloads: any;
 
   @Getter("currentNamespace", { namespace: StoreNamespaces.namespaces })
   public currentNamespace: any;
+
+  @Getter("namespaces", { namespace: StoreNamespaces.namespaces })
+  public namespaces: any;
+
+  public async mounted() {
+    await this.fetchNamespaces();
+  }
 
   public async selectNamespace() {
     if (this.loading) {
