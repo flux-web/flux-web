@@ -1,6 +1,6 @@
 # Flux-Web chart
 
-This chart bootstraps a [flux-web](https://github.com/idobry/flux-web) deployment. 
+This chart bootstraps a [flux-web](https://github.com/flux-web/flux-web) deployment. 
 
 ## Configuration
 
@@ -10,7 +10,7 @@ The following table lists the configurable parameters of the flux-web chart and 
 | -------------------------- | ------------------------------------------ | ----- |
 | `replicaCount`             | Number of pod replicas	                  | `1`     |
 | `applicationPort`          | The port your app runs on in its container | `8080`     |
-| `image.repository`         | Image Repository.                          | `idobry/flux-web`     |
+| `image.repository`         | Image Repository.                          | `fluxweb/flux-web`     |
 | `image.tag`                | Image tag                                  | `latest`     |
 | `image.pullPolicy`         | Image Pull policy                          | `IfNotPresent`     |
 | `imagePullSecrets`         | Specify Image pull secrets   | `nil`     |
