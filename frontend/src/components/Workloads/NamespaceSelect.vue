@@ -42,6 +42,7 @@ export default class NamespaceSelect extends Vue {
   public namespaces: any;
 
   public async mounted() {
+    this.namespace = this.currentNamespace;
     await this.fetchNamespaces();
   }
 
