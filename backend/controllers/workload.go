@@ -49,20 +49,23 @@ func (this *WorkloadController) ReleaseWorkloads() {
 		return
 	}
 	this.Ctx.WriteString("Done")
+
 	// @Refactor: Here we should implement ws response when release was done.
-	return
+	newReleaseRequest, err := models.NewReleseRequest(this.Ctx.Input.RequestBody)
+	if err != nil {
+		l.Printf(err.Error())
+		return
+	}
+	go waitForSync(jobID, newReleaseRequest)
+}
+
+func waitForSync(jobID string, releaseRequest models.ReleaseRequest) {
 
 	syncID, err := getSyncID(jobID)
 	if err != nil {
 		l.Printf(err.Error())
-		this.Ctx.Output.SetStatus(500)
 		return
 	}
-	this.Ctx.Output.SetStatus(waitForSync(syncID))
-}
-
-func waitForSync(syncID string) int {
-	l.Printf("waiting for sync: " + syncID)
 
 	for {
 		resp, err := httplib.Get(flux.FluxUrl + flux.SyncApi + syncID).String()
@@ -71,12 +74,12 @@ func waitForSync(syncID string) int {
 			break
 		}
 		if resp == "[]" {
-			return 200
+			l.Printf("release for" + releaseRequest.Spec.ContainerSpecs.Workload[0].Container + " is done!")
+			releaseChannel <- releaseRequest.Spec.ContainerSpecs.Workload[0].Container + " done!"
 			break
 		}
-		time.Sleep(time.Second)
+		time.Sleep(time.Millisecond * 300)
 	}
-	return 500
 }
 
 func getSyncID(jobID string) (string, error) {
@@ -97,7 +100,8 @@ func getSyncID(jobID string) (string, error) {
 			l.Printf("got syncID: " + job.Result.Revision)
 			return job.Result.Revision, nil
 		} else if job.Err != "" {
-			l.Printf("Error_getSyncID_02: " + job.Err)
+			l.Printf("Error_getSyncID_02")
+			releaseChannel <- "Error_getSyncID_02"
 			return job.Err, errors.New(job.Err)
 		} else {
 			l.Printf("job status: " + job.StatusString)
