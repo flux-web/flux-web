@@ -10,8 +10,11 @@
       }"
     >
       <template slot="table-row" slot-scope="props">
-        <span v-if="props.column.field == 'promote'">
-          <button class="promote_button">Promote</button>
+        <span v-if="props.column.field == 'release'">
+          <button
+            class="release_button"
+            @click="release(props.row)"
+          >{{props.row.releasing ? 'Relasing' : 'Release'}}</button>
         </span>
         <workload-available-tags
           :options-prop="props.row.available_tags"
@@ -61,8 +64,8 @@ export default class WorkloadsList extends Vue {
       field: "available_tags"
     },
     {
-      label: "Promote",
-      field: "promote"
+      label: "Release",
+      field: "release"
     }
   ];
 
@@ -75,9 +78,16 @@ export default class WorkloadsList extends Vue {
   @Action("fetchNamespaces", { namespace: StoreNamespaces.namespaces })
   public fetchNamespaces: any;
 
+  @Action("releaseVersion", { namespace: StoreNamespaces.workloads })
+  public releaseVersion: any;
+
   public tagChanged(workload: Workload, value: Tag) {
     const w = this.workloads.find((w: Workload) => (workload.id = w.id));
     w.selected_tag = value;
+  }
+
+  public release(row: Workload) {
+    this.releaseVersion(row);
   }
 }
 </script>
@@ -109,7 +119,7 @@ export default class WorkloadsList extends Vue {
       td {
         color: #3c5171;
         font-size: 15px;
-        .promote_button {
+        .release_button {
           background: #007efe;
           padding: 8px;
           color: #fff;

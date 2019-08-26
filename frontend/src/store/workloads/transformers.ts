@@ -8,6 +8,11 @@ function getImageFromUrl(url: any) {
     return url.join(':');
 }
 
+function parseCurrentTag(currentTag: string) {
+    const tagParts = currentTag.split(':');
+    return tagParts.length == 1 ? 'latest' : tagParts.pop()
+}
+
 export const workloadsTransformer = (workloads: any[]) => {
     return workloads.reduce((accWorkloads: any, workload: any) => {
         if (!workload.Containers) {
@@ -15,7 +20,7 @@ export const workloadsTransformer = (workloads: any[]) => {
         }
 
         return accWorkloads.concat(workload.Containers.reduce((containerWorkloads: any, container: any) => {
-            const currentTag = container.Current.ID.split(':').pop() || 'latest';
+            const currentTag = parseCurrentTag(container.Current.ID)
 
             const availableTags = container.Available ? container.Available.map((available: any) => {
                 const availableTag = available.ID.split(':').pop();
@@ -38,6 +43,7 @@ export const workloadsTransformer = (workloads: any[]) => {
                     current: true,
                     date: container.Current.CreatedAt || null,
                 },
+                selected_tag: {}
               };
             containerWorkloads.push(temp);
             return containerWorkloads;

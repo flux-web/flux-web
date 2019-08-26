@@ -9,4 +9,5 @@ export interface Workload {
     status: WorkloadStatuses;
     current_tag: Tag;
     available_tags: Tag[];
+    selected_tag: Tag;
 }
