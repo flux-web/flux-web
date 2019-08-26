@@ -48,6 +48,10 @@ func (this *WorkloadController) ReleaseWorkloads() {
 		this.Ctx.Output.SetStatus(500)
 		return
 	}
+	this.Ctx.WriteString("Done")
+	// @Refactor: Here we should implement ws response when release was done.
+	return
+
 	syncID, err := getSyncID(jobID)
 	if err != nil {
 		l.Printf(err.Error())
@@ -77,7 +81,7 @@ func waitForSync(syncID string) int {
 
 func getSyncID(jobID string) (string, error) {
 	l.Printf("getting syncID...")
-
+	
 	for {
 		resp, err := httplib.Get(flux.FluxUrl + flux.JobApi + jobID).Bytes()
 		if err != nil {

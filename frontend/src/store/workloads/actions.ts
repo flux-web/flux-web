@@ -8,7 +8,7 @@ import { WorkloadStatuses } from '../types/Workloads/WorkloadStatuses';
 
 export const actions: ActionTree<WorkloadsState, RootState> = {
     changeSearchTerm: ({commit}, searchTerm: string) => commit('CHANGE_SEARCH_TERM', searchTerm),
-    updateWorkloadStatus:  ({commit}, status: WorkloadStatuses) => commit('UPDATE_WORKLOAD_STATUS', status),
+    updateWorkloadStatus:  ({commit}, payload) => commit('UPDATE_WORKLOAD_STATUS', payload),
     fetchWorkloads: ({commit}, namespace: string): any => axios.get('/workloads/' + namespace).then(
         (response) => {
             const workloads = workloadsTransformer(response.data);
@@ -38,7 +38,7 @@ export const actions: ActionTree<WorkloadsState, RootState> = {
           ];
 
         axios.post('/release', releaseData).then(
-            ()  => dispatch('updateWorkloadStatus', workload, WorkloadStatuses.releasing),
+            ()  => dispatch('updateWorkloadStatus', {workload, status: WorkloadStatuses.releasing}),
        )
     },
 };

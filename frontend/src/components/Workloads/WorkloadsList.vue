@@ -13,7 +13,7 @@
         <span v-if="props.column.field == 'release'">
           <button
             class="release_button"
-            @click="release(props.row)"
+            @click="releaseVersion(props.row)"
           >{{props.row.releasing ? 'Relasing' : 'Release'}}</button>
         </span>
         <workload-available-tags
@@ -66,6 +66,10 @@ export default class WorkloadsList extends Vue {
     {
       label: "Release",
       field: "release"
+    },
+    {
+      label: "Status",
+      field: "status"
     }
   ];
 
@@ -84,10 +88,6 @@ export default class WorkloadsList extends Vue {
   public tagChanged(workload: Workload, value: Tag) {
     const w = this.workloads.find((w: Workload) => (workload.id = w.id));
     w.selected_tag = value;
-  }
-
-  public release(row: Workload) {
-    this.releaseVersion(row);
   }
 }
 </script>
