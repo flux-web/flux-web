@@ -10,7 +10,7 @@ services:
       PORT: 8080
       NODE_ENV: development
       BASE_URL: http://localhost/
-      VUE_APP_API_BASE_URL: http://localhost/api
+      VUE_APP_API_BASE_URL: http://localhost/api/v1
     volumes:
       - ./frontend:/app
       - /app/node_modules

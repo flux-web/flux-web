@@ -7,10 +7,15 @@ import (
 )
 
 func main() {
-	beego.Router("/api/v1", &controllers.WorkloadController{}, "get:ListWorkloads")
-	beego.Router("/namespaces", &controllers.NamespaceController{}, "get:ListNamespaces")
-	beego.Router("/workloads/:ns", &controllers.WorkloadController{}, "get:ListWorkloads")
-	beego.Router("/release", &controllers.WorkloadController{}, "post:ReleaseWorkloads")
+
+	apiNs := beego.NewNamespace("/api",
+		beego.NSNamespace("/v1",
+			beego.NSRouter("/namespaces", &controllers.NamespaceController{}, "get:ListNamespaces"),
+			beego.NSRouter("/workloads/:ns", &controllers.WorkloadController{}, "get:ListWorkloads"),
+			beego.NSRouter("/release", &controllers.WorkloadController{}, "post:ReleaseWorkloads"),
+		),
+	)
+	beego.AddNamespace(apiNs)
 
 	beego.Router("/ws/v1", &controllers.WebSocketController{}, "get:ReleaseWorkloads")
 
