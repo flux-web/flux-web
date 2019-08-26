@@ -10,35 +10,12 @@ export const actions: ActionTree<WorkloadsState, RootState> = {
     changeSearchTerm: ({commit}, searchTerm: string) => commit('CHANGE_SEARCH_TERM', searchTerm),
     updateWorkloadStatus:  ({commit}, payload) => commit('UPDATE_WORKLOAD_STATUS', payload),
     fetchWorkloads: ({commit}, namespace: string): any => axios.get('/workloads/' + namespace).then(
-        (response) => {
+        (response: any)=> {
             const workloads = workloadsTransformer(response.data);
             commit('UPDATE_WORKLOADS', workloads);
         },
     ),
-    releaseVersion: ({dispatch}, workload: Workload): any => {
-        const releaseData: any = {
-            Cause: {
-              Message: "",
-              User: "Flux-web"
-            },
-            Spec: {
-              ContainerSpecs: {},
-              Kind: "execute",
-              SkipMismatches: true
-            },
-            Type: "containers"
-          };
-      
-          releaseData.Spec.ContainerSpecs[workload.id] = [
-            {
-              Container: workload.container,
-              Current: workload.image + ":" + workload.current_tag.tag,
-              Target: workload.image + ":" + workload.selected_tag.tag
-            }
-          ];
-
-        axios.post('/release', releaseData).then(
-            ()  => dispatch('updateWorkloadStatus', {workload, status: WorkloadStatuses.releasing}),
-       )
-    },
+    releaseVersion: ({dispatch}, {workload, releaseData}): any => axios.post('/release', releaseData).then(
+      ()  => dispatch('updateWorkloadStatus', {workload, status: WorkloadStatuses.releasing}),
+    ),
 };

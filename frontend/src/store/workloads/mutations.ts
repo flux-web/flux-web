@@ -10,7 +10,6 @@ export const mutations: MutationTree<WorkloadsState> = {
         if (!workloadInst) {
             throw `Unable to update workload, workload (${workload.id}) not found`;
         }
-        console.log(workloadInst)
         workloadInst.status = status;
     },
 };

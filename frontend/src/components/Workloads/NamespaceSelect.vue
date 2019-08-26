@@ -1,6 +1,6 @@
 <template>
   <div class="namespace-select">
-    <select v-model="namespace" class="namespace-input">
+    <select v-model="namespace" class="namespace-input" @keyup.enter="selectNamespace">
       <option
         v-for="namespace in namespaces"
         v-bind:value="namespace"
