@@ -2,9 +2,9 @@ import { ActionTree } from 'vuex';
 import { RootState } from '../types/RootState';
 import { WorkloadsState } from '../types/Workloads/WorkloadsState';
 import { workloadsTransformer } from './transformers';
-import axios from 'axios';
 import { Workload } from '../types/Workloads/Workload';
 import { WorkloadStatuses } from '../types/Workloads/WorkloadStatuses';
+import axios from 'axios';
 
 export const actions: ActionTree<WorkloadsState, RootState> = {
     changeSearchTerm: ({commit}, searchTerm: string) => commit('CHANGE_SEARCH_TERM', searchTerm),

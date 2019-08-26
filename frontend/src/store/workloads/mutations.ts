@@ -1,7 +1,6 @@
 import { MutationTree } from 'vuex';
 import { WorkloadsState } from '../types/Workloads/WorkloadsState';
 import { Workload } from '../types/Workloads/Workload';
-import { WorkloadStatuses } from '../types/Workloads/WorkloadStatuses';
 
 export const mutations: MutationTree<WorkloadsState> = {
     CHANGE_SEARCH_TERM: (state: WorkloadsState, searchTerm: string) => state.searchTerm = searchTerm,
