@@ -6,9 +6,7 @@ import { RootState } from '@/store/types/RootState';
 import { NamespacesState } from '@/store/types/Namespaces/NamespacesState';
 
 export const state: NamespacesState = {
-    namespaces: [
-        'production',
-    ],
+    namespaces: [],
     currentNamespace: null,
 };
 
