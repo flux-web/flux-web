@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	//"flux-web/models"
+	"flux-web/models"
 
 	"github.com/astaxie/beego"
 	//"github.com/astaxie/beego/httplib"
@@ -22,7 +22,7 @@ type ReleaseResult struct{
 	Status int
 }
 
-var releaseChannel = make(chan string)
+var releaseChannel = make(chan models.ReleaseResult)
 
 func (this *WebSocketController) ReleaseWorkloads() {
 	ws, err := websocket.Upgrade(this.Ctx.ResponseWriter, this.Ctx.Request, nil, 1024, 1024)
@@ -37,18 +37,23 @@ func (this *WebSocketController) ReleaseWorkloads() {
 
 	go func(ws *websocket.Conn){
 		for {
-			msgType, releaseRequest, err := ws.ReadMessage()
-			if err != nil {
-				return
-			}
-			l.Println(string(releaseRequest))
+			//msgType, releaseRequest, err := ws.ReadMessage()
+			//if err != nil {
+			//	return
+			//}
 
-			for msg := range releaseChannel{
-				if err := ws.WriteMessage(msgType, []byte(msg)); err != nil{
-					l.Println(err)
-					return
+			//l.Println("new ws connection")
+
+			go func(ws *websocket.Conn){
+				for releaseResult := range releaseChannel{
+					l.Printf("got new msg in channel: " + releaseResult.Status)
+					if err := ws.WriteJSON(releaseResult); err != nil{
+						l.Printf("error in ws.WriteMessage: ")
+						l.Println(err)
+						return
+					}
 				}
-			}
+			}(ws)
 		}
 	}(ws)
 }
