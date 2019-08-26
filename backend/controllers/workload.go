@@ -74,9 +74,11 @@ func waitForSync(jobID string, releaseRequest models.ReleaseRequest) {
 			break
 		}
 		if resp == "[]" {
+			l.Printf("release for" + releaseRequest.Spec.ContainerSpecs.Workload[0].Container + " is done!")
+			releaseChannel <- releaseRequest.Spec.ContainerSpecs.Workload[0].Container + " done!"
 			break
 		}
-		time.Sleep(time.Second)
+		time.Sleep(time.Millisecond * 300)
 	}
 }
 

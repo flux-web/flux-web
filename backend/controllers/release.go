@@ -22,6 +22,8 @@ type ReleaseResult struct{
 	Status int
 }
 
+var releaseChannel = make(chan string)
+
 func (this *WebSocketController) ReleaseWorkloads() {
 	ws, err := websocket.Upgrade(this.Ctx.ResponseWriter, this.Ctx.Request, nil, 1024, 1024)
 	
@@ -41,9 +43,11 @@ func (this *WebSocketController) ReleaseWorkloads() {
 			}
 			l.Println(string(releaseRequest))
 
-			if err := ws.WriteMessage(msgType, triggerRelease()); err != nil{
-				l.Println(err)
-				return
+			for msg := range releaseChannel{
+				if err := ws.WriteMessage(msgType, []byte(msg)); err != nil{
+					l.Println(err)
+					return
+				}
 			}
 		}
 	}(ws)
