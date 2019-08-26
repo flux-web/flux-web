@@ -17,7 +17,11 @@ export default class WorkloadRelease extends Vue {
   @Action("releaseVersion", { namespace: StoreNamespaces.workloads })
   public releaseVersion: any;
 
+  @Getter("getWorkload", { namespace: StoreNamespaces.workloads })
+  public getWorkload: any;
+
   public release() {
+    const workload = this.getWorkload(this.workload);
     const releaseData: any = {
       Cause: {
         Message: "",
@@ -31,11 +35,11 @@ export default class WorkloadRelease extends Vue {
       Type: "containers"
     };
 
-    releaseData.Spec.ContainerSpecs[this.workload.id] = [
+    releaseData.Spec.ContainerSpecs[workload.id] = [
       {
-        Container: this.workload.container,
-        Current: this.workload.image + ":" + this.workload.current_tag.tag,
-        Target: this.workload.image + ":" + this.workload.selected_tag.tag
+        Container: workload.container,
+        Current: workload.image + ":" + workload.current_tag.tag,
+        Target: workload.image + ":" + workload.selected_tag.tag
       }
     ];
 

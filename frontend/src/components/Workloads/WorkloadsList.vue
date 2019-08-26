@@ -80,9 +80,11 @@ export default class WorkloadsList extends Vue {
   @Action("fetchNamespaces", { namespace: StoreNamespaces.namespaces })
   public fetchNamespaces: any;
 
-  public tagChanged(workload: Workload, value: Tag) {
-    const w = this.workloads.find((w: Workload) => (workload.id = w.id));
-    w.selected_tag = value;
+  @Action("updateSelectedTag", { namespace: StoreNamespaces.workloads })
+  public updateSelectedTag: any;
+
+  public tagChanged(workload: Workload, tag: Tag) {
+    this.updateSelectedTag({ workload, tag });
   }
 }
 </script>
