@@ -24,7 +24,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./backend/.kubeconfig:/usr/src/.kubeconfig
+      - ~/.kube/config:/usr/src/.kubeconfig
 
   nginx:
     image: nginx:alpine
