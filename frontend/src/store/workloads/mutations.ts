@@ -8,6 +8,9 @@ export const mutations: MutationTree<WorkloadsState> = {
     UPDATE_WORKLOADS: (state: WorkloadsState, workloads: Workload[]) => state.workloads = workloads,
     UPDATE_WORKLOAD_STATUS: (state: WorkloadsState, workload: Workload, status: WorkloadStatuses) => () => {
         const workloadInst = state.workloads.find(w => w.id == workload.id);
+        if (!workloadInst) {
+            throw `Unable to update workload, workload (${workload.id}) not found`;
+        }
         workloadInst.status = status;
     },
 };
