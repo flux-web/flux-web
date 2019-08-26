@@ -1,7 +1,7 @@
 <template>
   <button
     class="release_button"
-    @click="releaseVersion(workload)"
+    @click="release(workload)"
   >{{workload.releasing ? 'Relasing' : 'Release'}}</button>
 </template>
 
@@ -39,7 +39,7 @@ export default class WorkloadRelease extends Vue {
       }
     ];
 
-    this.releaseVersion({ workload, releaseData });
+    this.releaseVersion({ workload: this.workload, releaseData });
   }
 }
 </script>

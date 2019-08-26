@@ -15,9 +15,7 @@ export const actions: ActionTree<WorkloadsState, RootState> = {
             commit('UPDATE_WORKLOADS', workloads);
         },
     ),
-    releaseVersion: ({dispatch}, {workload, releaseData}): any => {
-      axios.post('/release', releaseData).then(
-            ()  => dispatch('updateWorkloadStatus', {workload, status: WorkloadStatuses.releasing}),
-       )
-    },
+    releaseVersion: ({dispatch}, {workload, releaseData}): any => axios.post('/release', releaseData).then(
+      ()  => dispatch('updateWorkloadStatus', {workload, status: WorkloadStatuses.releasing}),
+    ),
 };
