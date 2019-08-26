@@ -100,7 +100,8 @@ func getSyncID(jobID string) (string, error) {
 			l.Printf("got syncID: " + job.Result.Revision)
 			return job.Result.Revision, nil
 		} else if job.Err != "" {
-			l.Printf("Error_getSyncID_02: " + job.Err)
+			l.Printf("Error_getSyncID_02")
+			releaseChannel <- "Error_getSyncID_02"
 			return job.Err, errors.New(job.Err)
 		} else {
 			l.Printf("job status: " + job.StatusString)
