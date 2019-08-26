@@ -11,10 +11,7 @@
     >
       <template slot="table-row" slot-scope="props">
         <span v-if="props.column.field == 'release'">
-          <button
-            class="release_button"
-            @click="releaseVersion(props.row)"
-          >{{props.row.releasing ? 'Relasing' : 'Release'}}</button>
+          <workload-release :workload="props.row"></workload-release>
         </span>
         <workload-available-tags
           :options-prop="props.row.available_tags"
@@ -32,6 +29,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { StoreNamespaces } from "../../store/types/StoreNamespaces";
 import WorkloadAvailableTags from "./WorkloadAvailableTags.vue";
+import WorkloadRelease from "./WorkloadRelease.vue";
 import NamespaceSelect from "./NamespaceSelect.vue";
 import { namespace } from "vuex-class";
 import { Getter, Action } from "vuex-class";
@@ -39,7 +37,7 @@ import { Workload } from "../../store/types/Workloads/Workload";
 import { Tag } from "../../store/types/Workloads/Tag";
 
 @Component({
-  components: { WorkloadAvailableTags, NamespaceSelect }
+  components: { WorkloadAvailableTags, NamespaceSelect, WorkloadRelease }
 })
 export default class WorkloadsList extends Vue {
   public columns = [
@@ -82,9 +80,6 @@ export default class WorkloadsList extends Vue {
   @Action("fetchNamespaces", { namespace: StoreNamespaces.namespaces })
   public fetchNamespaces: any;
 
-  @Action("releaseVersion", { namespace: StoreNamespaces.workloads })
-  public releaseVersion: any;
-
   public tagChanged(workload: Workload, value: Tag) {
     const w = this.workloads.find((w: Workload) => (workload.id = w.id));
     w.selected_tag = value;
@@ -119,19 +114,6 @@ export default class WorkloadsList extends Vue {
       td {
         color: #3c5171;
         font-size: 15px;
-        .release_button {
-          background: #007efe;
-          padding: 8px;
-          color: #fff;
-          border-radius: 5px;
-          font-size: 11px;
-          &:hover {
-            background: #3190f1;
-          }
-          &:focus {
-            outline: 0;
-          }
-        }
       }
       th {
         color: #9aa9c2;
