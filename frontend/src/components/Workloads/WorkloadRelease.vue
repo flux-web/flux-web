@@ -16,6 +16,31 @@ export default class WorkloadRelease extends Vue {
 
   @Action("releaseVersion", { namespace: StoreNamespaces.workloads })
   public releaseVersion: any;
+
+  public release() {
+    const releaseData: any = {
+      Cause: {
+        Message: "",
+        User: "Flux-web"
+      },
+      Spec: {
+        ContainerSpecs: {},
+        Kind: "execute",
+        SkipMismatches: true
+      },
+      Type: "containers"
+    };
+
+    releaseData.Spec.ContainerSpecs[this.workload.id] = [
+      {
+        Container: this.workload.container,
+        Current: this.workload.image + ":" + this.workload.current_tag.tag,
+        Target: this.workload.image + ":" + this.workload.selected_tag.tag
+      }
+    ];
+
+    this.releaseVersion({ workload, releaseData });
+  }
 }
 </script>
 
