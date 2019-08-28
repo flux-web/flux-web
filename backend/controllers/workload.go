@@ -1,13 +1,14 @@
 package controllers
 
 import (
+	"os"
+	"time"
 	"bytes"
 	"errors"
-	"io/ioutil"
-	"net/http"
-	"os"
 	"strings"
-	"time"
+	"net/http"
+	"io/ioutil"
+	"encoding/json"
 
 	"flux-web/models"
 
@@ -42,33 +43,40 @@ func (this *WorkloadController) ListWorkloads() {
 }
 
 func (this *WorkloadController) ReleaseWorkloads() {
-	jobID, err := triggerJob(this.Ctx.Input.RequestBody)
+	newreleaseRequest, _ := models.NewReleseRequest(this.Ctx.Input.RequestBody)
+	spec := "newreleaseRequest.Workload:[{'Container':"+newreleaseRequest.Container+",'Current':"+newreleaseRequest.Current+",'Target':"+newreleaseRequest.Target+"}]"
+	releaseRequest := "{'Cause':{'Message':'', 'User':'Flux-web'},'Spec':{'ContainerSpecs':{"+spec+"},'Kind':'execute','SkipMismatches':true},'Type':'containers'}"
+	
+	jobID, err := triggerJob([]byte(releaseRequest))
 	if err != nil {
 		l.Printf("Found error: " + err.Error())
 		this.Ctx.Output.SetStatus(500)
 		return
 	}
 	this.Ctx.WriteString("Done")
-
-	newReleaseRequest, err := models.NewReleseRequest(this.Ctx.Input.RequestBody)
-	if err != nil {
-		l.Printf(err.Error())
-		return
+	
+	var f interface{}
+	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &f); err != nil {
+		panic(err)
 	}
-	l.Println("***************************")
-	l.Println(newReleaseRequest.Spec.ContainerSpecs.Workload[0].Container)
-	l.Println("***************************")
 
-	go func(jobID string, newReleaseRequest models.ReleaseRequest){
-		waitForSync(jobID, newReleaseRequest)
-	}(jobID, newReleaseRequest)
+	go func(jobID string, newreleaseRequest models.ReleaseRequest){
+		waitForSync(jobID, newreleaseRequest)
+	}(jobID, newreleaseRequest)
+	
+	//for wn := range f.(map[string]interface{})["Spec"].(map[string]interface{})["ContainerSpecs"].(map[string]interface{}) { 
+	//		go func(jobID string, workloadName string){
+	//			waitForSync(jobID, workloadName)
+	//		}(jobID, wn)
+	//}
 }
 
-func waitForSync(jobID string, releaseRequest models.ReleaseRequest) {
+func waitForSync(jobID string, newreleaseRequest models.ReleaseRequest) {
 	l.Printf("getting syncId...")
 
 	var releaseResult models.ReleaseResult
-	releaseResult.Workload = releaseRequest.Spec.ContainerSpecs.Workload[0].Container
+	releaseResult.Workload = newreleaseRequest.Workload
+	releaseResult.Container = newreleaseRequest.Container
 	releaseResult.Status = "Fail"
 
 	syncID, err := getSyncID(jobID)
@@ -88,7 +96,7 @@ func waitForSync(jobID string, releaseRequest models.ReleaseRequest) {
 		}
 		if resp == "[]" {
 			releaseResult.Status = "Released"
-			l.Printf("release for" + releaseRequest.Spec.ContainerSpecs.Workload[0].Container + " is done!")
+			l.Printf("release for" + newreleaseRequest.Workload + " is done!")
 			break
 		}
 		time.Sleep(time.Millisecond * 300)

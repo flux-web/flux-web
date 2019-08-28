@@ -37,23 +37,14 @@ func (this *WebSocketController) ReleaseWorkloads() {
 
 	go func(ws *websocket.Conn){
 		for {
-			//msgType, releaseRequest, err := ws.ReadMessage()
-			//if err != nil {
-			//	return
-			//}
-
-			//l.Println("new ws connection")
-
-			go func(ws *websocket.Conn){
-				for releaseResult := range releaseChannel{
-					l.Printf("got new msg in channel: " + releaseResult.Status)
-					if err := ws.WriteJSON(releaseResult); err != nil{
-						l.Printf("error in ws.WriteMessage: ")
-						l.Println(err)
-						return
-					}
+			for releaseResult := range releaseChannel{
+				l.Printf("got new msg in channel: " + releaseResult.Status)
+				if err := ws.WriteJSON(releaseResult); err != nil{
+					l.Printf("error in ws.WriteMessage: ")
+					l.Println(err)
+					return
 				}
-			}(ws)
+			}
 		}
 	}(ws)
 }

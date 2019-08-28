@@ -4,23 +4,13 @@ import (
 	"encoding/json"
 )
 
+
+
 type ReleaseRequest struct {
-	Cause struct {
-		Message string `json:"Message"`
-		User    string `json:"User"`
-	} `json:"Cause"`
-	Spec struct {
-		ContainerSpecs struct {
-			Workload []struct {
-				Container string `json:"Container"`
-				Current   string `json:"Current"`
-				Target    string `json:"Target"`
-			} `json:"default:deployment/kube-helloweb"`
-		} `json:"ContainerSpecs"`
-		Kind           string `json:"Kind"`
-		SkipMismatches bool   `json:"SkipMismatches"`
-	} `json:"Spec"`
-	Type string `json:"Type"`
+	Workload string `json:"Workload"`
+	Container string `json:"Container"`
+	Current   string `json:"Current"`
+	Target    string `json:"Target"`
 }
 
 //type ReleaseRequest struct {

@@ -23,25 +23,29 @@ export default class WorkloadRelease extends Vue {
   public release() {
     const workload = this.getWorkload(this.workload);
     const releaseData: any = {
-      Cause: {
-        Message: "",
-        User: "Flux-web"
-      },
-      Spec: {
-        ContainerSpecs: {},
-        Kind: "execute",
-        SkipMismatches: true
-      },
-      Type: "containers"
+      Workload: releaseData.Spec.ContainerSpecs[workload.id],
+      Container: workload.container,
+      Current: workload.image + ":" + workload.current_tag.tag,
+      Target: workload.image + ":" + workload.selected_tag.tag
+      //Cause: {
+      //  Message: "",
+      //  User: "Flux-web"
+      //},
+      //Spec: {
+      //  ContainerSpecs: {},
+      //  Kind: "execute",
+      //  SkipMismatches: true
+      //},
+      //Type: "containers"
     };
 
-    releaseData.Spec.ContainerSpecs[workload.id] = [
-      {
-        Container: workload.container,
-        Current: workload.image + ":" + workload.current_tag.tag,
-        Target: workload.image + ":" + workload.selected_tag.tag
-      }
-    ];
+    //releaseData.Spec.ContainerSpecs[workload.id] = [
+    //  {
+    //    Container: workload.container,
+    //    Current: workload.image + ":" + workload.current_tag.tag,
+    //    Target: workload.image + ":" + workload.selected_tag.tag
+    //  }
+    //];
 
     this.releaseVersion({ workload: this.workload, releaseData });
   }
