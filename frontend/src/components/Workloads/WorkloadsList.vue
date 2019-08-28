@@ -1,5 +1,6 @@
 <template>
   <div class="workloads-list">
+    {{message || 'No message yet'}}
     <namespace-select></namespace-select>
     <vue-good-table
       :columns="columns"
@@ -70,6 +71,9 @@ export default class WorkloadsList extends Vue {
       field: "status"
     }
   ];
+
+  @Getter("message")
+  protected message!: any;
 
   @Getter("workloads", { namespace: StoreNamespaces.workloads })
   protected workloads!: any;
