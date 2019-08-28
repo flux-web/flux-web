@@ -44,9 +44,12 @@ func (this *WorkloadController) ListWorkloads() {
 
 func (this *WorkloadController) ReleaseWorkloads() {
 	newreleaseRequest, _ := models.NewReleseRequest(this.Ctx.Input.RequestBody)
-	spec := "newreleaseRequest.Workload:[{'Container':"+newreleaseRequest.Container+",'Current':"+newreleaseRequest.Current+",'Target':"+newreleaseRequest.Target+"}]"
-	releaseRequest := "{'Cause':{'Message':'', 'User':'Flux-web'},'Spec':{'ContainerSpecs':{"+spec+"},'Kind':'execute','SkipMismatches':true},'Type':'containers'}"
+	l.Println(newreleaseRequest)
+	spec := "\""+newreleaseRequest.Workload+"\":[{\"Container\":\""+newreleaseRequest.Container+"\",\"Current\":\""+newreleaseRequest.Current+"\",\"Target\":\""+newreleaseRequest.Target+"\"}]"
+	releaseRequest := "{\"Cause\":{\"Message\":\"\", \"User\":\"Flux-web\"},\"Spec\":{\"ContainerSpecs\":{"+spec+"},\"Kind\":\"execute\",\"SkipMismatches\":true},\"Type\":\"containers\"}"
 	
+	l.Println(releaseRequest)
+
 	jobID, err := triggerJob([]byte(releaseRequest))
 	if err != nil {
 		l.Printf("Found error: " + err.Error())
