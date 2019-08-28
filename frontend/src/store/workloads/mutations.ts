@@ -9,14 +9,14 @@ export const mutations: MutationTree<WorkloadsState> = {
     UPDATE_SELECTED_TAG: (state: WorkloadsState, {workload, tag}) => {
         const w = state.workloads.find((w: Workload) => (workload.id == w.id && w.container == workload.container));
         if (!w) {
-            throw `Unable to update workload, workload (${workload.id}) not found`;
+            throw new Error(`Unable to update workload, workload (${workload.id}) not found`);
         }
         w.selected_tag = tag;
     },
     UPDATE_WORKLOAD_STATUS: (state: WorkloadsState, {workload, status}) => {
-        const workloadInst = state.workloads.find(w => w.id == workload.id && w.container == workload.container);
+        const workloadInst = state.workloads.find((w) => w.id == workload.id && w.container == workload.container);
         if (!workloadInst) {
-            throw `Unable to update workload, workload (${workload.id}) not found`;
+            throw new Error(`Unable to update workload, workload (${workload.id}) not found`);
         }
         workloadInst.status = status;
     },

@@ -4,3 +4,4 @@ declare module '*.vue' {
 }
 
 declare module 'vue-good-table'
+declare module 'vue-native-websocket'

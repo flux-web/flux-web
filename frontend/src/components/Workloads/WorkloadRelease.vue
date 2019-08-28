@@ -1,18 +1,22 @@
 <template>
   <button
     class="release_button"
+    :disabled="getWorkload(workload).status == statuses.releasing"
     @click="release(workload)"
-  >{{workload.releasing ? 'Relasing' : 'Release'}}</button>
+  >{{getWorkload(workload).status == statuses.releasing ? 'Relasing' : 'Release'}}</button>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Prop } from "vue-property-decorator";
 import { StoreNamespaces } from "../../store/types/StoreNamespaces";
 import { Getter, Action } from "vuex-class";
+import { WorkloadStatuses } from "../../store/types/Workloads/WorkloadStatuses";
 
 @Component({})
 export default class WorkloadRelease extends Vue {
   @Prop() protected workload: any;
+
+  protected statuses = WorkloadStatuses;
 
   @Action("releaseVersion", { namespace: StoreNamespaces.workloads })
   public releaseVersion: any;
