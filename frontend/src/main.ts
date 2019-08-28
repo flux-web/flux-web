@@ -19,6 +19,7 @@ Vue.use(VueNativeSock, 'ws://' + config.wsUrl, {
   reconnection: true,
   reconnectionAttempts: 5,
   reconnectionDelay: 3000,
+  format: 'json',
 });
 
 require('./assets/scss/_main.scss');

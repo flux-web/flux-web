@@ -1,6 +1,5 @@
 <template>
   <div class="workloads-list">
-    {{message || 'No message yet'}}
     <namespace-select></namespace-select>
     <vue-good-table
       :columns="columns"

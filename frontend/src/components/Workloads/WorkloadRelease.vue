@@ -24,6 +24,19 @@ export default class WorkloadRelease extends Vue {
   @Getter("getWorkload", { namespace: StoreNamespaces.workloads })
   public getWorkload: any;
 
+  public mounted() {
+    // this.$options.sockets.onmessage = (data: any) => console.log(data);
+    // const workload = {
+    //   id: message.data.Workload,
+    //   container: message.data.Container
+    // };
+    // // tslint:disable-next-line: max-line-length
+    // this.commit(StoreNamespaces.workloads + "/UPDATE_WORKLOAD_STATUS", {
+    //   workload,
+    //   status: WorkloadStatuses.upToDate
+    // });
+  }
+
   public release() {
     const workload = this.getWorkload(this.workload);
     const releaseData: any = {
