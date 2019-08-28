@@ -2,14 +2,12 @@
 package controllers
 
 import (
-	"net/http"
 	"time"
+	"net/http"
 
 	"flux-web/models"
 
 	"github.com/astaxie/beego"
-	//"github.com/astaxie/beego/httplib"
-	//"github.com/astaxie/beego/logs"
 	"github.com/gorilla/websocket"
 )
 

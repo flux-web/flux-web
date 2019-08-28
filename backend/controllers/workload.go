@@ -8,7 +8,6 @@ import (
 	"strings"
 	"net/http"
 	"io/ioutil"
-	"encoding/json"
 
 	"flux-web/models"
 
@@ -44,11 +43,8 @@ func (this *WorkloadController) ListWorkloads() {
 
 func (this *WorkloadController) ReleaseWorkloads() {
 	newreleaseRequest, _ := models.NewReleseRequest(this.Ctx.Input.RequestBody)
-	l.Println(newreleaseRequest)
 	spec := "\""+newreleaseRequest.Workload+"\":[{\"Container\":\""+newreleaseRequest.Container+"\",\"Current\":\""+newreleaseRequest.Current+"\",\"Target\":\""+newreleaseRequest.Target+"\"}]"
 	releaseRequest := "{\"Cause\":{\"Message\":\"\", \"User\":\"Flux-web\"},\"Spec\":{\"ContainerSpecs\":{"+spec+"},\"Kind\":\"execute\",\"SkipMismatches\":true},\"Type\":\"containers\"}"
-	
-	l.Println(releaseRequest)
 
 	jobID, err := triggerJob([]byte(releaseRequest))
 	if err != nil {
@@ -57,21 +53,10 @@ func (this *WorkloadController) ReleaseWorkloads() {
 		return
 	}
 	this.Ctx.WriteString("Done")
-	
-	var f interface{}
-	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &f); err != nil {
-		panic(err)
-	}
 
 	go func(jobID string, newreleaseRequest models.ReleaseRequest){
 		waitForSync(jobID, newreleaseRequest)
 	}(jobID, newreleaseRequest)
-	
-	//for wn := range f.(map[string]interface{})["Spec"].(map[string]interface{})["ContainerSpecs"].(map[string]interface{}) { 
-	//		go func(jobID string, workloadName string){
-	//			waitForSync(jobID, workloadName)
-	//		}(jobID, wn)
-	//}
 }
 
 func waitForSync(jobID string, newreleaseRequest models.ReleaseRequest) {
@@ -80,7 +65,7 @@ func waitForSync(jobID string, newreleaseRequest models.ReleaseRequest) {
 	var releaseResult models.ReleaseResult
 	releaseResult.Workload = newreleaseRequest.Workload
 	releaseResult.Container = newreleaseRequest.Container
-	releaseResult.Status = "Fail"
+	releaseResult.Status = "release failed"
 
 	syncID, err := getSyncID(jobID)
 	if err != nil {
@@ -98,7 +83,7 @@ func waitForSync(jobID string, newreleaseRequest models.ReleaseRequest) {
 			break
 		}
 		if resp == "[]" {
-			releaseResult.Status = "Released"
+			releaseResult.Status = "up to date"
 			l.Printf("release for" + newreleaseRequest.Workload + " is done!")
 			break
 		}
@@ -113,7 +98,7 @@ func getSyncID(jobID string) (string, error){
 	for {
 		resp, err := httplib.Get(flux.FluxUrl + flux.JobApi + jobID).Bytes()
 		if err != nil {
-			l.Printf(err.Error())
+			l.Println(err.Error())
 			return "", errors.New(err.Error())
 		}
 		job, err := models.NewJob(resp)
@@ -121,10 +106,10 @@ func getSyncID(jobID string) (string, error){
 			return "", errors.New(err.Error()) 
 		}
 		if job.Result.Revision != "" {
-			l.Printf("got syncID: " + job.Result.Revision)
+			l.Println("got syncID: " + job.Result.Revision)
 			return job.Result.Revision, nil
 		} else if job.Err != "" {
-			l.Printf("Error_getSyncID_02")
+			l.Println("Error_getSyncID_02")
 			return "", errors.New(err.Error()) 
 		} else {
 			l.Printf("job status: " + job.StatusString)
@@ -149,9 +134,9 @@ func triggerJob(requestBody []byte) (string, error) {
 			l.Panic(err.Error)
 			return "", errors.New(err.Error())
 		}
-		l.Printf(string(bodyBytes))
+		l.Println(string(bodyBytes))
 		jobID := strings.Replace(string(bodyBytes), "\"", "", -1)
-		l.Printf("job " + jobID + " triggered")
+		l.Println("job " + jobID + " triggered")
 		return string(jobID), nil
 	} else {
 		return "", errors.New("Job request statuscode is: " + string(resp.StatusCode))
@@ -175,7 +160,6 @@ func GetImages(params ...string) []models.Image {
 	}
 	if len(params) > 1 {
 		filter := params[1]
-		l.Printf(filter)
 		for i := 0; i < len(images); i++ {
 			if !strings.Contains(images[i].ID, filter) {
 				images = append(images[:i], images[i+1:]...)
