@@ -43,10 +43,9 @@ func (this *WorkloadController) ListWorkloads() {
 
 func (this *WorkloadController) ReleaseWorkloads() {
 	newreleaseRequest, _ := models.NewReleseRequest(this.Ctx.Input.RequestBody)
-	spec := "\""+newreleaseRequest.Workload+"\":[{\"Container\":\""+newreleaseRequest.Container+"\",\"Current\":\""+newreleaseRequest.Current+"\",\"Target\":\""+newreleaseRequest.Target+"\"}]"
-	releaseRequest := "{\"Cause\":{\"Message\":\"\", \"User\":\"Flux-web\"},\"Spec\":{\"ContainerSpecs\":{"+spec+"},\"Kind\":\"execute\",\"SkipMismatches\":true},\"Type\":\"containers\"}"
-
-	jobID, err := triggerJob([]byte(releaseRequest))
+	releaseRequest := newreleaseRequest.GetReleaseRequestJSON()
+	
+	jobID, err := triggerJob(releaseRequest)
 	if err != nil {
 		l.Printf("Found error: " + err.Error())
 		this.Ctx.Output.SetStatus(500)
@@ -111,7 +110,7 @@ func getSyncID(jobID string) (string, error){
 			return job.Result.Revision, nil
 		} else if job.Err != "" {
 			l.Println("Error_getSyncID_02")
-			return "", errors.New(err.Error()) 
+			return "", errors.New(job.Err) 
 		} else {
 			l.Printf("job status: " + job.StatusString)
 		}
