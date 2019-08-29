@@ -13,11 +13,26 @@ export const mutations: MutationTree<WorkloadsState> = {
         w.selected_tag = tag;
     },
     UPDATE_WORKLOAD_STATUS: (state: WorkloadsState, {workload, status}) => {
-        console.log(workload, status);
         const workloadInst = state.workloads.find((w) => w.id == workload.id && w.container == workload.container);
         if (!workloadInst) {
             throw new Error(`Unable to update workload, workload (${workload.id}) not found`);
         }
         workloadInst.status = status;
+    },
+    UPDATE_WORKLOAD_CURRENT_TAG: (state: WorkloadsState, {workload, tag}) => {
+        const workloadInst = state.workloads.find((w) => w.id == workload.id && w.container == workload.container);
+        if (!workloadInst) {
+            throw new Error(`Unable to update workload, workload (${workload.id}) not found`);
+        }
+        workloadInst.available_tags.map(t => {
+            t.current = false
+            return t;
+        })
+        const newTag = workloadInst.available_tags.find(t => t.tag == tag)
+        if (!newTag) {
+            throw new Error(`Unable to update workload, tag (${tag}) not found`);
+        }
+        newTag.current == true;
+        workloadInst.current_tag = newTag;
     },
 };

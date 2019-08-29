@@ -65,6 +65,7 @@ func waitForSync(jobID string, newreleaseRequest models.ReleaseRequest) {
 	var releaseResult models.ReleaseResult
 	releaseResult.Workload = newreleaseRequest.Workload
 	releaseResult.Container = newreleaseRequest.Container
+	releaseResult.Target = newreleaseRequest.Target
 	releaseResult.Status = "release failed"
 
 	syncID, err := getSyncID(jobID)
