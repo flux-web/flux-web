@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import Vuex, { StoreOptions } from 'vuex';
+import createPersistedState from 'vuex-persistedstate';
 import { root } from './root/index';
 import { RootState } from './types/RootState';
 import {actions} from '@/store/root/actions';
@@ -19,6 +20,7 @@ const store: StoreOptions<RootState> = {
         workloads,
         namespaces,
     },
+    plugins: [createPersistedState()],
 };
 
 export default new Vuex.Store<RootState>(store);
