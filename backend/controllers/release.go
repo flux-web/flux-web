@@ -4,6 +4,7 @@ package controllers
 import (
 	"time"
 	"net/http"
+	"encoding/json"
 
 	"flux-web/models"
 
@@ -34,16 +35,24 @@ func (this *WebSocketController) ReleaseWorkloads() {
 	}
 
 	go func(ws *websocket.Conn){
-		for {
+		//for {
 			for releaseResult := range releaseChannel{
 				l.Printf("got new msg in channel: " + releaseResult.Status)
-				if err := ws.WriteJSON(releaseResult); err != nil{
+				data, err := json.Marshal(releaseResult)
+				if err != nil {
+					l.Println("error:", err)
+				}
+				if err := ws.WriteMessage(websocket.BinaryMessage, data); err != nil {
 					l.Printf("error in ws.WriteMessage: ")
 					l.Println(err)
-					return
 				}
+				//if err := ws.WriteJSON(body); err != nil{
+				//	l.Printf("error in ws.WriteMessage: ")
+				//	l.Println(err)
+				//}
+				l.Println("msg from ws sent successfully")
 			}
-		}
+		//}
 	}(ws)
 }
 
