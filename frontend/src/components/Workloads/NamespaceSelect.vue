@@ -1,5 +1,5 @@
 <template>
-  <div class="namespace-select">
+  <div class="namespace-select" v-show="namespaces.length">
     <select v-model="namespace" class="namespace-input" @keyup.enter="selectNamespace">
       <option :value="null" disabled>Select Namespace</option>
       <option
