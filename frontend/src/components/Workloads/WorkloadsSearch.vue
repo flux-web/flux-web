@@ -9,7 +9,6 @@
       v-model="searchTerm"
       @input="searchTermChanged"
     />
-    <button class="sync_button">Sync all</button>
   </div>
 </template>
 
@@ -24,7 +23,7 @@
     border-radius: 7px;
     background-color: #f0f0fb;
     border: none;
-    width: calc(100% - 80px);
+    width: 100%;
     box-sizing: border-box;
     padding: 0 0 0 30px;
     font-family: SpoilerHE;
@@ -40,18 +39,6 @@
       color: #6a6c71;
       border: 1px solid #b6b9c3;
     }
-  }
-  .sync_button {
-    float: right;
-    background-color: #f0f0fb;
-    border: none;
-    font-family: sans-serif;
-    font-weight: 100;
-    font-size: 13px;
-    color: #97989c;
-    height: 42px;
-    border-radius: 7px;
-    padding: 10px;
   }
   .input-icon {
     position: absolute;
