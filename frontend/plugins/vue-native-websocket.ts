@@ -4,7 +4,7 @@ import store from '../store/index';
 import config from '../config';
 
 Vue.use(VueNativeSock, 'ws://' + config.wsUrl, {
-  store: store(),
+  store: store,
   reconnection: true,
   reconnectionAttempts: 5,
   reconnectionDelay: 3000,
