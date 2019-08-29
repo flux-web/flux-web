@@ -17,7 +17,7 @@ export const mutations: MutationTree<RootState> = {
             id: message.Workload,
             container: message.Container,
         },
-        tag: message.Target
+        tag: message.Tag
     }),
     SOCKET_RECONNECT: (state: RootState, count: number) => console.info(state, count),
     SOCKET_RECONNECT_ERROR: (state: RootState) => state.socket.reconnectError = true,
