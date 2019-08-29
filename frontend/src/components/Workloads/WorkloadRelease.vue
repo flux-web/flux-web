@@ -56,5 +56,8 @@ export default class WorkloadRelease extends Vue {
   &:focus {
     outline: 0;
   }
+  &:disabled {
+    background: #9abfe4;
+  }
 }
 </style>
