@@ -10,14 +10,13 @@
       }"
     >
       <template slot="table-row" slot-scope="props">
-        <span v-if="props.column.field == 'release'">
-          <workload-release :workload="props.row"></workload-release>
-        </span>
+        <workload-release :workload="props.row" v-if="props.column.field == 'action'"></workload-release>
+        <workload-status :workload="props.row" v-else-if="props.column.field == 'status'" />
         <workload-available-tags
           :options-prop="props.row.available_tags"
           :workload="props.row"
           @input="tagChanged"
-          v-if="props.column.field == 'available_tags'"
+          v-else-if="props.column.field == 'available_tags'"
         />
         <span v-else>{{props.formattedRow[props.column.field]}}</span>
       </template>
@@ -31,13 +30,19 @@ import { StoreNamespaces } from "../../store/types/StoreNamespaces";
 import WorkloadAvailableTags from "./WorkloadAvailableTags.vue";
 import WorkloadRelease from "./WorkloadRelease.vue";
 import NamespaceSelect from "./NamespaceSelect.vue";
+import WorkloadStatus from "./WorkloadStatus.vue";
 import { namespace } from "vuex-class";
 import { Getter, Action } from "vuex-class";
 import { Workload } from "../../store/types/Workloads/Workload";
 import { Tag } from "../../store/types/Workloads/Tag";
 
 @Component({
-  components: { WorkloadAvailableTags, NamespaceSelect, WorkloadRelease }
+  components: {
+    WorkloadAvailableTags,
+    NamespaceSelect,
+    WorkloadRelease,
+    WorkloadStatus
+  }
 })
 export default class WorkloadsList extends Vue {
   public columns = [
@@ -58,16 +63,16 @@ export default class WorkloadsList extends Vue {
       field: "current_tag.tag"
     },
     {
+      label: "Status",
+      field: "status"
+    },
+    {
       label: "Available tags",
       field: "available_tags"
     },
     {
-      label: "Release",
-      field: "release"
-    },
-    {
-      label: "Status",
-      field: "status"
+      label: "Action",
+      field: "action"
     }
   ];
 
