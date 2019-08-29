@@ -52,11 +52,13 @@ export default class WorkloadRelease extends Vue {
   font-size: 11px;
   &:hover {
     background: #3190f1;
+    cursor: pointer;
   }
   &:focus {
     outline: 0;
   }
   &:disabled {
+    cursor: default;
     background: #9abfe4;
   }
 }
