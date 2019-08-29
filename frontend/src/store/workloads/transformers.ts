@@ -1,4 +1,5 @@
 import { WorkloadStatuses } from '../types/Workloads/WorkloadStatuses';
+import { Tag } from '../types/Workloads/Tag';
 
 function getImageFromUrl(url: any) {
     url = url.split(':');
@@ -8,9 +9,9 @@ function getImageFromUrl(url: any) {
     return url.join(':');
 }
 
-function parseCurrentTag(currentTag: string) {
+function parseCurrentTag(currentTag: string): string {
     const tagParts = currentTag.split(':');
-    return tagParts.length == 1 ? 'latest' : tagParts.pop()
+    return tagParts.length == 1 ? 'latest' : (tagParts.pop() || 'unknown')
 }
 
 export const workloadsTransformer = (workloads: any[]) => {
@@ -31,12 +32,14 @@ export const workloadsTransformer = (workloads: any[]) => {
                   };
             }) : [];
 
+            const isStatusUpToDate = (availableTags: Tag[], currentTag: string) => currentTag == 'latest' || ( availableTags.length && currentTag == availableTags[0].tag)
+
             const temp = {
                 id: workload.ID,
                 workload: workload.ID.split(':').pop(),
                 container: container.Name,
                 image: getImageFromUrl(container.Current.ID),
-                status: WorkloadStatuses.upToDate,
+                status: isStatusUpToDate(availableTags, currentTag) ? WorkloadStatuses.upToDate : WorkloadStatuses.behind,
                 available_tags: availableTags,
                 current_tag: {
                     tag: currentTag,
