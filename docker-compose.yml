@@ -1,22 +1,22 @@
 version: "3.7"
 services:
-  #flux-web-frontend:
-  #  build:
-  #    context: ./frontend
-  #    dockerfile: Dockerfile.dev
-  #  tty: true
-  #  restart: always
-  #  environment:
-  #    APP_HOST: 0.0.0.0
-  #    APP_PORT: 8080
-  #    NODE_ENV: development
-  #    BASE_URL: http://localhost/
-  #    API_SERVICE_URL: http://flux-web-backend:3000/api/v1
-  #    API_EXTERNAL_URL: http://localhost/api/v1
-  #    WS_URL: localhost:3000/ws/v1
-  #  volumes:
-  #    - ./frontend:/app
-  #    - /app/node_modules
+  flux-web-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    tty: true
+    restart: always
+    environment:
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8080
+      NODE_ENV: development
+      BASE_URL: http://localhost/
+      API_SERVICE_URL: http://flux-web-backend:3000/api/v1
+      API_EXTERNAL_URL: http://localhost/api/v1
+      WS_URL: localhost:3000/ws/v1
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
 
   flux-web-backend:
     build:
@@ -29,13 +29,12 @@ services:
     volumes:
       - ~/.kube/config:/usr/src/.kubeconfig
 
-  #nginx:
-  #  image: nginx:alpine
-  #  ports:
-  #    - 80:80
-  #  volumes:
-  #    - .docker/default.conf:/etc/nginx/conf.d/default.conf
-  #  depends_on:
-  #    - flux-web-backend
-  #    - flux-web-frontend
-#
+  nginx:
+    image: nginx:alpine
+    ports:
+      - 80:80
+    volumes:
+      - .docker/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - flux-web-backend
+      - flux-web-frontend

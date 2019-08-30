@@ -10,7 +10,9 @@ export const actions: ActionTree<WorkloadsState, RootState> = {
     changeSearchTerm: ({commit}, searchTerm: string) => commit('CHANGE_SEARCH_TERM', searchTerm),
     updateWorkloadStatus:  ({commit}, payload) => commit('UPDATE_WORKLOAD_STATUS', payload),
     updateWorloadRelease:  ({commit, getters}, {workload, tag}) => {
+        console.log('Workload from root:', workload)
         const storeWorkload = getters.getWorkload(workload);
+        console.log('Workload from store:', storeWorkload);
         const isStatusUpToDate = (workload: Workload) => tag == 'latest' || ( workload.available_tags.length && tag == workload.available_tags[0].tag)
         commit('UPDATE_WORKLOAD_CURRENT_TAG', {
             workload: storeWorkload,
