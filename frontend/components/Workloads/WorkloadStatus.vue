@@ -4,7 +4,7 @@
   </div>
 </template>
 
-<style lang="scss">
+<style scoped lang="scss">
 .icon {
   background-position: center center;
   background-size: contain;
