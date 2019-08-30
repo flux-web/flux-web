@@ -2,11 +2,9 @@
   <span>
     <button
       class="release_button"
-      v-if="getWorkload(workload).selected_tag.tag"
-      :disabled="getWorkload(workload).status == statuses.releasing"
+      :disabled="!getWorkload(workload).selected_tag.tag || getWorkload(workload).status == statuses.releasing"
       @click="release(workload)"
     >{{getWorkload(workload).status == statuses.releasing ? 'Relasing' : 'Release'}}</button>
-    <span v-else>-</span>
   </span>
 </template>
 
