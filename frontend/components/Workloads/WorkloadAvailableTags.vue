@@ -26,9 +26,9 @@
 <style lang="scss">
 @import "../../assets/scss/include";
 .available-tag-select-wrapper {
-  width: max-content;
+  min-width: max-content;
   .multiselect__content-wrapper {
-    width: max-content;
+    min-width: max-content;
     right: 0;
   }
   .option__desc {
