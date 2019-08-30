@@ -3,9 +3,11 @@
     <multiselect
       v-model="value"
       :options="options"
-      :placeholder="currentTag.tag"
+      :placeholder="currentTag ? currentTag.tag : 'Select tag'"
       label="tag"
       track-by="tag"
+      :allow-empty="false"
+      deselect-label="Can't remove this value"
       @input="valueChanged"
     >
       <template slot="singleLabel" slot-scope="{ option }">
