@@ -8,6 +8,7 @@ import (
 	"strings"
 	"net/http"
 	"io/ioutil"
+	"encoding/json"
 
 	"flux-web/models"
 
@@ -59,7 +60,7 @@ func (this *WorkloadController) ReleaseWorkloads() {
 }
 
 func waitForSync(jobID string, newreleaseRequest models.ReleaseRequest) {
-	l.Printf("getting syncId...")
+	l.Printf("getting syncID...")
 
 	var releaseResult models.ReleaseResult
 	releaseResult.Workload = newreleaseRequest.Workload
@@ -89,7 +90,12 @@ func waitForSync(jobID string, newreleaseRequest models.ReleaseRequest) {
 		}
 		time.Sleep(time.Millisecond * 300)
 	}
-	releaseChannel <- releaseResult
+
+	jsonString, err := json.Marshal(releaseResult)
+	if err != nil {
+		l.Println(err)
+	}
+	h.broadcast <- jsonString
 }
 
 func getSyncID(jobID string) (string, error){

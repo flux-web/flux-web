@@ -8,6 +8,9 @@ import (
 
 func main() {
 
+	h := controllers.InitHub()
+	go h.Run()
+
 	apiNs := beego.NewNamespace("/api",
 		beego.NSNamespace("/v1",
 			beego.NSRouter("/namespaces", &controllers.NamespaceController{}, "get:ListNamespaces"),

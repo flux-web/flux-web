@@ -14,10 +14,11 @@ type WebSocketController struct {
 	beego.Controller
 }
 
-type ReleaseResult struct{
-	RequestID string
-	Status int
+type client struct {
+	ws *websocket.Conn
+	send chan []byte
 }
+
 
 var releaseChannel = make(chan models.ReleaseResult)
 
@@ -32,30 +33,28 @@ func (this *WebSocketController) ReleaseWorkloads() {
 		return
 	}
 
-	go func(ws *websocket.Conn){
-		for releaseResult := range releaseChannel{
-			l.Printf("got new msg in channel: " + releaseResult.Status)
-			err = ws.WriteJSON(releaseResult)
-			if err != nil {
-				// End request if socket is closed
-				if isExpectedClose(err) {
-					l.Println("Expected Close on socket", err)
-					break
-				} else {
-					l.Println(err) 
-				}
-			}else{
-				l.Println("msg from ws sent successfully")
-			}	
-		}
-	}(ws)
-}
-
-func isExpectedClose(err error) bool {
-	if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway) {
-		l.Println("Unexpected websocket close: ", err)
-		return false
+	c := &client{
+		send: make(chan []byte),
+		ws: ws,
 	}
 
-	return true
+	h.register <- c
+
+	go c.writePump()
+}
+
+func (c *client) writePump() {
+	defer func() {
+		c.ws.Close()
+	}()
+
+	for {
+		select {
+		case message := <-c.send:
+            if err := c.ws.WriteMessage(websocket.TextMessage, []byte(message)); err != nil {
+                l.Println(err)
+                return
+            }
+		}
+	}
 }
