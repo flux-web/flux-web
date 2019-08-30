@@ -9,6 +9,7 @@ type ReleaseResult struct {
 	Workload string
 	Container string
 	Tag string
+	Action string
 }
 
 func NewReleseResult(data []byte) (ReleaseResult, error) {
