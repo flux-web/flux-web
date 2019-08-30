@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="available-tag-select-wrapper">
     <multiselect
       v-model="value"
       :options="options"
-      placeholder="Select one"
+      :placeholder="currentTag.tag"
       label="tag"
       track-by="tag"
       @input="valueChanged"
@@ -25,10 +25,16 @@
 
 <style lang="scss">
 @import "../../assets/scss/include";
-
-.option__desc {
-  .option__date {
-    float: right;
+.available-tag-select-wrapper {
+  width: max-content;
+  .multiselect__content-wrapper {
+    width: max-content;
+    right: 0;
+  }
+  .option__desc {
+    .option__date {
+      float: right;
+    }
   }
 }
 </style>
@@ -45,6 +51,7 @@ import moment from "moment";
 })
 export default class WorkloadAvailableTags extends Vue {
   @Prop() protected optionsProp: any;
+  @Prop() protected currentTag: any;
   @Prop() protected workload: any;
 
   protected value: any = null;

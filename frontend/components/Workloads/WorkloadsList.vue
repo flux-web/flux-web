@@ -14,6 +14,7 @@
         <workload-status :workload="props.row" v-else-if="props.column.field == 'status'" />
         <workload-available-tags
           :options-prop="props.row.available_tags"
+          :current-tag="props.row.current_tag"
           :workload="props.row"
           @input="tagChanged"
           v-else-if="props.column.field == 'available_tags'"
