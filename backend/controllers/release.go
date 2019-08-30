@@ -2,7 +2,6 @@
 package controllers
 
 import (
-	"time"
 	"net/http"
 
 	"flux-web/models"
@@ -34,24 +33,29 @@ func (this *WebSocketController) ReleaseWorkloads() {
 	}
 
 	go func(ws *websocket.Conn){
-		//for {
-			for releaseResult := range releaseChannel{
-				l.Printf("got new msg in channel: " + releaseResult.Status)
-				//if err := ws.WriteMessage(websocket.BinaryMessage, data); err != nil {
-				//	l.Printf("error in ws.WriteMessage: ")
-				//	l.Println(err)
-				//}
-				if err := ws.WriteJSON(releaseResult); err != nil{
-					l.Printf("error in ws.WriteMessage: ")
-					l.Println(err)
+		for releaseResult := range releaseChannel{
+			l.Printf("got new msg in channel: " + releaseResult.Status)
+			err = ws.WriteJSON(releaseResult)
+			if err != nil {
+				// End request if socket is closed
+				if isExpectedClose(err) {
+					l.Println("Expected Close on socket", err)
+					break
+				} else {
+					l.Println(err) 
 				}
+			}else{
 				l.Println("msg from ws sent successfully")
-			}
-		//}
+			}	
+		}
 	}(ws)
 }
 
-func triggerRelease() []byte{
-	time.Sleep(time.Second)
-	return []byte("worked!")
+func isExpectedClose(err error) bool {
+	if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway) {
+		l.Println("Unexpected websocket close: ", err)
+		return false
+	}
+
+	return true
 }
