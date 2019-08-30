@@ -1,7 +1,7 @@
 export enum WorkloadStatuses {
-    upToDate = 'up to date',
+    upToDate = 'up_to_date',
     releasing = 'releasing',
     behind = 'behind',
     unknown = 'unknown',
-    releaseFailed = 'release failed',
+    releaseFailed = 'release_failed',
 }

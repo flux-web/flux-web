@@ -125,6 +125,7 @@ export default class WorkloadsList extends Vue {
       td {
         color: #3c5171;
         font-size: 15px;
+        white-space: nowrap;
       }
       th {
         color: #9aa9c2;
