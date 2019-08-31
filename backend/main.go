@@ -4,6 +4,7 @@ import (
 	"flux-web/controllers"
 
 	"github.com/astaxie/beego"
+	"github.com/astaxie/beego/context"
 )
 
 func main() {
@@ -16,9 +17,9 @@ func main() {
 			beego.NSRouter("/namespaces", &controllers.NamespaceController{}, "get:ListNamespaces"),
 			beego.NSRouter("/workloads/:ns", &controllers.WorkloadController{}, "get:ListWorkloads"),
 			beego.NSRouter("/release", &controllers.WorkloadController{}, "post:ReleaseWorkloads"),
-			beego.NSGet("/health", func(ctx *context.Context){
-				ctx.Output.Body([]byte("All good"))
-		   })
+			beego.NSGet("/health", func(ctx *context.Context) {
+            	ctx.Output.Body([]byte("shopinfo"))
+        	}),
 		),
 	)
 	beego.AddNamespace(apiNs)
