@@ -69,7 +69,7 @@ export default class WorkloadAvailableTags extends Vue {
       return;
     }
     const selectedTagFoundInProps = this.optionsProp.find(
-      o => o.tag == this.value.tag
+      (o: any) => o.tag == this.value.tag
     );
     if (!selectedTagFoundInProps) {
       this.value = null;
