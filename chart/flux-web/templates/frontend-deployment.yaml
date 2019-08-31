@@ -1,3 +1,4 @@
+{{ $appName := include "flux-web.fullname" . }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -24,7 +25,15 @@ spec:
           image: "{{ .Values.frontend.repository }}:{{ .Values.frontend.tag }}"
           imagePullPolicy: {{ .Values.frontend.pullPolicy }}
           env:
-{{ toYaml .Values.frontend.env | indent 11 }}
+          {{ toYaml .Values.frontend.env }}
+          - name: APP_HOST
+            value: '0.0.0.0'
+          - name: APP_PORT
+            value: '8080'
+          - name: NODE_ENV
+            value: 'production'
+          - name: API_SERVICE_URL
+            value: "http://{{ $appName }}-backend:3000/api/v1"
           ports:
             - name: http
               containerPort: {{ .Values.frontend.containerPort }}

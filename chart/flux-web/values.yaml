@@ -4,6 +4,9 @@
 
 replicaCount: 1
 
+#optional
+namespace:  flux
+
 backend:
   repository: fluxweb/backend
   tag: latest
@@ -18,9 +21,12 @@ frontend:
   pullPolicy: Always
   containerPort: 8080
   env:
-    - name: FLUX_URL
-      value: 'http://flux:3030'
-
+    - name: BASE_URL
+      value: 'http://flux-web.local'
+    - name: API_EXTERNAL_URL
+      value: 'http://flux-web.local/api/v1'
+    - name: WS_URL
+      value: 'flux-web.local/ws/v1'
 nameOverride: ""
 fullnameOverride: ""
 
@@ -33,10 +39,11 @@ ingress:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: flux-web
+    - host: flux-web.local
       paths: 
         - frontend: /
         - backend: /api
+        - backend: /ws
 
 
   tls: []
