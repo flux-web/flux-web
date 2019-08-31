@@ -56,9 +56,25 @@ export default class WorkloadAvailableTags extends Vue {
   @Prop() protected currentTag: any;
   @Prop() protected workload: any;
 
+  protected moment = moment;
+
   protected value: any = null;
 
-  protected moment = moment;
+  public updated() {
+    this.refreshSelectedValue();
+  }
+
+  public refreshSelectedValue() {
+    if (!this.value) {
+      return;
+    }
+    const selectedTagFoundInProps = this.optionsProp.find(
+      o => o.tag == this.value.tag
+    );
+    if (!selectedTagFoundInProps) {
+      this.value = null;
+    }
+  }
 
   get options() {
     return this.optionsProp.map((option: any) => {
