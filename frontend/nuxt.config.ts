@@ -27,6 +27,15 @@ export default {
   buildModules: ["@nuxt/typescript-build"],
   modules: [
     "@nuxtjs/axios",
+    ['nuxt-env', {
+      keys: [
+        'NODE_ENV', 
+        'BASE_URL', 
+        'API_SERVICE_URL', 
+        'API_EXTERNAL_URL', 
+        'WS_URL', 
+      ]
+    }]
   ],
   plugins: [ 
       '~/plugins/vue-good-table',
