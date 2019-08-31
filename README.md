@@ -1,33 +1,12 @@
 # flux-web (UNDER DEVELOPMENT!!!)
 [![HitCount](http://hits.dwyl.io/flux-web/flux-web.svg)](http://hits.dwyl.io/flux-web/flux-web) [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues) [![Go Report Card](https://goreportcard.com/badge/github.com/flux-web/flux-web)](https://goreportcard.com/report/github.com/flux-web/flux-web) [![Build Status](https://travis-ci.com/flux-web/flux-web.svg?branch=master)](https://travis-ci.com/flux-web/flux-web)
 
-> If you don't know what *GitOps* is then I highly encourage you to read [Weavework blog](https://www.weave.works/technologies/gitops/) and [flux](https://github.com/fluxcd/flux) for the implemention.
+> If you don't know what *GitOps* is then we highly encourage you to read [Weavework blog](https://www.weave.works/technologies/gitops/) and [flux](https://github.com/fluxcd/flux) for the implemention.
 
 flux-web is used for manuall actions against flux api:
 * list current workloads
 * dynamic namespaces overview
 * workload's version promotion or rollback
-
-<img src="flux-web-01.gif"/>
-
-## Setup
-
-Please see the [Weave Flux setup documentation](https://github.com/weaveworks/flux/blob/master/site/standalone/installing.md) for setting up Flux.
-
-To use flux-web, you should deploy a seperate deployment, see `deploy/flux-web-deploy.yaml`.
-
-Set the following environment variables in your chosen deployment:
-
-- `FLUX_URL`: fluxd's endpoint
-- `DEFAULT_NAMESPACE`: default namespace to be set as home page
-- `NAMESPACES`: namespaces list to show in the navigation bar
-- `READ_ONLY`: restric flux-web to read-only mode
-
-And then apply the configuration:
-
-```
-kubectl apply -f deploy/flux-web-deploy.yaml
-```
 
 ## Reasoning
 
@@ -54,13 +33,15 @@ Basically a roadmap.
 ### Probably in the future
 
 - select multiple workloads
-- use socket
 
 ## Built With
 
-* [beego](https://beego.me/) - Web framework
+* [beego](https://beego.me/) - Backend framework
 * [go](https://golang.org/) - Programing language
-* [docker](https://www.docker.com/) - Packaged with docker
+* [vue.js](https://vuejs.org/) - Frontend framework
+* [nuxt.js](https://nuxtjs.org/) - Giving vue.js the ability to do ssr
+* [docker](https://www.docker.com/) - Containerized with docker
+* [helm](https://www.helm.sh/) - Packaged with helm
 
 
 ## Contributing
