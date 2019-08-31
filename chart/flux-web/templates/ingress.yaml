@@ -25,10 +25,12 @@ spec:
     - host: {{ .host | quote }}
       http:
         paths:
-        {{- range $service, $path := .paths }}
+        {{- range $k, $v := .paths }}
+        {{- range $service, $path := $v }}
           - path: {{ $path }}
             backend:
               serviceName: "{{ $fullName }}-{{ $service }}"
               servicePort: http
+        {{- end }}
         {{- end }}
   {{- end }}
