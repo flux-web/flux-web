@@ -51,7 +51,7 @@ func (c *client) writePump() {
 	for {
 		select {
 		case message := <-c.send:
-            if err := c.ws.WriteMessage(websocket.TextMessage, []byte(message)); err != nil {
+            if err := c.ws.WriteMessage(websocket.TextMessage, message); err != nil {
                 l.Println(err)
                 return
             }
