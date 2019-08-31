@@ -13,20 +13,16 @@ backend:
   pullPolicy: Always
   containerPort: 3000
   env:
-    - name: FLUX_URL
-      value: 'http://flux:3030'
+    - FLUX_URL: http://flux:3030
 frontend:
   repository: fluxweb/frontend
   tag: latest
   pullPolicy: Always
   containerPort: 8080
   env:
-    - name: BASE_URL
-      value: 'http://flux-web.local'
-    - name: API_EXTERNAL_URL
-      value: 'http://flux-web.local/api/v1'
-    - name: WS_URL
-      value: 'flux-web.local/ws/v1'
+    - BASE_URL: http://flux-web.local
+    - API_EXTERNAL_URL: http://flux-web.local/api/v1
+    - WS_URL: flux-web.local/ws/v1
 nameOverride: ""
 fullnameOverride: ""
 

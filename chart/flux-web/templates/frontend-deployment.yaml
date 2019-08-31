@@ -21,19 +21,22 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}-frontend
     spec:
       containers:
-        - name: {{ .Chart.Name }}-frontend
+        - name: {{ include "flux-web.fullname" . }}-frontend
           image: "{{ .Values.frontend.repository }}:{{ .Values.frontend.tag }}"
           imagePullPolicy: {{ .Values.frontend.pullPolicy }}
           env:
-          {{ toYaml .Values.frontend.env }}
           - name: APP_HOST
             value: '0.0.0.0'
           - name: APP_PORT
             value: '8080'
           - name: NODE_ENV
-            value: 'production'
+            value: production
           - name: API_SERVICE_URL
             value: "http://{{ $appName }}-backend:3000/api/v1"
+          {{- range $k, $v := .Values.frontend.env }}
+          - name: {{ quote $k }}
+            value: {{ quote $v }}
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.frontend.containerPort }}

@@ -20,11 +20,14 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}-backend
     spec:
       containers:
-        - name: {{ .Chart.Name }}-backend
+        - name: {{ include "flux-web.fullname" . }}-backend
           image: "{{ .Values.backend.repository }}:{{ .Values.backend.tag }}"
           imagePullPolicy: {{ .Values.backend.pullPolicy }}
           env:
-{{ toYaml .Values.backend.env | indent 11 }}
+          {{- range $k, $v := .Values.backend.env }}
+           - name: {{ quote $k }}
+             value: {{ quote $v }}
+          {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.backend.containerPort }}
