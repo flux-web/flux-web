@@ -43,13 +43,13 @@ export default class WorkloadRelease extends Vue {
 <style lang="scss">
 @import "../../assets/scss/include";
 .release_button {
-  background: #007efe;
+  background: #343d5d;
   padding: 8px;
   color: #fff;
   border-radius: 5px;
   font-size: 11px;
   &:hover {
-    background: #3190f1;
+    background: #5c6484;
     cursor: pointer;
   }
   &:focus {
@@ -57,7 +57,8 @@ export default class WorkloadRelease extends Vue {
   }
   &:disabled {
     cursor: default;
-    background: #9abfe4;
+    background: #f0f0fa;
+    color: #948f8f;
   }
 }
 </style>
