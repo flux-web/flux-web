@@ -26,6 +26,7 @@ Basically a roadmap.
 
 - filter workloads - Done
 - scroll over workload's versions - Done
+- readonly mode
 - features you'd like to see?
 
 ### Maybe in the future, if people want it
