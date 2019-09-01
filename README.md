@@ -1,6 +1,8 @@
 # flux-web (UNDER DEVELOPMENT!!!)
 [![HitCount](http://hits.dwyl.io/flux-web/flux-web.svg)](http://hits.dwyl.io/flux-web/flux-web) [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/dwyl/esta/issues) [![Go Report Card](https://goreportcard.com/badge/github.com/flux-web/flux-web)](https://goreportcard.com/report/github.com/flux-web/flux-web) [![Build Status](https://travis-ci.com/flux-web/flux-web.svg?branch=master)](https://travis-ci.com/flux-web/flux-web)
 
+<img src="flux-web.gif"/>
+
 > If you don't know what *GitOps* is then we highly encourage you to read [Weavework blog](https://www.weave.works/technologies/gitops/) and [flux](https://github.com/fluxcd/flux) for the implemention.
 
 flux-web is used for manuall actions against flux api:
