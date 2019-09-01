@@ -12,7 +12,7 @@ flux-web is used for manuall actions against flux's api:
 
 ## Reasoning
 
-When using `flux` your pipelines, or, to be more precise your Continues Deployments are fully automated and that's great.
+When using `flux` your pipelines or to be more precise, your Continues Deployments are fully automated and that's great.
 But, sometimes we would like to have more stable environments with fewer deployments and with more control, for example, production.
 That's mean we need to do some manual actions against `flux` which have his own CLI tool `fluxctl`.
 
