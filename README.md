@@ -23,7 +23,7 @@ Basically a roadmap.
 ### Coming soon
 
 - filter workloads - Done
-- scroll over workload's versions
+- scroll over workload's versions - Done
 - features you'd like to see?
 
 ### Maybe in the future, if people want it
@@ -32,7 +32,7 @@ Basically a roadmap.
 
 ### Probably in the future
 
-- select multiple workloads
+- select and release multiple workloads
 
 ## Built With
 
