@@ -5,7 +5,7 @@
 
 > If you don't know what *GitOps* is then we highly encourage you to read [Weavework blog](https://www.weave.works/technologies/gitops/) and [flux](https://github.com/fluxcd/flux) for the implemention.
 
-flux-web is used for manuall actions against flux api:
+flux-web is used for manuall actions against flux's api:
 * list current workloads
 * dynamic namespaces overview
 * workload's version promotion or rollback
