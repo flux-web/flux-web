@@ -21,8 +21,6 @@ WORKDIR $GOPATH/src/flux-web
 RUN CGO_ENABLED=0 godep get -v
 
 RUN CGO_ENABLED=0 go build -ldflags '-w -s' -o /flux-web && \
-    cp -r views/ /views && \
-    cp -r static/ /static  && \
     cp -r conf/ /conf
 #
 # Stage 2
@@ -30,8 +28,6 @@ RUN CGO_ENABLED=0 go build -ldflags '-w -s' -o /flux-web && \
 FROM alpine:3.8
 RUN adduser -D -u 1000 flux-web
 COPY --from=builder /flux-web /flux-web
-COPY --from=builder /views /views
-COPY --from=builder /static /static
 COPY --from=builder /conf /conf
 USER 1000
 ENTRYPOINT ["/flux-web"]
