@@ -14,6 +14,7 @@ services:
       API_SERVICE_URL: http://flux-web-backend:3000/api/v1
       API_EXTERNAL_URL: http://localhost/api/v1
       WS_URL: localhost:3000/ws/v1
+      READ_ONLY: "false"
     volumes:
       - ./frontend:/app
       - /app/node_modules

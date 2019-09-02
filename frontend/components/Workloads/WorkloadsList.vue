@@ -70,15 +70,14 @@ export default class WorkloadsList extends Vue {
     {
       label: "Available tags",
       field: "available_tags"
-    },
-    {
-      label: "Action",
-      field: "action"
     }
   ];
 
   @Getter("message")
   protected message!: any;
+
+  @Getter("readOnly")
+  protected readOnly!: any;
 
   @Getter("workloads", { namespace: StoreNamespaces.workloads })
   protected workloads!: any;
@@ -91,6 +90,15 @@ export default class WorkloadsList extends Vue {
 
   @Action("updateSelectedTag", { namespace: StoreNamespaces.workloads })
   public updateSelectedTag: any;
+
+  public mounted() {
+    if (!this.readOnly) {
+      this.columns.push({
+        label: "Action",
+        field: "action"
+      });
+    }
+  }
 
   public tagChanged(workload: Workload, tag: Tag) {
     this.updateSelectedTag({ workload, tag });

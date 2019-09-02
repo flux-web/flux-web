@@ -5,6 +5,7 @@ export default {
     API_EXTERNAL_URL: process.env.API_EXTERNAL_URL,
     API_SERVICE_URL: process.env.API_SERVICE_URL,
     WS_URL: process.env.WS_URL,
+    READ_ONLY: process.env.READ_ONLY,
   },
   head: {
     title: "flux-web",
@@ -34,6 +35,7 @@ export default {
         'API_SERVICE_URL', 
         'API_EXTERNAL_URL', 
         'WS_URL', 
+        'READ_ONLY'
       ]
     }]
   ],
