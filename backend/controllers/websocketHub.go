@@ -16,7 +16,6 @@ var h = Hub{
 	register:    make(chan *client),
 	unregister:  make(chan *client),
 	clients: 	 make(map[*client]bool),
-	//content:  	 "",
 }
 
 func InitHub() *Hub{
