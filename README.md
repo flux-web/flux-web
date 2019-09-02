@@ -69,5 +69,5 @@ Code contributions are very welcome. If you are interested in helping make flux-
 
 ## Authors
 
-* **Ido Braunstain** - *Initial work*
-* **Yohanan Baruchel** - *Initial work*
+* [Ido Braunstain](https://github.com/idobry) - *Initial work*
+* [Yohanan Baruchel](https://github.com/ybaruchel) - *Initial work*
