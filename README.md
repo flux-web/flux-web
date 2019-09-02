@@ -25,11 +25,13 @@ The easiset way to deploy flux-web is with helm:
 git clone git@github.com:flux-web/flux-web.git
 cd flux-web/chart/flux-web
 kubectl create ns flux
-helm install . --name flux-web
+helm install . --name flux-web \
+               --set namespace=flux
 ```
 Or, for an example we can deploy flux-web as readonly mode:
 ```shell
 helm install . --name flux-web \
+               --set namespace=flux
                --set frontend.env.READ_ONLY=true
 ```
 
