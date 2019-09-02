@@ -18,15 +18,31 @@ That's mean we need to do some manual actions against `flux` which have his own 
 
 flux-web is intended to be the UI approach to this problem. With flux-web we can view at our workloads per namespace with their available versions and with a single click we can promote a workload or to perform a rollback.
 
+## Getting Started
+
+The easiset way to deploy flux-web is with helm:
+```shell
+git clone git@github.com:flux-web/flux-web.git
+cd flux-web/chart/flux-web
+kubectl create ns flux
+helm install . --name flux-web
+```
+Or, for an example we can deploy flux-web as readonly mode:
+```shell
+helm install . --name flux-web \
+               --set frontend.env.READ_ONLY=true
+```
+
 ## Continued Development
 
 Basically a roadmap.
 
 ### Coming soon
 
-- filter workloads - Done
-- scroll over workload's versions - Done
-- readonly mode
+- filter workloads - ✓
+- scroll over workload's versions - ✓
+- readonly mode - ✓
+- turn on/off flux automation on a workload
 - features you'd like to see?
 
 ### Maybe in the future, if people want it
