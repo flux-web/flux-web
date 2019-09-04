@@ -25,6 +25,7 @@ services:
     environment:
       FLUX_URL: http://host.docker.internal:3030
       KUBE_CONFIG_PATH: /usr/src/.kubeconfig
+      READ_ONLY: "false"
     ports:
       - 3000:3000
     volumes:
