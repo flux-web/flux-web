@@ -8,4 +8,6 @@ RUN npm i
 
 COPY . .
 
-CMD npm run build && npm start
+RUN npm run build
+
+CMD npm start
