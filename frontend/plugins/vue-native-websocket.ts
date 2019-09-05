@@ -1,9 +1,8 @@
 import Vue from 'vue';
 import VueNativeSock from 'vue-native-websocket';
-import config from '../config';
 
-export default ({ store }: { store: any }) => {
-  Vue.use(VueNativeSock, 'ws://' + config.wsUrl, {
+export default ({ store, app }: { store: any, app: any }) => {
+  Vue.use(VueNativeSock, 'ws://' + app.$env.WS_URL, {
     store,
     reconnection: true,
     reconnectionAttempts: 5,

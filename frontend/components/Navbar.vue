@@ -27,11 +27,11 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import config from "~/config";
+import Config from "~/config";
 
 @Component({})
 export default class Navbar extends Vue {
-  public githubUrl = config.githubUrl;
+  public githubUrl = Config.config.githubUrl;
 }
 </script>
 

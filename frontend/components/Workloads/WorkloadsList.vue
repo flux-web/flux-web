@@ -73,11 +73,10 @@ export default class WorkloadsList extends Vue {
     }
   ];
 
+  protected $env!: any;
+
   @Getter("message")
   protected message!: any;
-
-  @Getter("readOnly")
-  protected readOnly!: any;
 
   @Getter("workloads", { namespace: StoreNamespaces.workloads })
   protected workloads!: any;
@@ -91,8 +90,8 @@ export default class WorkloadsList extends Vue {
   @Action("updateSelectedTag", { namespace: StoreNamespaces.workloads })
   public updateSelectedTag: any;
 
-  public mounted() {
-    if (!this.readOnly) {
+  public created() {
+    if (this.$env.READ_ONLY != "true") {
       this.columns.push({
         label: "Action",
         field: "action"

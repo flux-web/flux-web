@@ -1,4 +1,5 @@
 import axios from 'axios'
-import config from '~/config';
 
-axios.defaults.baseURL = config.apiExternalUrl;
+export default ({ app }: { app: any }) => {
+    axios.defaults.baseURL = app.$env.API_EXTERNAL_URL;
+}

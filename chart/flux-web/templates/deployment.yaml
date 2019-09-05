@@ -31,8 +31,6 @@ spec:
             value: '8080'
           - name: NODE_ENV
             value: production
-          - name: API_SERVICE_URL
-            value: "http://{{ $appName }}-backend:3000/api/v1"
           - name: READ_ONLY
             value: {{ .Values.readOnly | quote }}
           {{- range $k, $v := .Values.frontend.env }}

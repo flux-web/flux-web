@@ -1,11 +1,6 @@
-import config from './config';
-
 export default {
   env: {
-    API_EXTERNAL_URL: process.env.API_EXTERNAL_URL,
-    API_SERVICE_URL: process.env.API_SERVICE_URL,
-    WS_URL: process.env.WS_URL,
-    READ_ONLY: process.env.READ_ONLY,
+    NUXT_ENV_COOL: process.env.NUXT_ENV_COOL
   },
   head: {
     title: "flux-web",
@@ -32,10 +27,9 @@ export default {
       keys: [
         'NODE_ENV', 
         'BASE_URL', 
-        'API_SERVICE_URL', 
         'API_EXTERNAL_URL', 
         'WS_URL', 
-        'READ_ONLY'
+        'READ_ONLY',
       ]
     }]
   ],
