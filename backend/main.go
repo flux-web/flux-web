@@ -14,8 +14,8 @@ func main() {
 	h := controllers.InitHub()
 	go h.Run()
 
-	releaseNs := beego.NewNamespace("/api",
-		beego.NSNamespace("/rel/v1",
+	writeNs := beego.NewNamespace("/api",
+		beego.NSNamespace("/v1/write",
 			beego.NSCond(func(ctx *context.Context) bool {
 				if readOnly, err := strconv.ParseBool(os.Getenv("READ_ONLY")); err != nil  {
 					return true
@@ -27,8 +27,8 @@ func main() {
 		),
 	)
 
-	apiNs := beego.NewNamespace("/api",
-		beego.NSNamespace("/v1",
+	readNs := beego.NewNamespace("/api",
+		beego.NSNamespace("/v1/read",
 			beego.NSRouter("/namespaces", &controllers.NamespaceController{}, "get:ListNamespaces"),
 			beego.NSRouter("/workloads/:ns", &controllers.WorkloadController{}, "get:ListWorkloads"),
 			beego.NSGet("/health", func(ctx *context.Context) {
@@ -37,8 +37,8 @@ func main() {
 		),
 	)
 
-	beego.AddNamespace(releaseNs)
-	beego.AddNamespace(apiNs)
+	beego.AddNamespace(writeNs)
+	beego.AddNamespace(readNs)
 
 	beego.Router("/ws/v1", &controllers.WebSocketController{}, "get:ReleaseWorkloads")
 
