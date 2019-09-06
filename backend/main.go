@@ -2,7 +2,6 @@ package main
 
 import (
 	"os"
-	"fmt"
 	"strconv"
 	"flux-web/controllers"
 
