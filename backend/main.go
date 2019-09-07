@@ -18,8 +18,8 @@ func main() {
 			beego.NSRouter("/workloads/:ns", &controllers.WorkloadController{}, "get:ListWorkloads"),
 			beego.NSRouter("/release", &controllers.WorkloadController{}, "post:ReleaseWorkloads"),
 			beego.NSGet("/health", func(ctx *context.Context) {
-            	ctx.Output.Body([]byte("All good"))
-        	}),
+				ctx.Output.Body([]byte("All good"))
+			}),
 		),
 	)
 	beego.AddNamespace(apiNs)
@@ -28,4 +28,3 @@ func main() {
 
 	beego.Run()
 }
-
