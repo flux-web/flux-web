@@ -1,14 +1,14 @@
 package controllers
 
 import (
-	"os"
-	"time"
 	"bytes"
-	"errors"
-	"strings"
-	"net/http"
-	"io/ioutil"
 	"encoding/json"
+	"errors"
+	"io/ioutil"
+	"net/http"
+	"os"
+	"strings"
+	"time"
 
 	"flux-web/models"
 
@@ -21,7 +21,6 @@ type WorkloadController struct {
 	beego.Controller
 }
 
-
 var l = logs.GetLogger()
 
 var flux = models.Flux{
@@ -29,7 +28,7 @@ var flux = models.Flux{
 	SyncApi:            "/api/flux/v6/sync?ref=",
 	JobApi:             "/api/flux/v6/jobs?id=",
 	UpdateManifestsApi: "/api/flux/v9/update-manifests",
-	ListImagesApi:      "/api/flux/v10/images?namespace=", 
+	ListImagesApi:      "/api/flux/v10/images?namespace=",
 }
 
 func (this *WorkloadController) ListWorkloads() {
@@ -45,7 +44,7 @@ func (this *WorkloadController) ListWorkloads() {
 func (this *WorkloadController) ReleaseWorkloads() {
 	newreleaseRequest, _ := models.NewReleseRequest(this.Ctx.Input.RequestBody)
 	releaseRequest := newreleaseRequest.GetReleaseRequestJSON()
-	
+
 	jobID, err := triggerJob(releaseRequest)
 	if err != nil {
 		l.Printf("Found error: " + err.Error())
@@ -54,7 +53,7 @@ func (this *WorkloadController) ReleaseWorkloads() {
 	}
 	this.Ctx.WriteString("Done")
 
-	go func(jobID string, newreleaseRequest models.ReleaseRequest){
+	go func(jobID string, newreleaseRequest models.ReleaseRequest) {
 		waitForSync(jobID, newreleaseRequest)
 	}(jobID, newreleaseRequest)
 }
@@ -99,9 +98,9 @@ func waitForSync(jobID string, newreleaseRequest models.ReleaseRequest) {
 	h.broadcast <- jsonString
 }
 
-func getSyncID(jobID string) (string, error){
+func getSyncID(jobID string) (string, error) {
 	l.Printf("getting syncID...")
-	
+
 	for {
 		resp, err := httplib.Get(flux.FluxUrl + flux.JobApi + jobID).Bytes()
 		if err != nil {
@@ -110,20 +109,20 @@ func getSyncID(jobID string) (string, error){
 		}
 		job, err := models.NewJob(resp)
 		if err != nil {
-			return "", errors.New(err.Error()) 
+			return "", errors.New(err.Error())
 		}
 		if job.Result.Revision != "" {
 			l.Println("got syncID: " + job.Result.Revision)
 			return job.Result.Revision, nil
 		} else if job.Err != "" {
 			l.Println("Error_getSyncID_02")
-			return "", errors.New(job.Err) 
+			return "", errors.New(job.Err)
 		} else {
 			l.Printf("job status: " + job.StatusString)
 		}
 		time.Sleep(time.Second)
 	}
-	return "", nil 
+	return "", nil
 }
 
 func triggerJob(requestBody []byte) (string, error) {

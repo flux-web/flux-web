@@ -5,11 +5,11 @@ import (
 )
 
 type ReleaseResult struct {
-	Status string 
-	Workload string
+	Status    string
+	Workload  string
 	Container string
-	Tag string
-	Action string
+	Tag       string
+	Action    string
 }
 
 func NewReleseResult(data []byte) (ReleaseResult, error) {

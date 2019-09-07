@@ -7,7 +7,7 @@ import (
 )
 
 type ReleaseRequest struct {
-	Workload string `json:"Workload"`
+	Workload  string `json:"Workload"`
 	Container string `json:"Container"`
 	Current   string `json:"Current"`
 	Target    string `json:"Target"`
@@ -20,11 +20,11 @@ func NewReleseRequest(data []byte) (ReleaseRequest, error) {
 }
 
 func (this *ReleaseRequest) GetReleaseRequestJSON() []byte {
-	spec := "\""+this.Workload+"\":[{\"Container\":\""+this.Container+"\",\"Current\":\""+this.Current+"\",\"Target\":\""+this.Target+"\"}]"
-	releaseRequest := "{\"Cause\":{\"Message\":\"\", \"User\":\"Flux-web\"},\"Spec\":{\"ContainerSpecs\":{"+spec+"},\"Kind\":\"execute\",\"SkipMismatches\":true},\"Type\":\"containers\"}"
+	spec := "\"" + this.Workload + "\":[{\"Container\":\"" + this.Container + "\",\"Current\":\"" + this.Current + "\",\"Target\":\"" + this.Target + "\"}]"
+	releaseRequest := "{\"Cause\":{\"Message\":\"\", \"User\":\"Flux-web\"},\"Spec\":{\"ContainerSpecs\":{" + spec + "},\"Kind\":\"execute\",\"SkipMismatches\":true},\"Type\":\"containers\"}"
 	var l = logs.GetLogger()
 	l.Println("****************************")
 	l.Println(releaseRequest)
 	l.Println("****************************")
-	return []byte(releaseRequest)	
+	return []byte(releaseRequest)
 }
