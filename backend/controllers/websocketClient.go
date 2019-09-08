@@ -1,4 +1,3 @@
-
 package controllers
 
 import (
@@ -15,16 +14,15 @@ type WebSocketController struct {
 }
 
 type client struct {
-	ws *websocket.Conn
+	ws   *websocket.Conn
 	send chan []byte
 }
-
 
 var releaseChannel = make(chan models.ReleaseResult)
 
 func (this *WebSocketController) ReleaseWorkloads() {
 	ws, err := websocket.Upgrade(this.Ctx.ResponseWriter, this.Ctx.Request, nil, 1024, 1024)
-	
+
 	if _, ok := err.(websocket.HandshakeError); ok {
 		http.Error(this.Ctx.ResponseWriter, "Not a websocket handshake", 400)
 		return
@@ -35,7 +33,7 @@ func (this *WebSocketController) ReleaseWorkloads() {
 
 	c := &client{
 		send: make(chan []byte),
-		ws: ws,
+		ws:   ws,
 	}
 
 	h.register <- c
@@ -51,10 +49,10 @@ func (c *client) writePump() {
 	for {
 		select {
 		case message := <-c.send:
-            if err := c.ws.WriteMessage(websocket.TextMessage, message); err != nil {
-                l.Println(err)
-                return
-            }
+			if err := c.ws.WriteMessage(websocket.TextMessage, message); err != nil {
+				l.Println(err)
+				return
+			}
 		}
 	}
 }

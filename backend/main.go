@@ -17,8 +17,8 @@ func main() {
 			beego.NSRouter("/namespaces", &controllers.NamespaceController{}, "get:ListNamespaces"),
 			beego.NSRouter("/workloads/:ns", &controllers.WorkloadController{}, "get:ListWorkloads"),
 			beego.NSGet("/health", func(ctx *context.Context) {
-            	ctx.Output.Body([]byte("All good"))
-        	}),
+				ctx.Output.Body([]byte("All good"))
+			}),
 		),
 	)
 
@@ -36,4 +36,3 @@ func main() {
 
 	beego.Run()
 }
-
