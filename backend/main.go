@@ -1,8 +1,6 @@
 package main
 
 import (
-	"os"
-	"strconv"
 	"flux-web/controllers"
 
 	"github.com/astaxie/beego"
@@ -14,21 +12,8 @@ func main() {
 	h := controllers.InitHub()
 	go h.Run()
 
-	writeNs := beego.NewNamespace("/api",
-		beego.NSNamespace("/v1/write",
-			beego.NSCond(func(ctx *context.Context) bool {
-				if readOnly, err := strconv.ParseBool(os.Getenv("READ_ONLY")); err != nil  {
-					return true
-				} else{
-					return !readOnly
-				}
-			}),
-			beego.NSRouter("/release", &controllers.WorkloadController{}, "post:ReleaseWorkloads"),
-		),
-	)
-
-	readNs := beego.NewNamespace("/api",
-		beego.NSNamespace("/v1/read",
+	apiNs := beego.NewNamespace("/api",
+		beego.NSNamespace("/v1",
 			beego.NSRouter("/namespaces", &controllers.NamespaceController{}, "get:ListNamespaces"),
 			beego.NSRouter("/workloads/:ns", &controllers.WorkloadController{}, "get:ListWorkloads"),
 			beego.NSGet("/health", func(ctx *context.Context) {
@@ -37,8 +22,15 @@ func main() {
 		),
 	)
 
-	beego.AddNamespace(writeNs)
-	beego.AddNamespace(readNs)
+	release := beego.NewNamespace("/api",
+		beego.NSNamespace("/v1/release",
+			beego.NSBefore(controllers.Auth),
+            beego.NSRouter("/", &controllers.WorkloadController{}, "post:ReleaseWorkloads"),
+		),
+	)
+
+	beego.AddNamespace(apiNs)
+	beego.AddNamespace(release)
 
 	beego.Router("/ws/v1", &controllers.WebSocketController{}, "get:ReleaseWorkloads")
 
