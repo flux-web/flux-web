@@ -8,7 +8,6 @@ import (
 	"strings"
 	"net/http"
 	"io/ioutil"
-	"net/http"
 	"os"
 	"strings"
 	"time"
