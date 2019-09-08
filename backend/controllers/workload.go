@@ -1,16 +1,15 @@
 package controllers
 
 import (
+	"os"
+	"time"
 	"bytes"
-	"encoding/json"
 	"errors"
 	"strconv"
 	"strings"
 	"net/http"
 	"io/ioutil"
-	"os"
-	"strings"
-	"time"
+	"encoding/json"
 
 	"flux-web/models"
 
