@@ -9,14 +9,14 @@ namespace:  flux
 
 backend:
   repository: fluxweb/backend
-  tag: latest
+  tag: 0.1
   pullPolicy: Always
   containerPort: 3000
   env:
     FLUX_URL: http://flux:3030
 frontend:
   repository: fluxweb/frontend
-  tag: latest
+  tag: 0.1
   pullPolicy: Always
   containerPort: 8080
   env:
