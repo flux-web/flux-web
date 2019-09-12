@@ -2,19 +2,20 @@ sudo: required
 services:
   - docker
 language: bash
+if: tag IS present
 jobs:
   include:
     - stage: frontend-build
       script:
         - docker build -t fluxweb/frontend ./frontend
         - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
-        - docker tag fluxweb/frontend fluxweb/frontend:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
-          docker push fluxweb/frontend:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
+        - docker tag fluxweb/frontend fluxweb/frontend:$TRAVIS_TAG &&
+          docker push fluxweb/frontend:$TRAVIS_TAG &&
           docker push fluxweb/frontend:latest
     - stage: backend-build
       script:
         - docker build -t fluxweb/backend ./backend
         - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
-        - docker tag fluxweb/backend fluxweb/backend:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
-          docker push fluxweb/backend:master-$TRAVIS_COMMIT-$TRAVIS_BUILD_NUMBER &&
+        - docker tag fluxweb/backend fluxweb/backend:$TRAVIS_TAG &&
+          docker push fluxweb/backend:$TRAVIS_TAG &&
           docker push fluxweb/backend:latest
