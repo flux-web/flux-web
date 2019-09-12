@@ -7,7 +7,6 @@ services:
     tty: true
     restart: always
     environment:
-      APP_HOST: 0.0.0.0
       APP_PORT: 8080
       NODE_ENV: development
       API_EXTERNAL_URL: http://localhost/api/v1

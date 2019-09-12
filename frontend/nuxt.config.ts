@@ -26,7 +26,6 @@ export default {
     ['nuxt-env', {
       keys: [
         'NODE_ENV', 
-        'BASE_URL', 
         'API_EXTERNAL_URL', 
         'WS_URL', 
         'READ_ONLY',
