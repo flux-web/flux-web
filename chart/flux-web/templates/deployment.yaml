@@ -25,8 +25,6 @@ spec:
           image: "{{ .Values.frontend.repository }}:{{ .Values.frontend.tag }}"
           imagePullPolicy: {{ .Values.frontend.pullPolicy }}
           env:
-          - name: APP_HOST
-            value: '0.0.0.0'
           - name: APP_PORT
             value: '8080'
           - name: NODE_ENV

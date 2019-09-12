@@ -20,9 +20,9 @@
     "vuex-persistedstate": "^2.5.4"
   },
   "scripts": {
-    "dev": "nuxt-ts --hostname $APP_HOST --port $APP_PORT",
+    "dev": "nuxt-ts --hostname 0.0.0.0 --port $APP_PORT",
     "build": "nuxt-ts build",
-    "start": "nuxt-ts start --hostname $APP_HOST --port $APP_PORT",
+    "start": "nuxt-ts start --hostname 0.0.0.0 --port $APP_PORT",
     "generate": "nuxt-ts generate"
   },
   "devDependencies": {
