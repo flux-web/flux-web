@@ -10,9 +10,8 @@ services:
       APP_HOST: 0.0.0.0
       APP_PORT: 8080
       NODE_ENV: development
-      BASE_URL: http://localhost/
       API_EXTERNAL_URL: http://localhost/api/v1
-      WS_URL: localhost:3000/ws/v1
+      WS_URL: ws://localhost:3000/ws/v1
       READ_ONLY: "false"
     volumes:
       - ./frontend:/app
