@@ -35,6 +35,34 @@ helm install . --name flux-web \
                --set frontend.env.READ_ONLY=true
 ```
 
+Deploying flux-web with `HelmRelease`:
+```
+---
+apiVersion: flux.weave.works/v1beta1
+kind: HelmRelease
+metadata:
+  name: flux-web
+  namespace: flux
+spec:
+  releaseName: flux-web
+  chart:
+    git: git@github.com:flux-web/flux-web.git
+    path: chart/flux-web
+    ref: master
+  values:
+    frontend:
+        env:
+          API_EXTERNAL_URL: //flux-web.my-domain/api/v1
+          WS_URL: wss://flux-web.my-domain/ws/v1
+    ingress:
+      hosts:
+        - host: flux-web.my-domain.io
+          paths: 
+            - frontend: /
+            - backend: /api
+            - backend: /ws
+```
+
 ## Continued Development
 
 Basically a roadmap.
