@@ -28,6 +28,11 @@ services:
     volumes:
       - ~/.kube/config:/usr/src/.kubeconfig
 
+  memcache:
+    image: memcached:1.5.15
+    ports:
+      - 11211:11211
+
   nginx:
     image: nginx:alpine
     ports:

@@ -8,6 +8,7 @@ RUN go get github.com/astaxie/beego
 RUN go get github.com/ericchiang/k8s
 RUN go get github.com/ghodss/yaml
 RUN go get github.com/gorilla/websocket
+RUN go get github.com/bradfitz/gomemcache/memcache
 
 RUN CGO_ENABLED=0 go install -a std
 
@@ -16,7 +17,7 @@ RUN mkdir -p $APP_DIR
 
 ADD . $APP_DIR
 
-WORKDIR $GOPATH/src/flux-web
+WORKDIR $APP_DIR
 
 RUN CGO_ENABLED=0 godep get -v
 

@@ -1,22 +1,21 @@
 package controllers
 
 import (
-	"os"
-	"time"
 	"bytes"
+	"encoding/json"
 	"errors"
+	"io/ioutil"
+	"net/http"
 	"strconv"
 	"strings"
-	"net/http"
-	"io/ioutil"
-	"encoding/json"
+	"time"
 
 	"flux-web/models"
 
 	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
-	"github.com/astaxie/beego/httplib"
 	"github.com/astaxie/beego/context"
+	"github.com/astaxie/beego/httplib"
+	"github.com/astaxie/beego/logs"
 )
 
 type WorkloadController struct {
@@ -26,7 +25,7 @@ type WorkloadController struct {
 var l = logs.GetLogger()
 
 var flux = models.Flux{
-	FluxUrl:            os.Getenv("FLUX_URL"),
+	FluxUrl:            models.GetEnv("FLUX_URL", "http://flux:3030"),
 	SyncApi:            "/api/flux/v6/sync?ref=",
 	JobApi:             "/api/flux/v6/jobs?id=",
 	UpdateManifestsApi: "/api/flux/v9/update-manifests",
@@ -36,10 +35,13 @@ var flux = models.Flux{
 func (this *WorkloadController) ListWorkloads() {
 	ns := this.Ctx.Input.Param(":ns")
 	l.Printf("in ListWorkloads, executing: " + flux.FluxUrl + flux.ListImagesApi + ns)
+
 	res, err := httplib.Get(flux.FluxUrl + flux.ListImagesApi + ns).Debug(true).Bytes()
 	if err != nil {
 		l.Panic(err.Error)
 	}
+
+	_ = models.NewWorkloads(res)
 	this.Ctx.Output.Body(res)
 }
 
@@ -67,11 +69,14 @@ func waitForSync(jobID string, newreleaseRequest models.ReleaseRequest) {
 	releaseResult.Workload = newreleaseRequest.Workload
 	releaseResult.Container = newreleaseRequest.Container
 	releaseResult.Tag = newreleaseRequest.Target
-	releaseResult.Status = "release failed"
-	releaseResult.Action = "updateRelease"
+	releaseResult.Status = models.InRelease
+
+	models.MemPut(releaseResult.GetReleaseResultKey(), releaseResult.Status)
 
 	syncID, err := getSyncID(jobID)
 	if err != nil {
+		releaseResult.Status = models.ReleaseFaild
+		models.MemPut(releaseResult.GetReleaseResultKey(), releaseResult.Status)
 		l.Printf(err.Error())
 		return
 	}
@@ -82,12 +87,15 @@ func waitForSync(jobID string, newreleaseRequest models.ReleaseRequest) {
 		l.Printf("waiting for syncID: " + syncID + " to finish...")
 		resp, err := httplib.Get(flux.FluxUrl + flux.SyncApi + syncID).String()
 		if err != nil {
+			releaseResult.Status = models.ReleaseFaild
+			models.MemPut(releaseResult.GetReleaseResultKey(), releaseResult.Status)
 			l.Printf(err.Error())
 			break
 		}
 		if resp == "[]" {
-			releaseResult.Status = "up to date"
-			l.Printf("release for" + newreleaseRequest.Workload + " is done!")
+			releaseResult.Status = models.UpToDate
+			models.MemPut(releaseResult.GetReleaseResultKey(), releaseResult.Status)
+			l.Printf("release for " + newreleaseRequest.Workload + " is done!")
 			break
 		}
 		time.Sleep(time.Millisecond * 300)
@@ -151,38 +159,11 @@ func triggerJob(requestBody []byte) (string, error) {
 	}
 }
 
-func GetImages(params ...string) []models.Image {
-	namespace := os.Getenv("DEFAULT_NAMESPACE")
-	if len(params) > 0 {
-		namespace = params[0]
-		l.Printf(namespace)
-	}
-	res, err := httplib.Get(flux.FluxUrl + flux.ListImagesApi + namespace).Debug(true).Bytes()
-	if err != nil {
-		l.Panic(err.Error)
-	}
-
-	images, err := models.NewImages(res)
-	if err != nil {
-		l.Panic(err.Error)
-	}
-	if len(params) > 1 {
-		filter := params[1]
-		for i := 0; i < len(images); i++ {
-			if !strings.Contains(images[i].ID, filter) {
-				images = append(images[:i], images[i+1:]...)
-				i--
-			}
-		}
-	}
-	return images
-}
-
 func Auth(c *context.Context) {
-	if readOnly, err := strconv.ParseBool(os.Getenv("READ_ONLY")); err != nil  {
+	if readOnly, err := strconv.ParseBool(models.GetEnv("READ_ONLY", "false")); err != nil {
 		c.Abort(401, "Not boolean value for READ_ONLY")
 		return
-	} else if readOnly{
+	} else if readOnly {
 		c.Abort(401, "Not authorized")
 		return
 	}
