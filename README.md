@@ -97,7 +97,7 @@ Basically a roadmap.
 
 Code contributions are very welcome. If you are interested in helping make flux-web great then feel free!
 
-## Authors
+## Authors 
 
 * [Ido Braunstain](https://github.com/idobry) - *Initial work*
 * [Yohanan Baruchel](https://github.com/ybaruchel) - *Initial work*
