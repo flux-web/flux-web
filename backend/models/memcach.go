@@ -13,7 +13,7 @@ func memLogin() *memcache.Client {
 func MemPut(key, value string) {
 	l.Println("in MemPut")
 	mc := memLogin()
-	l.Println("in MemPut - got mem client")
+	l.Println("inserting: key - " + key + " value - " + value)
 	err := mc.Set(&memcache.Item{Key: key, Value: []byte(value)})
 	if err != nil {
 		l.Printf(err.Error())

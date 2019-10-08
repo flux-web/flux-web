@@ -41,8 +41,11 @@ func (this *WorkloadController) ListWorkloads() {
 		l.Panic(err.Error)
 	}
 
-	_ = models.NewWorkloads(res)
-	this.Ctx.Output.Body(res)
+	workloads, err := json.Marshal(models.NewWorkloads(res))
+	if err != nil {
+		l.Panic(err.Error)
+	}
+	this.Ctx.Output.Body(workloads)
 }
 
 func (this *WorkloadController) ReleaseWorkloads() {
