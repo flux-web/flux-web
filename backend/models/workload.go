@@ -48,8 +48,8 @@ type Workload struct {
 	} `json:"Containers"`
 }
 
-func (w Workload) getWorkloadKey() string {
-	return w.ID + "_" + w.Containers[0].Name
+func (w Workload) getWorkloadKey(container string) string {
+	return w.ID + "_" + container
 }
 
 func NewWorkloads(data []byte) []Workload {
@@ -58,21 +58,17 @@ func NewWorkloads(data []byte) []Workload {
 	if err != nil {
 		l.Panic(err.Error())
 	}
-	w = setWorkloadsStatus(w)
-	for _, workload := range w {
-		l.Println(workload.Status)
-	}
-	return w
+	return setWorkloadsStatus(w)
 }
 
 func setWorkloadsStatus(workloads []Workload) []Workload {
 	l.Printf("in setWorkloadsStatus")
 	for i, workload := range workloads {
-		workloadStatus := MemGet(workload.getWorkloadKey())
-		if workloadStatus != "" {
-			workload.Status = workloadStatus
-		} else {
-			for j, container := range workload.Containers {
+		for j, container := range workload.Containers {
+			workloadStatus := MemGet(workload.getWorkloadKey(container.Name))
+			if workloadStatus != "" {
+				workloads[i].Containers[j].Status = workloadStatus
+			} else {
 				if container.Current.ID == container.Available[0].ID {
 					workloads[i].Containers[j].Status = Behind
 				} else {
@@ -80,7 +76,6 @@ func setWorkloadsStatus(workloads []Workload) []Workload {
 				}
 			}
 		}
-		l.Println(workload.ID + ": " + workload.Status)
 	}
 	return workloads
 }
