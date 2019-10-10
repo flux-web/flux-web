@@ -56,7 +56,7 @@ spec:
           WS_URL: wss://flux-web.my-domain/ws/v1
     ingress:
       hosts:
-        - host: flux-web.my-domain.io
+        - host: flux-web.my-domain
           paths: 
             - frontend: /
             - backend: /api
