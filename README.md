@@ -12,7 +12,7 @@ flux-web is used for manual actions against flux's api:
 
 ## Reasoning
 
-When using `flux` your pipelines, or to be more precise, your Continues Deployments are fully automated and that's great.
+When using `flux` our pipelines, or to be more precise, our Continues Deployments are fully automated and that's great.
 But, sometimes we would like to have more stable environments with fewer deployments and with more control, for example, production.
 That's mean we need to do some manual actions against `flux` which have his own CLI tool `fluxctl`.
 
@@ -56,7 +56,7 @@ spec:
           WS_URL: wss://flux-web.my-domain/ws/v1
     ingress:
       hosts:
-        - host: flux-web.my-domain.io
+        - host: flux-web.my-domain
           paths: 
             - frontend: /
             - backend: /api
@@ -97,7 +97,7 @@ Basically a roadmap.
 
 Code contributions are very welcome. If you are interested in helping make flux-web great then feel free!
 
-## Authors
+## Authors 
 
 * [Ido Braunstain](https://github.com/idobry) - *Initial work*
 * [Yohanan Baruchel](https://github.com/ybaruchel) - *Initial work*
