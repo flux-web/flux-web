@@ -70,9 +70,9 @@ func setWorkloadsStatus(workloads []Workload) []Workload {
 				workloads[i].Containers[j].Status = workloadStatus
 			} else {
 				if container.Current.ID == container.Available[0].ID {
-					workloads[i].Containers[j].Status = Behind
-				} else {
 					workloads[i].Containers[j].Status = UpToDate
+				} else {
+					workloads[i].Containers[j].Status = Behind
 				}
 			}
 		}
