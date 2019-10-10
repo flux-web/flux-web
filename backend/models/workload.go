@@ -65,10 +65,15 @@ func setWorkloadsStatus(workloads []Workload) []Workload {
 	for _, workload := range workloads {
 		workloadStatus := MemGet(workload.getWorkloadKey())
 		if workloadStatus != "" {
-			l.Println("******found status in memcach****: :" + workloadStatus)
 			workload.Status = workloadStatus
 		} else {
-			workload.Status = UpToDate
+			for _, container := range workload.Containers {
+				if container.Current.ID == container.Available[0].ID {
+					workload.Status = UpToDate
+				} else {
+					workload.Status = Behind
+				}
+			}
 		}
 		l.Println(workload.ID + ": " + workload.Status)
 	}
