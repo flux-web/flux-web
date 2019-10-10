@@ -18,9 +18,9 @@ var l = logs.GetLogger()
 
 type Workload struct {
 	ID         string `json:"ID"`
-	Status     string
 	Containers []struct {
 		Name    string `json:"Name"`
+		Status  string
 		Current struct {
 			ID      string `json:"ID"`
 			Digest  string `json:"Digest"`
@@ -56,22 +56,27 @@ func NewWorkloads(data []byte) []Workload {
 	var w []Workload
 	err := json.Unmarshal(data, &w)
 	if err != nil {
-		l.Panic(err.Error)
+		l.Panic(err.Error())
 	}
-	return setWorkloadsStatus(w)
+	w = setWorkloadsStatus(w)
+	for _, workload := range w {
+		l.Println(workload.Status)
+	}
+	return w
 }
 
 func setWorkloadsStatus(workloads []Workload) []Workload {
-	for _, workload := range workloads {
+	l.Printf("in setWorkloadsStatus")
+	for i, workload := range workloads {
 		workloadStatus := MemGet(workload.getWorkloadKey())
 		if workloadStatus != "" {
 			workload.Status = workloadStatus
 		} else {
-			for _, container := range workload.Containers {
+			for j, container := range workload.Containers {
 				if container.Current.ID == container.Available[0].ID {
-					workload.Status = UpToDate
+					workloads[i].Containers[j].Status = Behind
 				} else {
-					workload.Status = Behind
+					workloads[i].Containers[j].Status = UpToDate
 				}
 			}
 		}

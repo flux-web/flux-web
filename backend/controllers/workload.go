@@ -38,12 +38,12 @@ func (this *WorkloadController) ListWorkloads() {
 
 	res, err := httplib.Get(flux.FluxUrl + flux.ListImagesApi + ns).Debug(true).Bytes()
 	if err != nil {
-		l.Panic(err.Error)
+		l.Panic(err.Error())
 	}
 
 	workloads, err := json.Marshal(models.NewWorkloads(res))
 	if err != nil {
-		l.Panic(err.Error)
+		l.Panic(err.Error())
 	}
 	this.Ctx.Output.Body(workloads)
 }
