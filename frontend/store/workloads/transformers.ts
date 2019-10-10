@@ -32,14 +32,12 @@ export const workloadsTransformer = (workloads: any[]) => {
                   };
             }) : [];
 
-            const isStatusUpToDate = (availableTags: Tag[], currentTag: string) => currentTag == 'latest' || ( availableTags.length && currentTag == availableTags[0].tag)
-
             const temp = {
                 id: workload.ID,
                 workload: workload.ID.split(':').pop(),
                 container: container.Name,
                 image: getImageFromUrl(container.Current.ID),
-                status: isStatusUpToDate(availableTags, currentTag) ? WorkloadStatuses.upToDate : WorkloadStatuses.behind,
+                status: container.Status,
                 available_tags: availableTags,
                 current_tag: {
                     tag: currentTag,
