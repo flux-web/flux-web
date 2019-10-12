@@ -14,10 +14,19 @@ const (
 	ReleaseFaild
 )
 
+const (
+	workloadType    = "workload"
+	helmreleaseType = "helmrelease"
+	NotInRepo       = "NotInRepo"
+)
+
 var l = logs.GetLogger()
 
 type Workload struct {
 	ID         string `json:"ID"`
+	Type       string
+	Automated  bool
+	Policies   interface{}
 	Containers []struct {
 		Name    string `json:"Name"`
 		Status  string
@@ -52,18 +61,27 @@ func (w Workload) getWorkloadKey(container string) string {
 	return w.ID + "_" + container
 }
 
-func NewWorkloads(data []byte) []Workload {
+func NewWorkloads(data []byte, services Dictionary) []Workload {
 	var w []Workload
 	err := json.Unmarshal(data, &w)
 	if err != nil {
 		l.Panic(err.Error())
 	}
-	return setWorkloadsStatus(w)
+	return initWorkloads(w, filterOutWorkloads(services))
 }
 
-func setWorkloadsStatus(workloads []Workload) []Workload {
-	l.Printf("in setWorkloadsStatus")
+func initWorkloads(workloads []Workload, services Dictionary) []Workload {
 	for i, workload := range workloads {
+
+		if services[workload.ID].Antecedent == "" {
+			workloads[i].Type = workloadType
+		} else {
+			workloads[i].Type = helmreleaseType
+		}
+
+		workloads[i].Policies = services[workload.ID].Policies
+		workloads[i].Automated = services[workload.ID].Automated
+
 		for j, container := range workload.Containers {
 			workloadStatus := MemGet(workload.getWorkloadKey(container.Name))
 			if workloadStatus != "" {
@@ -78,4 +96,13 @@ func setWorkloadsStatus(workloads []Workload) []Workload {
 		}
 	}
 	return workloads
+}
+
+func filterOutWorkloads(services Dictionary) Dictionary {
+	for k, _ := range services {
+		if services[k].Antecedent != "" || services[k].ReadOnly == NotInRepo {
+			delete(services, k)
+		}
+	}
+	return services
 }

@@ -30,18 +30,27 @@ var flux = models.Flux{
 	JobApi:             "/api/flux/v6/jobs?id=",
 	UpdateManifestsApi: "/api/flux/v9/update-manifests",
 	ListImagesApi:      "/api/flux/v10/images?namespace=",
+	ListServicesApi:    "/api/flux/v11/services?namespace=",
 }
 
 func (this *WorkloadController) ListWorkloads() {
 	ns := this.Ctx.Input.Param(":ns")
 	l.Printf("in ListWorkloads, executing: " + flux.FluxUrl + flux.ListImagesApi + ns)
 
-	res, err := httplib.Get(flux.FluxUrl + flux.ListImagesApi + ns).Debug(true).Bytes()
+	servicesRes, err := httplib.Get(flux.FluxUrl + flux.ListServicesApi + ns).Debug(true).Bytes()
+	if err != nil {
+		l.Panic(err.Error())
+	}
+	services, err := models.NewServices(servicesRes)
 	if err != nil {
 		l.Panic(err.Error())
 	}
 
-	workloads, err := json.Marshal(models.NewWorkloads(res))
+	imagesRes, err := httplib.Get(flux.FluxUrl + flux.ListImagesApi + ns).Debug(true).Bytes()
+	if err != nil {
+		l.Panic(err.Error())
+	}
+	workloads, err := json.Marshal(models.NewWorkloads(imagesRes, services))
 	if err != nil {
 		l.Panic(err.Error())
 	}
@@ -150,7 +159,7 @@ func triggerJob(requestBody []byte) (string, error) {
 	if resp.StatusCode == http.StatusOK {
 		bodyBytes, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			l.Panic(err.Error)
+			l.Panic(err.Error())
 			return "", errors.New(err.Error())
 		}
 		l.Println(string(bodyBytes))

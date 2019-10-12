@@ -7,4 +7,5 @@ type Flux struct {
 	UpdateManifestsApi string
 	ListImagesApi      string
 	ListServices       string
+	ListServicesApi    string
 }
