@@ -36,6 +36,7 @@ export const workloadsTransformer = (workloads: any[]) => {
                 id: workload.ID,
                 workload: workload.ID.split(':').pop(),
                 container: container.Name,
+                type: workload.Type,
                 image: getImageFromUrl(container.Current.ID),
                 status: container.Status,
                 available_tags: availableTags,

@@ -87,7 +87,7 @@ func initWorkloads(workloads []Workload, services Dictionary) []Workload {
 			if workloadStatus != "" {
 				workloads[i].Containers[j].Status = workloadStatus
 			} else {
-				if container.Current.ID == container.Available[0].ID {
+				if len(container.Available) > 0 && container.Current.ID == container.Available[0].ID {
 					workloads[i].Containers[j].Status = UpToDate
 				} else {
 					workloads[i].Containers[j].Status = Behind

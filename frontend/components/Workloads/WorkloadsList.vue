@@ -56,6 +56,10 @@ export default class WorkloadsList extends Vue {
       field: "container"
     },
     {
+      label: "Type",
+      field: "type"
+    },
+    {
       label: "Image",
       field: "image"
     },
