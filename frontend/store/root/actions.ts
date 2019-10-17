@@ -4,7 +4,7 @@ import { StoreNamespaces } from '../types/StoreNamespaces';
 
 export const actions: ActionTree<RootState, RootState> = {
     updateRelease: ({dispatch}, message: any) => {
-        dispatch(StoreNamespaces.workloads + '/updateWorloadRelease', {
+        dispatch(StoreNamespaces.workloads + '/updateWorkloadRelease', {
             workload: {
                 id: message.Workload,
                 container: message.Container,

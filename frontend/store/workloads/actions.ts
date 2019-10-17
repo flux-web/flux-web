@@ -9,7 +9,7 @@ import axios from 'axios';
 export const actions: ActionTree<WorkloadsState, RootState> = {
     changeSearchTerm: ({commit}, searchTerm: string) => commit('CHANGE_SEARCH_TERM', searchTerm),
     updateWorkloadStatus:  ({commit}, payload) => commit('UPDATE_WORKLOAD_STATUS', payload),
-    updateWorloadRelease:  ({commit, getters}, {workload, tag}) => {
+    updateWorkloadRelease:  ({commit, getters}, {workload, tag}) => {
         const storeWorkload = getters.getWorkload(workload);
         if (!storeWorkload) {
             throw "Error updating workload release state"
