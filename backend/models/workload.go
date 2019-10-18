@@ -68,28 +68,47 @@ func (w Workload) getWorkloadKey(container string) string {
 	return w.ID + "_" + container
 }
 
-func NewWorkloads(data []byte, services Dictionary) []Workload {
+func NewWorkloads(data []byte, services ServiceDictionary) []Workload {
 	var w []Workload
 	err := json.Unmarshal(data, &w)
 	if err != nil {
 		l.Panic(err.Error())
 	}
-	return initWorkloads(w, filterOutWorkloads(services))
+	for k, _ := range services {
+		l.Println("@@@@@@@")
+		l.Println(services[k].ID)
+		l.Println(services[k].Antecedent)
+	}
+	return initWorkloads(w, services)
 }
 
-func initWorkloads(workloads []Workload, services Dictionary) []Workload {
+func initWorkloads(workloads []Workload, services ServiceDictionary) []Workload {
+
+	filterdWorkloads := []Workload{}
+
+	//remove workloads that belongs to a chart
+	for k, _ := range services {
+		if services[k].Antecedent != "" {
+			delete(services, k)
+		}
+	}
+
 	for i, workload := range workloads {
 
-		if services[workload.ID].Antecedent == "" {
-			workloads[i].Type = workloadType
-		} else {
+		if services[workload.ID].ID == "" {
+			remove(workloads, i)
+			continue
+		}
+
+		if strings.Contains(workload.ID, helmreleaseType) {
 			workloads[i].Type = helmreleaseType
+		} else {
+			workloads[i].Type = workloadType
 		}
 
 		workloads[i].Automated = services[workload.ID].Automated
 
 		for j, container := range workload.Containers {
-
 			if services[workload.ID].Policies != nil {
 				workloads[i].Policies = services[workload.ID].Policies
 				workloads[i].Containers[j].Available = filterOutTags(services[workload.ID].Policies, workloads[i].Containers[j].Available, workloads[i].Containers[j].Name)
@@ -106,8 +125,9 @@ func initWorkloads(workloads []Workload, services Dictionary) []Workload {
 				}
 			}
 		}
+		filterdWorkloads = append(filterdWorkloads, workloads[i])
 	}
-	return workloads
+	return filterdWorkloads
 }
 
 func filterOutTags(policies interface{}, available []Available, containerName string) []Available {
@@ -125,25 +145,18 @@ func filterOutTags(policies interface{}, available []Available, containerName st
 		l.Println("tagFilter: " + tagPattern[1])
 		if containerName == availableName[1] {
 			for _, ava := range available {
-				re := regexp.MustCompile(tagPattern[1])
+				re := regexp.MustCompile(`\*`)
 
-				if !re.MatchString(`*`) {
+				if !re.MatchString(strings.Split(ava.ID, ":")[1]) {
 					l.Println("need to delete " + strings.Split(ava.ID, ":")[1])
 				}
 			}
 		}
-
 	}
-
 	return available
 }
 
-func filterOutWorkloads(services Dictionary) Dictionary {
-	for k, _ := range services {
-		if services[k].Antecedent != "" || services[k].ReadOnly == NotInRepo {
-			delete(services, k)
-			continue
-		}
-	}
-	return services
+func remove(s []Workload, i int) []Workload {
+	s[i] = s[len(s)-1]
+	return s[:len(s)-1]
 }

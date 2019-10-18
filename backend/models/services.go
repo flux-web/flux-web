@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 )
 
-type Dictionary map[string]Service
+type ServiceDictionary map[string]Service
 
 type Service struct {
 	ID         string `json:"ID"`
@@ -40,14 +40,13 @@ type Service struct {
 	Policies   interface{} `json:"Policies"`
 }
 
-func NewServices(data []byte) (Dictionary, error) {
+func NewServices(data []byte) (ServiceDictionary, error) {
 	var s []Service
-	serviceDictionary := Dictionary{}
+	serviceDictionary := ServiceDictionary{}
 	err := json.Unmarshal(data, &s)
 
-	for _, service := range s {
-		serviceDictionary[service.ID] = service
+	for i, service := range s {
+		serviceDictionary[service.ID] = s[i]
 	}
-
 	return serviceDictionary, err
 }
