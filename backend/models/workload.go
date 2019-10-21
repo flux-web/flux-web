@@ -74,11 +74,6 @@ func NewWorkloads(data []byte, services ServiceDictionary) []Workload {
 	if err != nil {
 		l.Panic(err.Error())
 	}
-	for k, _ := range services {
-		l.Println("@@@@@@@")
-		l.Println(services[k].ID)
-		l.Println(services[k].Antecedent)
-	}
 	return initWorkloads(w, services)
 }
 
@@ -87,11 +82,7 @@ func initWorkloads(workloads []Workload, services ServiceDictionary) []Workload 
 	filterdWorkloads := []Workload{}
 
 	//remove workloads that belongs to a chart
-	for k, _ := range services {
-		if services[k].Antecedent != "" {
-			delete(services, k)
-		}
-	}
+	removeChildWorkloads(&services)
 
 	for i, workload := range workloads {
 
@@ -100,57 +91,82 @@ func initWorkloads(workloads []Workload, services ServiceDictionary) []Workload 
 			continue
 		}
 
-		if strings.Contains(workload.ID, helmreleaseType) {
-			workloads[i].Type = helmreleaseType
-		} else {
-			workloads[i].Type = workloadType
-		}
-
+		setType(workload.ID, &workloads[i])
 		workloads[i].Automated = services[workload.ID].Automated
-
-		for j, container := range workload.Containers {
-			if services[workload.ID].Policies != nil {
-				workloads[i].Policies = services[workload.ID].Policies
-				workloads[i].Containers[j].Available = filterOutTags(services[workload.ID].Policies, workloads[i].Containers[j].Available, workloads[i].Containers[j].Name)
-			}
-
-			workloadStatus := MemGet(workload.getWorkloadKey(container.Name))
-			if workloadStatus != "" {
-				workloads[i].Containers[j].Status = workloadStatus
-			} else {
-				if len(container.Available) > 0 && container.Current.ID == container.Available[0].ID {
-					workloads[i].Containers[j].Status = UpToDate
-				} else {
-					workloads[i].Containers[j].Status = Behind
-				}
-			}
-		}
+		initContainers(&workloads[i], services)
 		filterdWorkloads = append(filterdWorkloads, workloads[i])
 	}
 	return filterdWorkloads
 }
 
+func initContainers(workload *Workload, services ServiceDictionary) {
+	for i, container := range workload.Containers {
+		if services[workload.ID].Policies != nil {
+			workload.Policies = services[workload.ID].Policies
+			workload.Containers[i].Available = filterOutTags(services[workload.ID].Policies, workload.Containers[i].Available, workload.Containers[i].Name)
+		}
+
+		workloadStatus := MemGet(workload.getWorkloadKey(container.Name))
+
+		if workloadStatus != "" {
+			workload.Containers[i].Status = workloadStatus
+		} else {
+			if len(container.Available) > 0 && container.Current.ID == container.Available[0].ID {
+				workload.Containers[i].Status = UpToDate
+			} else {
+				workload.Containers[i].Status = Behind
+			}
+		}
+	}
+}
+
+func setType(workloadID string, workload *Workload) {
+	if strings.Contains(workloadID, helmreleaseType) {
+		workload.Type = helmreleaseType
+	} else {
+		workload.Type = workloadType
+	}
+}
+
+func removeChildWorkloads(services *ServiceDictionary) {
+	for k, service := range *services {
+		if service.Antecedent != "" {
+			delete(*services, k)
+		}
+	}
+}
+
 func filterOutTags(policies interface{}, available []Available, containerName string) []Available {
 	policiesMap := policies.(map[string]interface{})
+	//filterdAvailable := []Available{}
 	l.Println(containerName)
 	for k, v := range policiesMap {
 		availableName := strings.Split(k, ".")
+
+		// not a tag.<name>
 		if len(availableName) == 1 {
 			continue
 		}
 		tagPattern := strings.Split(fmt.Sprintf("%s", v), ":")
-		if tagPattern[0] != "glob" {
+		if tagPattern[0] != "glob" || len(tagPattern[1]) == 1 {
 			continue
 		}
+
 		l.Println("tagFilter: " + tagPattern[1])
 		if containerName == availableName[1] {
+			i := 0
 			for _, ava := range available {
-				re := regexp.MustCompile(`\*`)
+				matched, err := regexp.MatchString(tagPattern[1], strings.Split(ava.ID, ":")[1])
 
-				if !re.MatchString(strings.Split(ava.ID, ":")[1]) {
-					l.Println("need to delete " + strings.Split(ava.ID, ":")[1])
+				if err != nil {
+					panic(err.Error())
+				}
+				if matched {
+					available[i] = ava
+					i++
 				}
 			}
+			available = available[:i]
 		}
 	}
 	return available
