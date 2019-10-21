@@ -79,7 +79,7 @@ func NewWorkloads(data []byte, services ServiceDictionary) []Workload {
 
 func initWorkloads(workloads []Workload, services ServiceDictionary) []Workload {
 
-	filterdWorkloads := []Workload{}
+	var filteredWorkloadsWorkloads []Workload
 
 	//remove workloads that belongs to a chart
 	removeChildWorkloads(&services)
@@ -94,9 +94,9 @@ func initWorkloads(workloads []Workload, services ServiceDictionary) []Workload 
 		setType(workload.ID, &workloads[i])
 		workloads[i].Automated = services[workload.ID].Automated
 		initContainers(&workloads[i], services)
-		filterdWorkloads = append(filterdWorkloads, workloads[i])
+		filteredWorkloadsWorkloads = append(filteredWorkloadsWorkloads, workloads[i])
 	}
-	return filterdWorkloads
+	return filteredWorkloadsWorkloads
 }
 
 func initContainers(workload *Workload, services ServiceDictionary) {
@@ -138,7 +138,6 @@ func removeChildWorkloads(services *ServiceDictionary) {
 
 func filterOutTags(policies interface{}, available []Available, containerName string) []Available {
 	policiesMap := policies.(map[string]interface{})
-	//filterdAvailable := []Available{}
 	l.Println(containerName)
 	for k, v := range policiesMap {
 		availableName := strings.Split(k, ".")

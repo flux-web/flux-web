@@ -22,6 +22,32 @@ frontend:
   env:
     API_EXTERNAL_URL: //flux-web.local/api/v1
     WS_URL: ws://flux-web.local/ws/v1
+memcached:
+  enabled: true
+  hostnameOverride:
+  repository: memcached
+  tag: 1.5.15
+  pullSecret:
+  createClusterIP: true
+  verbose: false
+  maxItemSize: 5m
+  maxMemory: 512
+  securityContext:
+    runAsUser: 11211
+    runAsGroup: 11211
+    allowPrivilegeEscalation: false
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  resources: {}
+    # If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #  cpu: 100m
+    #  memory: 628Mi
+    # requests:
+    #  cpu: 50m
+    #  memory: 512Mi
     
 nameOverride: ""
 fullnameOverride: ""
