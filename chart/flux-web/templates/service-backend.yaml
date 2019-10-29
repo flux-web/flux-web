@@ -7,6 +7,12 @@ metadata:
   {{- end }}
   labels:
 {{ include "flux-web.labels" . | indent 4 }}
+  {{- if .Values.backend.service.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.backend.service.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end -}}
+  {{- end }}
 spec:
   type: {{ .Values.service.type }}
   ports:
