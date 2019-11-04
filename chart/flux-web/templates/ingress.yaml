@@ -24,6 +24,14 @@ spec:
   {{- end }}
 {{- end }}
   rules:
+  {{- if .Values.ingress.redirect.enabled }}
+    - http:
+        paths:
+        - backend:
+            serviceName: redirect
+            servicePort: use-annotation
+          path: {{ .Values.ingress.redirect.path }}
+  {{- end -}}
   {{- range .Values.ingress.hosts }}
     - host: {{ .host | quote }}
       http:

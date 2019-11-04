@@ -45,6 +45,9 @@ ingress:
         - frontend: /
         - backend: /api
         - backend: /ws
+  redirect:
+    enabled: false
+    # path: "/*"
 
 
   tls: []
