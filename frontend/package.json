@@ -10,7 +10,7 @@
     "moment": "^2.24.0",
     "nuxt": "2.9.1",
     "nuxt-env": "^0.1.0",
-    "nuxt-property-decorator": "2.3.0",
+    "nuxt-property-decorator": "2.5.1",
     "vue-class-component": "^7.0.2",
     "vue-good-table": "^2.18.0",
     "vue-multiselect": "^2.1.6",
