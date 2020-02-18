@@ -27,7 +27,7 @@ RUN CGO_ENABLED=0 go build -ldflags '-w -s' -o /flux-web && \
 #
 # Stage 2
 #
-FROM alpine:3.8
+FROM alpine:3.11
 RUN adduser -D -u 1000 flux-web
 COPY --from=builder /flux-web /flux-web
 COPY --from=builder /views /views

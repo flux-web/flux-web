@@ -14,6 +14,8 @@ backend:
   containerPort: 3000
   env:
     FLUX_URL: http://flux:3030
+  service: {}
+    # annotations: ""
 frontend:
   repository: fluxweb/frontend
   tag: 0.1
@@ -22,6 +24,9 @@ frontend:
   env:
     API_EXTERNAL_URL: //flux-web.local/api/v1
     WS_URL: ws://flux-web.local/ws/v1
+  service: {}
+    # annotations: ""
+
 memcached:
   enabled: true
   hostnameOverride:
@@ -67,6 +72,9 @@ ingress:
         - frontend: /
         - backend: /api
         - backend: /ws
+  redirect:
+    enabled: false
+    # path: "/*"
 
 
   tls: []

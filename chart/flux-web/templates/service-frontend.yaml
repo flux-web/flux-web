@@ -7,11 +7,17 @@ metadata:
   {{- end }}
   labels:
 {{ include "flux-web.labels" . | indent 4 }}
+  {{- if .Values.frontend.service.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.frontend.service.annotations }}
+    {{ $key }}: {{ $value | quote }}
+  {{- end -}}
+  {{- end }}
 spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
-      targetPort:  {{ .Values.frontend.containerPort }}
+      targetPort: {{ .Values.frontend.containerPort }}
       protocol: TCP
       name: http
   selector:
