@@ -14,7 +14,7 @@
     "vue-class-component": "7.1.0",
     "vue-good-table": "2.18.0",
     "vue-multiselect": "2.1.6",
-    "vue-native-websocket": "2.0.13",
+    "vue-native-websocket": "2.0.14",
     "vue-property-decorator": "8.2.2",
     "vuex-class": "0.3.2",
     "vuex-persistedstate": "2.5.4"
