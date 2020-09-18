@@ -23,6 +23,7 @@ RUN CGO_ENABLED=0 godep get -v
 RUN CGO_ENABLED=0 go build -ldflags '-w -s' -o /flux-web && \
     cp -r views/ /views && \
     cp -r conf/ /conf
+    
 #
 # Stage 2
 #
