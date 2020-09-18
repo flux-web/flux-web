@@ -2,9 +2,12 @@ FROM node:alpine
 
 WORKDIR /app
 
-COPY package*.json ./
+RUN apk add python
 
-RUN npm i
+COPY package.json ./
+COPY yarn.lock ./
+
+RUN yarn
 
 COPY . .
 
