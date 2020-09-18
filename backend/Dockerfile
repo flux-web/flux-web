@@ -3,10 +3,11 @@
 #
 FROM library/golang as builder
 
-RUN go get github.com/tools/godep       \
-    && go get github.com/astaxie/beego  \ 
-    && go get github.com/ericchiang/k8s \
-    && go get github.com/ghodss/yaml    \
+RUN go get github.com/tools/godep                     \
+    && go get github.com/astaxie/beego                \ 
+    && go get github.com/ericchiang/k8s               \
+    && go get github.com/ghodss/yaml                  \
+    && go get github.com/bradfitz/gomemcache/memcache \
     && go get github.com/gorilla/websocket
 
 RUN CGO_ENABLED=0 go install -a std
@@ -16,7 +17,7 @@ RUN mkdir -p $APP_DIR
 
 ADD . $APP_DIR
 
-WORKDIR $GOPATH/src/flux-web
+WORKDIR $APP_DIR
 
 RUN CGO_ENABLED=0 godep get -v
 

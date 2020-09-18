@@ -9,7 +9,10 @@ type ReleaseResult struct {
 	Workload  string
 	Container string
 	Tag       string
-	Action    string
+}
+
+func (r ReleaseResult) GetReleaseResultKey() string {
+	return r.Workload + "_" + r.Container
 }
 
 func NewReleseResult(data []byte) (ReleaseResult, error) {

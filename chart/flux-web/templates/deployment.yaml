@@ -53,6 +53,10 @@ spec:
           image: "{{ .Values.backend.repository }}:{{ .Values.backend.tag }}"
           imagePullPolicy: {{ .Values.backend.pullPolicy }}
           env:
+            - name: MEMCACHE_URL
+              value: {{ template "flux-web.fullname" . }}-memcached
+            - name: MEMCACHE_PORT
+              value: '11211'
            - name: READ_ONLY
              value: {{ .Values.readOnly | quote }}
           {{- range $k, $v := .Values.backend.env }}
