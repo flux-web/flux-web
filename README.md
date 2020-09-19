@@ -20,7 +20,7 @@ flux-web is intended to be the UI approach to this problem. With flux-web we can
 
 ## Getting Started
 
-The easiset way to deploy flux-web is with helm:
+The easiest way to deploy flux-web is with helm:
 ```shell
 git clone git@github.com:flux-web/flux-web.git
 cd flux-web/chart/flux-web
@@ -59,6 +59,7 @@ spec:
           API_EXTERNAL_URL: //flux-web.my-domain/api/v1
           WS_URL: wss://flux-web.my-domain/ws/v1
     ingress:
+      enabled: true
       hosts:
         - host: flux-web.my-domain
           paths: 
