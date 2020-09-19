@@ -19,14 +19,16 @@ services:
   flux-web-backend:
     build:
       context: ./backend
+      dockerfile: Dockerfile.dev
     environment:
       FLUX_URL: http://host.docker.internal:3030
-      KUBE_CONFIG_PATH: /usr/src/.kubeconfig
+      KUBE_CONFIG_PATH: /home/flux-web/.kubeconfig
       READ_ONLY: "false"
     ports:
       - 3000:3000
     volumes:
-      - ~/.kube/config:/usr/src/.kubeconfig
+      - ~/.kube/config:/home/flux-web/.kubeconfig
+      - ~/.aws:/home/flux-web/.aws
 
   nginx:
     image: nginx:alpine
