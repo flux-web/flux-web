@@ -9,7 +9,7 @@ namespace:  flux
 
 backend:
   repository: fluxweb/backend
-  tag: 0.1
+  tag: 0.2
   pullPolicy: Always
   containerPort: 3000
   env:
@@ -18,7 +18,7 @@ backend:
     # annotations: ""
 frontend:
   repository: fluxweb/frontend
-  tag: 0.1
+  tag: 0.2
   pullPolicy: Always
   containerPort: 8080
   env:
