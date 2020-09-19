@@ -2,7 +2,7 @@
   <div class="navbar">
     <div class="info">
       <div class="details">
-        <span class="details__item details__label cr__label">Flux Web</span>
+        <span class="details__item details__label cr__label">FluxCD Web</span>
       </div>
       <ul class="icons">
         <li class="icon">
