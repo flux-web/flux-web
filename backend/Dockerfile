@@ -19,7 +19,7 @@ RUN CGO_ENABLED=0 go build -ldflags '-w -s' -o /flux-web && cp -r conf/ /conf
 #
 # Stage 2
 #
-FROM alpine:3.11
+FROM alpine:3.12
 RUN adduser -D -u 1000 flux-web
 COPY --from=builder /flux-web /flux-web
 COPY --from=builder /conf /conf

@@ -19,7 +19,7 @@ RUN CGO_ENABLED=0 go build -ldflags '-w -s' -o /flux-web && cp -r conf/ /conf
 #
 # Stage 2
 #
-FROM alpine:3.11
+FROM alpine:3.12
 
 RUN apk add --no-cache \
         python3 \
