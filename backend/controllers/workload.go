@@ -1,22 +1,22 @@
 package controllers
 
 import (
-	"os"
-	"time"
 	"bytes"
+	"encoding/json"
 	"errors"
+	"io/ioutil"
+	"net/http"
+	"os"
 	"strconv"
 	"strings"
-	"net/http"
-	"io/ioutil"
-	"encoding/json"
+	"time"
 
-	"flux-web/models"
+	"github.com/flux-web/flux-web/models"
 
 	"github.com/astaxie/beego"
-	"github.com/astaxie/beego/logs"
-	"github.com/astaxie/beego/httplib"
 	"github.com/astaxie/beego/context"
+	"github.com/astaxie/beego/httplib"
+	"github.com/astaxie/beego/logs"
 )
 
 type WorkloadController struct {
@@ -38,7 +38,7 @@ func (this *WorkloadController) ListWorkloads() {
 	l.Printf("in ListWorkloads, executing: " + flux.FluxUrl + flux.ListImagesApi + ns)
 	res, err := httplib.Get(flux.FluxUrl + flux.ListImagesApi + ns).Debug(true).Bytes()
 	if err != nil {
-		l.Panic(err.Error)
+		l.Panic(err.Error())
 	}
 	this.Ctx.Output.Body(res)
 }
@@ -124,7 +124,6 @@ func getSyncID(jobID string) (string, error) {
 		}
 		time.Sleep(time.Second)
 	}
-	return "", nil
 }
 
 func triggerJob(requestBody []byte) (string, error) {
@@ -139,7 +138,7 @@ func triggerJob(requestBody []byte) (string, error) {
 	if resp.StatusCode == http.StatusOK {
 		bodyBytes, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			l.Panic(err.Error)
+			l.Panic(err.Error())
 			return "", errors.New(err.Error())
 		}
 		l.Println(string(bodyBytes))
@@ -147,7 +146,7 @@ func triggerJob(requestBody []byte) (string, error) {
 		l.Println("job " + jobID + " triggered")
 		return string(jobID), nil
 	} else {
-		return "", errors.New("Job request statuscode is: " + string(resp.StatusCode))
+		return "", errors.New("Job request statuscode is: " + strconv.Itoa(resp.StatusCode))
 	}
 }
 
@@ -179,10 +178,10 @@ func GetImages(params ...string) []models.Image {
 }
 
 func Auth(c *context.Context) {
-	if readOnly, err := strconv.ParseBool(os.Getenv("READ_ONLY")); err != nil  {
+	if readOnly, err := strconv.ParseBool(os.Getenv("READ_ONLY")); err != nil {
 		c.Abort(401, "Not boolean value for READ_ONLY")
 		return
-	} else if readOnly{
+	} else if readOnly {
 		c.Abort(401, "Not authorized")
 		return
 	}
