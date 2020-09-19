@@ -18,7 +18,6 @@ export default {
     'vue-good-table/dist/vue-good-table.css',
     './assets/scss/_main.scss'
   ],
-  mode: 'universal',
   build: { },
   buildModules: ["@nuxt/typescript-build"],
   modules: [
@@ -33,10 +32,10 @@ export default {
     }]
   ],
   plugins: [ 
-      '~/plugins/vue-good-table',
-      { src: '~/plugins/vue-native-websocket', ssr: false },
-      { src: '~/plugins/localStorage', ssr: false },
-      '~/plugins/axios'
+      'plugins/vue-good-table',
+      { src: 'plugins/vue-native-websocket', ssr: false },
+      { src: 'plugins/vuex-persistedstate', ssr: false },
+      'plugins/axios'
     ],
   axios: {
   },
