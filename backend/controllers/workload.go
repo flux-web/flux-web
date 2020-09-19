@@ -118,7 +118,7 @@ func getSyncID(jobID string) (string, error) {
 			l.Println("got syncID: " + job.Result.Revision)
 			return job.Result.Revision, nil
 		} else if job.Err != "" {
-			l.Println("Error_getSyncID_02")
+			l.Printf("job error: " + job.Err)
 			return "", errors.New(job.Err)
 		} else {
 			l.Printf("job status: " + job.StatusString)
