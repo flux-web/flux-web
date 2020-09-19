@@ -27,11 +27,15 @@ cd flux-web/chart/flux-web
 kubectl create ns flux
 helm install . --name flux-web \
                --set namespace=flux
+               --set frontend.env.API_EXTERNAL_URL=//flux-web.my-domain/api/v1
+               --set frontend.env.WS_URL=wss://flux-web.my-domain/ws/v1
 ```
 Or, for an example we can deploy flux-web as readonly mode:
 ```shell
 helm install . --name flux-web \
                --set namespace=flux
+               --set frontend.env.API_EXTERNAL_URL=//flux-web.my-domain/api/v1
+               --set frontend.env.WS_URL=wss://flux-web.my-domain/ws/v1
                --set frontend.env.READ_ONLY=true
 ```
 
