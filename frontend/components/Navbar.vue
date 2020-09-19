@@ -11,11 +11,6 @@
           </router-link>
         </li>
         <li class="icon">
-          <router-link to="/about">
-            <i class="fas fa-info"></i>
-          </router-link>
-        </li>
-        <li class="icon">
           <a :href="githubUrl" target="__blank">
             <i class="fab fa-github"></i>
           </a>
