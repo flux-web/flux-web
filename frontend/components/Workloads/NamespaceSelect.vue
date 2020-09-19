@@ -88,7 +88,7 @@ export default class NamespaceSelect extends Vue {
     border: none;
     width: 200px;
     box-sizing: border-box;
-    padding: 0 0 0 30px;
+    padding: 0 0 0 15px;
     font-family: SpoilerHE;
     font-weight: 300;
     font-size: 13px;
