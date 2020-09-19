@@ -45,6 +45,7 @@ func (this *WorkloadController) ListWorkloads() {
 
 func (this *WorkloadController) ReleaseWorkloads() {
 	newreleaseRequest, _ := models.NewReleseRequest(this.Ctx.Input.RequestBody)
+
 	releaseRequest := newreleaseRequest.GetReleaseRequestJSON()
 
 	jobID, err := triggerJob(releaseRequest)
@@ -158,12 +159,12 @@ func GetImages(params ...string) []models.Image {
 	}
 	res, err := httplib.Get(flux.FluxUrl + flux.ListImagesApi + namespace).Debug(true).Bytes()
 	if err != nil {
-		l.Panic(err.Error)
+		l.Panic(err.Error())
 	}
 
 	images, err := models.NewImages(res)
 	if err != nil {
-		l.Panic(err.Error)
+		l.Panic(err.Error())
 	}
 	if len(params) > 1 {
 		filter := params[1]
