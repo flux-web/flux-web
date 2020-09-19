@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"flux-web/models"
+	"github.com/flux-web/flux-web/models"
 
 	"github.com/astaxie/beego"
 	"github.com/gorilla/websocket"
