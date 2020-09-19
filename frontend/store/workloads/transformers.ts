@@ -21,7 +21,8 @@ export const workloadsTransformer = (workloads: any[]) => {
         }
 
         return accWorkloads.concat(workload.Containers.reduce((containerWorkloads: any, container: any) => {
-            const currentTag = parseCurrentTag(container.Current.ID)
+            const current = (container.Current.ID && container.Current) || (container.Available && container.Available[0]) || {}
+            const currentTag = parseCurrentTag(current.ID)
 
             const availableTags = container.Available ? container.Available.map((available: any) => {
                 const availableTag = available.ID.split(':').pop();
@@ -38,16 +39,16 @@ export const workloadsTransformer = (workloads: any[]) => {
                 id: workload.ID,
                 workload: workload.ID.split(':').pop(),
                 container: container.Name,
-                image: getImageFromUrl(container.Current.ID),
+                image: getImageFromUrl(current.ID),
                 status: isStatusUpToDate(availableTags, currentTag) ? WorkloadStatuses.upToDate : WorkloadStatuses.behind,
                 available_tags: availableTags,
                 current_tag: {
                     tag: currentTag,
                     current: true,
-                    date: container.Current.CreatedAt || null,
+                    date: current.CreatedAt || null,
                 },
                 selected_tag: {}
-              };
+            };
             containerWorkloads.push(temp);
             return containerWorkloads;
         }, []));
