@@ -1,7 +1,7 @@
 package main
 
 import (
-	"flux-web/controllers"
+	"github.com/flux-web/flux-web/controllers"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/context"
