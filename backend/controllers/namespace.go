@@ -1,19 +1,16 @@
 package controllers
 
 import (
-	"context"
 	"encoding/json"
-	"errors"
-	"fmt"
-	"io/ioutil"
 	"os"
 
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
-	"github.com/ghodss/yaml"
 
-	"github.com/ericchiang/k8s"
-	corev1 "github.com/ericchiang/k8s/apis/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes"
+	"k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/clientcmd"
 )
 
 type NamespaceController struct {
@@ -23,19 +20,16 @@ type NamespaceController struct {
 func (this *NamespaceController) ListNamespaces() {
 	var l = logs.GetLogger()
 
-	client, err := loadClient()
-	if err != nil {
-		l.Panic(err.Error())
-	}
+	clientset := loadClient()
 
-	var namespacesList corev1.NamespaceList
-	if err := client.List(context.Background(), "", &namespacesList); err != nil {
-		l.Panic(err.Error())
+	namespacesList, err := clientset.CoreV1().Namespaces().List(metav1.ListOptions{})
+	if err != nil {
+		panic(err.Error())
 	}
 
 	var namespaces []string
 	for _, namespace := range namespacesList.Items {
-		namespaces = append(namespaces, *namespace.Metadata.Name)
+		namespaces = append(namespaces, namespace.ObjectMeta.Name)
 	}
 
 	namespacesJson, err := json.Marshal(namespaces)
@@ -46,29 +40,30 @@ func (this *NamespaceController) ListNamespaces() {
 	this.Ctx.Output.Body(namespacesJson)
 }
 
-func loadClient() (*k8s.Client, error) {
-	kubeconfigPath, err := getKubeconfigPath()
+func loadClient() *kubernetes.Clientset {
+	kubeconfig, err := getKubeconfig()
+	clientset, err := kubernetes.NewForConfig(kubeconfig)
 	if err != nil {
-		return k8s.NewInClusterClient()
+		panic(err.Error())
 	}
-
-	kubeconfig, err := ioutil.ReadFile(kubeconfigPath)
-	if err != nil {
-		return nil, fmt.Errorf("read kubeconfig: %v", err)
-	}
-
-	// Unmarshal YAML into a Kubernetes config object.
-	var config k8s.Config
-	if err := yaml.Unmarshal(kubeconfig, &config); err != nil {
-		return nil, fmt.Errorf("unmarshal kubeconfig: %v", err)
-	}
-	return k8s.NewClient(&config)
+	return clientset
 }
 
-func getKubeconfigPath() (string, error) {
-	value := os.Getenv("KUBE_CONFIG_PATH")
-	if len(value) == 0 {
-		return "", errors.New("kubeconfig path env not found")
+func getKubeconfig() (*rest.Config, error) {
+	configPathFromEnv := os.Getenv("KUBE_CONFIG_PATH")
+
+	var kubeconfig *rest.Config
+
+	var err error
+	if len(configPathFromEnv) != 0 {
+		kubeconfig, err = clientcmd.BuildConfigFromFlags("", configPathFromEnv)
+	} else {
+		kubeconfig, err = rest.InClusterConfig()
 	}
-	return value, nil
+
+	if err != nil {
+		panic(err.Error())
+	}
+
+	return kubeconfig, nil
 }
