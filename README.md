@@ -105,3 +105,4 @@ Code contributions are very welcome. If you are interested in helping make flux-
 ## Authors 
 
 * [Ido Braunstain](https://github.com/idobry) - *Initial work
+* [derkinderfietsen](https://github.com/derkinderfietsen) - *Initial work
