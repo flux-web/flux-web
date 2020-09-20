@@ -28,13 +28,15 @@ export default class CallScreenLayout extends Vue {}
 @import "../assets/scss/include";
 
 .container {
-  height: 100vh;
+  height: 100%;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+
   box-sizing: border-box;
-  padding: 5vh 5vw;
-  box-shadow: 15px 20px 99px 0 rgba(82, 80, 94, 0.33);
   position: relative;
   @include respond-above("Lmedium") {
-    padding: 3vh 3vw;
     flex-direction: column;
   }
 
@@ -44,10 +46,8 @@ export default class CallScreenLayout extends Vue {}
     justify-content: center;
     z-index: 9999;
     position: relative;
-    box-shadow: 15px 20px 99px 0 rgba(82, 80, 94, 0.33);
-    height: 90vh;
+    height: 100%;
     min-height: 450px;
-    border-radius: 13px;
     @include respond-above("Lmedium") {
       display: block;
       height: 88vh;
@@ -55,7 +55,6 @@ export default class CallScreenLayout extends Vue {}
     .left-side {
       @include respond-above("Lmedium") {
         height: 60px;
-        border-radius: 13px 13px 0 0;
         width: 100%;
       }
       width: 60px;
@@ -65,16 +64,11 @@ export default class CallScreenLayout extends Vue {}
         rgba(38, 50, 80, 1) 0%,
         rgba(59, 68, 106, 1) 100%
       );
-      border-radius: 13px 0 0 13px;
     }
     .right-side {
-      @include respond-above("Lmedium") {
-        border-radius: 0 0 13px 13px;
-      }
-      border-radius: 0 13px 13px 0;
       position: relative;
       background: #fff;
-      width: 100%;
+      width: calc(100% - 60px);
       height: 100%;
       padding: 15px;
       box-sizing: border-box;

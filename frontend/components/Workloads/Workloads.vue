@@ -1,6 +1,5 @@
 <template>
   <div class="workloads-wrapper">
-    <workloads-search></workloads-search>
     <workloads-list></workloads-list>
   </div>
 </template>
@@ -15,13 +14,12 @@
 
 <script lang="ts">
 import { Component, Vue, Watch } from "vue-property-decorator";
-import WorkloadsSearch from "~/components/Workloads/WorkloadsSearch.vue";
 import WorkloadsList from "~/components/Workloads/WorkloadsList.vue";
 import { StoreNamespaces } from "../../store/types/StoreNamespaces";
 import { Action, Getter } from "vuex-class";
 
 @Component({
-  components: { WorkloadsSearch, WorkloadsList }
+  components: { WorkloadsList }
 })
 export default class Workloads extends Vue {}
 </script>

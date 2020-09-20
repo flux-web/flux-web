@@ -34,8 +34,9 @@ export default class Navbar extends Vue {
 @import "../assets/scss/include";
 
 .navbar {
+  position: sticky;
   padding: 20px;
-  height: 100%;
+  height: 100vh;
   align-items: center;
   box-sizing: border-box;
   display: flex;
@@ -46,6 +47,7 @@ export default class Navbar extends Vue {
     height: 100%;
   }
   .info {
+    position: fixed;
     .details {
       display: flex;
       align-items: center;
@@ -53,13 +55,13 @@ export default class Navbar extends Vue {
       .cr__label {
         color: $gray-light-color;
         border-radius: 15px;
-        padding: 5px 15px 5px 0px;
         font-size: 13px;
         font-weight: 500;
         user-select: none;
-        margin: 0 0 0 15px;
+        width: 60px;
         color: #bbc7dc;
         font-family: SpoilerHE;
+        text-align: center;
       }
     }
     .icons {
