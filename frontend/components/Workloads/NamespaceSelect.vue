@@ -84,7 +84,7 @@ export default class NamespaceSelect extends Vue {
     } catch (e) {
       alert(
         "Error when retrieving workloads for namespace: " +
-          this.currentNamespace
+          this.currentNamespace.name
       );
     }
 
