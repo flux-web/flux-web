@@ -17,8 +17,7 @@
 
 .workloads-search {
   position: relative;
-  float: right;
-  width: 300px;
+  width: 100%;
   .text-input {
     height: 42px;
     border-radius: 7px;

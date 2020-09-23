@@ -15,9 +15,6 @@ function parseCurrentTag(currentTag: string): string {
 }
 
 export const workloadsTransformer = (workloads: any[]) => {
-    if (!workloads) {
-        return []
-    }
     return workloads.reduce((accWorkloads: any, workload: any) => {
         if (!workload.Containers) {
             return accWorkloads;
