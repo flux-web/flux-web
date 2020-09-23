@@ -1,29 +1,45 @@
 <template>
   <div class="namespace-select" v-show="namespaces.length">
-    <select v-model="namespace" class="namespace-input" @keyup.enter="selectNamespace">
-      <option :value="null" disabled>Select Namespace</option>
-      <option
-        v-for="namespace in namespaces"
-        v-bind:value="namespace"
-        :key="namespace"
-      >{{namespace}}</option>
-    </select>
-    <button
-      @click="selectNamespace"
-      class="namespace-button"
-      :disabled="loading"
-    >{{loading ? 'Loading, please wait' : 'Select'}}</button>
+    <multiselect
+      v-model="namespace"
+      :options="options"
+      label="name"
+      track-by="name"
+      :placeholder="namespace ? namespace.name : 'Select namespace'"
+      :allow-empty="false"
+      deselect-label="Selected"
+      @input="selectNamespace"
+    >
+      <template slot="singleLabel" slot-scope="{ option }">
+        <strong>{{ option.name }}</strong>
+      </template>
+      <template slot="option" slot-scope="props">
+        <div class="option__desc">
+          <span class="option__tag">{{ props.option.name }}</span>
+        </div>
+      </template>
+    </multiselect>
+    <div
+      class="namespace-status"
+    >{{loading ? 'Loading, please wait' : ''}}</div>
   </div>
 </template>
 
 <script lang="ts">
+import Multiselect from "vue-multiselect";
 import { Component, Vue } from "vue-property-decorator";
 import { StoreNamespaces } from "../../store/types/StoreNamespaces";
 import { Action, Getter } from "vuex-class";
 
-@Component({})
+@Component({
+  components: {
+    Multiselect
+  }
+})
 export default class NamespaceSelect extends Vue {
-  public namespace: string = "";
+  public namespace: any = {};
+
+  public options: Array<any> = [];
 
   public loading: boolean = false;
 
@@ -48,6 +64,7 @@ export default class NamespaceSelect extends Vue {
     } catch (e) {
       throw "Error fetching namespaces";
     }
+    this.options = this.namespaces.map(n => ({name: n}))
     this.namespace = this.currentNamespace;
     if (this.namespace) {
       this.selectNamespace();
@@ -63,11 +80,11 @@ export default class NamespaceSelect extends Vue {
     this.loading = true;
 
     try {
-      await this.fetchWorkloads(this.currentNamespace);
+      await this.fetchWorkloads(this.currentNamespace.name);
     } catch (e) {
       alert(
         "Error when retrieving workloads for namespace: " +
-          this.currentNamespace
+          this.currentNamespace.name
       );
     }
 
@@ -81,6 +98,16 @@ export default class NamespaceSelect extends Vue {
 
 .namespace-select {
   margin-bottom: 10px;
+  display: inline-block;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  .multiselect {
+    width: 300px;
+  }
+  .namespace-status {
+    margin-left: 10px;
+  }
   .namespace-input {
     height: 30px;
     border-radius: 7px;
