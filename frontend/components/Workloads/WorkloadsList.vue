@@ -110,6 +110,15 @@ export default class WorkloadsList extends Vue {
 <style lang="scss">
 @import "../../assets/scss/include";
 
+/* Hack to replace empty table text */
+.vgt-text-disabled {
+  visibility: hidden;
+}
+.vgt-text-disabled:after {
+  content:'No workloads found in namespace.'; 
+  visibility: visible;
+}
+
 .workloads-list {
   height: calc(100% - 110px);
   min-height: 250px;
