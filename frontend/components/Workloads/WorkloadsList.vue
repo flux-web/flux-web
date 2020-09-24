@@ -1,33 +1,27 @@
 <template>
   <div class="workloads-list">
-    <div class="workloads-header">
-      <namespace-select></namespace-select>
-      <workloads-search></workloads-search>
-    </div>
-    
-    <div class="workloads-table">
-      <vue-good-table
-        :columns="columns"
-        :rows="workloads"
-        :search-options="{
-          enabled: true,
-          externalQuery: searchTerm
-        }"
-      >
-        <template slot="table-row" slot-scope="props">
-          <workload-release :workload="props.row" v-if="props.column.field == 'action'"></workload-release>
-          <workload-status :workload="props.row" v-else-if="props.column.field == 'status'" />
-          <workload-available-tags
-            :options-prop="props.row.available_tags"
-            :current-tag="props.row.current_tag"
-            :workload="props.row"
-            @input="tagChanged"
-            v-else-if="props.column.field == 'available_tags'"
-          />
-          <span v-else>{{props.formattedRow[props.column.field]}}</span>
-        </template>
-      </vue-good-table>
-    </div>
+    <namespace-select></namespace-select>
+    <vue-good-table
+      :columns="columns"
+      :rows="workloads"
+      :search-options="{
+        enabled: true,
+        externalQuery: searchTerm
+      }"
+    >
+      <template slot="table-row" slot-scope="props">
+        <workload-release :workload="props.row" v-if="props.column.field == 'action'"></workload-release>
+        <workload-status :workload="props.row" v-else-if="props.column.field == 'status'" />
+        <workload-available-tags
+          :options-prop="props.row.available_tags"
+          :current-tag="props.row.current_tag"
+          :workload="props.row"
+          @input="tagChanged"
+          v-else-if="props.column.field == 'available_tags'"
+        />
+        <span v-else>{{props.formattedRow[props.column.field]}}</span>
+      </template>
+    </vue-good-table>
   </div>
 </template>
 
@@ -42,15 +36,13 @@ import { namespace } from "vuex-class";
 import { Getter, Action } from "vuex-class";
 import { Workload } from "../../store/types/Workloads/Workload";
 import { Tag } from "../../store/types/Workloads/Tag";
-import WorkloadsSearch from "~/components/Workloads/WorkloadsSearch.vue";
 
 @Component({
   components: {
     WorkloadAvailableTags,
     NamespaceSelect,
     WorkloadRelease,
-    WorkloadStatus,
-    WorkloadsSearch
+    WorkloadStatus
   }
 })
 export default class WorkloadsList extends Vue {
@@ -133,11 +125,6 @@ export default class WorkloadsList extends Vue {
   padding: 15px 0;
   box-sizing: border-box;
   overflow-y: scroll;
-
-  .workloads-table {
-      margin: 40px 0 0 0;
-      overflow: scroll;
-  }
 
   .vgt-responsive {
     overflow-x: initial;

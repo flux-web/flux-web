@@ -26,10 +26,10 @@
 </template>
 
 <script lang="ts">
+import Multiselect from "vue-multiselect";
 import { Component, Vue } from "vue-property-decorator";
 import { StoreNamespaces } from "../../store/types/StoreNamespaces";
 import { Action, Getter } from "vuex-class";
-import Multiselect from "vue-multiselect";
 
 @Component({
   components: {
@@ -97,14 +97,18 @@ export default class NamespaceSelect extends Vue {
 @import "../../assets/scss/include";
 
 .namespace-select {
-  // margin-bottom: 10px;
+  margin-bottom: 10px;
   display: inline-block;
-  width: 300px;
+  display: flex;
+  align-items: center;
+  align-content: center;
   .multiselect {
-    display: inline-block;
+    width: 300px;
+  }
+  .namespace-status {
+    margin-left: 10px;
   }
   .namespace-input {
-    display: inline-block;
     height: 30px;
     border-radius: 7px;
     background-color: #f0f0fb;
@@ -121,21 +125,23 @@ export default class NamespaceSelect extends Vue {
     }
     &:focus {
       outline: none;
-      padding: 0 0 0 15px;
+      padding: 0 0 0 29px;
       color: #6a6c71;
       border: 1px solid #b6b9c3;
     }
   }
 
-  .namespace-status {
+  .namespace-button {
+    margin-left: 10px;
+    background-color: #f0f0fb;
     border: none;
     font-family: sans-serif;
     font-weight: 100;
     font-size: 13px;
-    color: #232323;
+    color: #97989c;
+    height: 30px;
     border-radius: 7px;
-    padding: 0px 8px;
-    display: inline-block;
+    padding: 8px;
   }
 }
 </style>
