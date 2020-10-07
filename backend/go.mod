@@ -11,7 +11,7 @@ require (
 	github.com/go-logr/logr v0.2.1 // indirect
 	github.com/golang/protobuf v1.4.2
 	github.com/google/gofuzz v1.2.0 // indirect
-	github.com/googleapis/gnostic v0.3.1
+	github.com/googleapis/gnostic v0.4.1
 	github.com/gorilla/websocket v1.4.2
 	github.com/prometheus/common v0.13.0 // indirect
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
@@ -21,7 +21,7 @@ require (
 	golang.org/x/sys v0.0.0-20200918174421-af09f7315aff // indirect
 	golang.org/x/time v0.0.0-20200630173020-3af7569d3a1e // indirect
 	k8s.io/api v0.17.2
-	k8s.io/apimachinery v0.17.2
+	k8s.io/apimachinery v0.19.2
 	k8s.io/client-go v0.17.2
 	k8s.io/gengo v0.0.0-20200413195148-3a45101e95ac // indirect
 	k8s.io/klog/v2 v2.3.0 // indirect
