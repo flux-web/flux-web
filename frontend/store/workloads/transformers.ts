@@ -49,8 +49,9 @@ export const workloadsTransformer = (workloads: any[]) => {
                     tag: currentTag,
                     current: true,
                     date: current.CreatedAt || null,
+                    automated: workload.Automated,
                 },
-                selected_tag: {}
+                selected_tag: {},
             };
             containerWorkloads.push(temp);
             return containerWorkloads;

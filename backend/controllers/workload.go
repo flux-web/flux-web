@@ -55,7 +55,6 @@ func (this *WorkloadController) ListWorkloads() {
 	workloads = models.NewWorkloads(images, services)
 
 	workloadsResponse, err := json.Marshal(workloads)
-	l.Printf("JSON Response: %v", string(workloadsResponse))
 
 	this.Ctx.Output.Body(workloadsResponse)
 }

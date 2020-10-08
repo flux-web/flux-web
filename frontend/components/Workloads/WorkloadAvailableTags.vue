@@ -3,7 +3,7 @@
     <multiselect
       v-model="value"
       :options="options"
-      :placeholder="currentTag ? currentTag.tag : 'Select tag'"
+      :placeholder="currentTag ? (currentTag.tag + (currentTag.automated ? ' (Auto Update)' : '')) : 'Select tag'"
       label="tag"
       track-by="tag"
       :allow-empty="false"
@@ -16,6 +16,7 @@
       <template slot="option" slot-scope="props">
         <div class="option__desc">
           <span class="option__tag">{{ props.option.tag }}</span>
+          <span> ({{ props.option.automated }})</span>
           <span class="option__date">
             <strong>{{ moment(props.option.date).fromNow() }}</strong>
           </span>
