@@ -31,6 +31,7 @@ var flux = models.Flux{
 	JobApi:             "/api/flux/v6/jobs?id=",
 	UpdateManifestsApi: "/api/flux/v9/update-manifests",
 	ListImagesApi:      "/api/flux/v10/images?namespace=",
+	ListServices:       "/api/flux/v11/services?namespace=",
 }
 
 func (this *WorkloadController) ListWorkloads() {
@@ -40,7 +41,23 @@ func (this *WorkloadController) ListWorkloads() {
 	if err != nil {
 		l.Panic(err.Error())
 	}
-	this.Ctx.Output.Body(res)
+	var images []models.Image
+	images, err = models.NewImages(res)
+
+	res2, err2 := httplib.Get(flux.FluxUrl + flux.ListServices + ns).Debug(true).Bytes()
+	if err2 != nil {
+		l.Panic(err.Error())
+	}
+	var services []models.Service
+	services, err = models.NewServices(res2)
+
+	var workloads []models.Workload
+	workloads = models.NewWorkloads(images, services)
+
+	workloadsResponse, err := json.Marshal(workloads)
+	l.Printf("JSON Response: %v", string(workloadsResponse))
+
+	this.Ctx.Output.Body(workloadsResponse)
 }
 
 func (this *WorkloadController) ReleaseWorkloads() {

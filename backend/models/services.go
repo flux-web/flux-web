@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 )
 
-type Service []struct {
+type Service struct {
 	ID         string `json:"ID"`
 	Containers []struct {
 		Name    string `json:"Name"`
@@ -19,8 +19,13 @@ type Service []struct {
 			} `json:"Labels"`
 		} `json:"LatestFiltered"`
 	} `json:"Containers"`
-	ReadOnly string `json:"ReadOnly"`
-	Status   string `json:"Status"`
+	ReadOnly  string `json:"ReadOnly"`
+	Status    string `json:"Status"`
+	Automated bool   `json:"Automated"`
+	Policies  struct {
+		automated     string `json:"automated"`
+		tagChartImage string `json:"tag.chart-image"`
+	} `json:"Policies"`
 }
 
 func NewServices(data []byte) ([]Service, error) {
