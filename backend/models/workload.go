@@ -1,6 +1,8 @@
 package models
 
 import (
+	"regexp"
+	"strings"
 	"time"
 )
 
@@ -10,6 +12,10 @@ type Workload struct {
 	ReadOnly   string      `json:"ReadOnly"`
 	Status     string      `json:"Status"`
 	Automated  bool        `json:"Automated"`
+	Policies   struct {
+		Automated     string `json:"automated"`
+		TagChartImage string `json:"tag.chart-image"`
+	} `json:"Policies"`
 }
 
 type Container struct {
@@ -60,6 +66,8 @@ func NewWorkloads(images []Image, services []Service) []Workload {
 		w.ReadOnly = services[i].ReadOnly
 		w.Status = services[i].Status
 		w.Automated = services[i].Automated
+		w.Policies.Automated = services[i].Policies.Automated
+		w.Policies.TagChartImage = services[i].Policies.TagChartImage
 		workloadsMap[services[i].ID] = w
 	}
 
@@ -87,16 +95,24 @@ func NewWorkloads(images []Image, services []Service) []Workload {
 			w.Containers[j].LatestFiltered.CreatedAt = images[i].Containers[j].LatestFiltered.CreatedAt
 			w.Containers[j].LatestFiltered.LastFetched = images[i].Containers[j].LatestFiltered.LastFetched
 
-			availableCount := len(images[i].Containers[j].Available)
-			w.Containers[j].Available = make([]Available, availableCount, availableCount)
+			//availableCount := len(images[i].Containers[j].Available)
+			w.Containers[j].Available = make([]Available, 0)
 			for k := range images[i].Containers[j].Available {
-				w.Containers[j].Available[k].ID = images[i].Containers[j].Available[k].ID
-				w.Containers[j].Available[k].Digest = images[i].Containers[j].Available[k].Digest
-				w.Containers[j].Available[k].ImageID = images[i].Containers[j].Available[k].ImageID
-				w.Containers[j].Available[k].Labels.OrgLabelSchemaBuildDate = images[i].Containers[j].Available[k].Labels.OrgLabelSchemaBuildDate
-				w.Containers[j].Available[k].Labels.OrgOpencontainersImageCreated = images[i].Containers[j].Available[k].Labels.OrgOpencontainersImageCreated
-				w.Containers[j].Available[k].CreatedAt = images[i].Containers[j].Available[k].CreatedAt
-				w.Containers[j].Available[k].LastFetched = images[i].Containers[j].Available[k].LastFetched
+
+				filter := strings.TrimSuffix(strings.TrimPrefix(w.Policies.TagChartImage, "glob:"), "*")
+				match, _ := regexp.MatchString(filter, images[i].Containers[j].Available[k].ID)
+
+				if match {
+					var available Available
+					available.ID = images[i].Containers[j].Available[k].ID
+					available.Digest = images[i].Containers[j].Available[k].Digest
+					available.ImageID = images[i].Containers[j].Available[k].ImageID
+					available.Labels.OrgLabelSchemaBuildDate = images[i].Containers[j].Available[k].Labels.OrgLabelSchemaBuildDate
+					available.Labels.OrgOpencontainersImageCreated = images[i].Containers[j].Available[k].Labels.OrgOpencontainersImageCreated
+					available.CreatedAt = images[i].Containers[j].Available[k].CreatedAt
+					available.LastFetched = images[i].Containers[j].Available[k].LastFetched
+					w.Containers[j].Available = append(w.Containers[j].Available, available)
+				}
 			}
 
 			w.Containers[j].AvailableImagesCount = images[i].Containers[j].AvailableImagesCount

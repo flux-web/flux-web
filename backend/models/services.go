@@ -2,7 +2,6 @@ package models
 
 import (
 	"encoding/json"
-	"log"
 )
 
 type Service struct {
@@ -24,17 +23,13 @@ type Service struct {
 	Status    string `json:"Status"`
 	Automated bool   `json:"Automated"`
 	Policies  struct {
-		automated     string `json:"automated"`
-		tagChartImage string `json:"tag.chart-image"`
+		Automated     string `json:"automated"`
+		TagChartImage string `json:"tag.chart-image"`
 	} `json:"Policies"`
 }
 
 func NewServices(data []byte) ([]Service, error) {
 	var s []Service
-	log.Printf("JSON: %v", string(data))
 	err := json.Unmarshal(data, &s)
-	for _, value := range s {
-		log.Printf("Policies: %v / %v", value.Policies.automated, value.Policies.tagChartImage)
-	}
 	return s, err
 }
