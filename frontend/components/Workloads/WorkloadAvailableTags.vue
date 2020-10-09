@@ -16,7 +16,7 @@
       <template slot="option" slot-scope="props">
         <div class="option__desc">
           <span class="option__tag">{{ props.option.tag }}</span>
-          <span> ({{ props.option.automated }})</span>
+          <span>{{ props.option.automated ? '(Auto Update)' : ''}}</span>
           <span class="option__date">
             <strong>{{ moment(props.option.date).fromNow() }}</strong>
           </span>
