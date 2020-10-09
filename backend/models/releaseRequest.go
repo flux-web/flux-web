@@ -11,6 +11,7 @@ type ReleaseRequest struct {
 	Container string `json:"Container"`
 	Current   string `json:"Current"`
 	Target    string `json:"Target"`
+	Automated bool   `json:"Automated"`
 }
 
 func NewReleseRequest(data []byte) (ReleaseRequest, error) {
