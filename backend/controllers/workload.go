@@ -62,7 +62,12 @@ func (this *WorkloadController) ListWorkloads() {
 func (this *WorkloadController) ReleaseWorkloads() {
 	newreleaseRequest, _ := models.NewReleseRequest(this.Ctx.Input.RequestBody)
 
-	releaseRequest := newreleaseRequest.GetReleaseRequestJSON()
+	releaseRequest, err := newreleaseRequest.GetReleaseRequestJSON()
+	if err != nil {
+		l.Printf("Found error: " + err.Error())
+		this.Ctx.Output.SetStatus(500)
+		return
+	}
 
 	jobID, err := triggerJob(releaseRequest)
 	if err != nil {
@@ -121,7 +126,8 @@ func getSyncID(jobID string) (string, error) {
 	l.Printf("getting syncID...")
 
 	for {
-		resp, err := httplib.Get(flux.FluxUrl + flux.JobApi + jobID).Bytes()
+		url := flux.FluxUrl + flux.JobApi + jobID
+		resp, err := httplib.Get(url).Bytes()
 		if err != nil {
 			l.Println(err.Error())
 			return "", errors.New(err.Error())
@@ -144,7 +150,8 @@ func getSyncID(jobID string) (string, error) {
 }
 
 func triggerJob(requestBody []byte) (string, error) {
-	resp, err := http.Post(flux.FluxUrl+flux.UpdateManifestsApi, "application/json", bytes.NewBuffer(requestBody))
+	url := flux.FluxUrl + flux.UpdateManifestsApi
+	resp, err := http.Post(url, "application/json", bytes.NewBuffer(requestBody))
 	if err != nil {
 		l.Printf("Error_triggerJob_01: " + err.Error())
 		return "", errors.New(err.Error())
