@@ -23,6 +23,12 @@ type WorkloadController struct {
 	beego.Controller
 }
 
+type jobResponse struct {
+	Result       interface{} `json:"-"`
+	Err          string      `json:"Err"`
+	StatusString string      `json:"StatusString"`
+}
+
 var l = logs.GetLogger()
 
 var flux = models.Flux{
@@ -60,16 +66,30 @@ func (this *WorkloadController) ListWorkloads() {
 }
 
 func (this *WorkloadController) ReleaseWorkloads() {
-	newreleaseRequest, _ := models.NewReleseRequest(this.Ctx.Input.RequestBody)
+	releaseRequest, err := models.NewReleseRequest(this.Ctx.Input.RequestBody)
+	if err != nil {
+		l.Printf("Found error: " + err.Error())
+		this.Ctx.Output.SetStatus(500)
+		return
+	}
+	err = this.automateWorkload(releaseRequest)
+	if err != nil {
+		l.Printf("Found error: " + err.Error())
+		this.Ctx.Output.SetStatus(500)
+		return
+	}
+	this.updateWorkload(releaseRequest)
+}
 
-	releaseRequest, err := newreleaseRequest.GetReleaseRequestJSON()
+func (this *WorkloadController) updateWorkload(releaseRequest models.ReleaseRequest) {
+	jsonRequest, err := releaseRequest.GetReleaseRequestJSON()
 	if err != nil {
 		l.Printf("Found error: " + err.Error())
 		this.Ctx.Output.SetStatus(500)
 		return
 	}
 
-	jobID, err := triggerJob(releaseRequest)
+	jobID, err := triggerJob(jsonRequest)
 	if err != nil {
 		l.Printf("Found error: " + err.Error())
 		this.Ctx.Output.SetStatus(500)
@@ -77,9 +97,44 @@ func (this *WorkloadController) ReleaseWorkloads() {
 	}
 	this.Ctx.WriteString("Done")
 
-	go func(jobID string, newreleaseRequest models.ReleaseRequest) {
-		waitForSync(jobID, newreleaseRequest)
-	}(jobID, newreleaseRequest)
+	go func(jobID string, releaseRequest models.ReleaseRequest) {
+		waitForSync(jobID, releaseRequest)
+	}(jobID, releaseRequest)
+}
+
+func (this *WorkloadController) automateWorkload(releaseRequest models.ReleaseRequest) error {
+	jsonRequest, err := releaseRequest.GetAutomatedRequestJSON()
+	if err != nil {
+		return err
+	}
+	jobID, err := triggerJob(jsonRequest)
+	if err != nil {
+		return err
+	}
+
+	timeout := time.After(600 * time.Second)
+	ticker := time.Tick(300 * time.Millisecond)
+mainLoop:
+	for {
+		select {
+		case <-timeout:
+			l.Printf("jobID: " + jobID + " timed out")
+			return errors.New("timeout while automateWorkload")
+		case <-ticker:
+			l.Printf("waiting for jobID: " + jobID + " to finish...")
+			jobStatus, err := fetchJobstatus(flux.FluxUrl + flux.JobApi + jobID)
+			if err != nil {
+				return err
+			}
+			if jobStatus.StatusString == statusSucceeded {
+				l.Printf("automate for workload" + releaseRequest.Workload + " is done!")
+				break mainLoop
+			}
+		}
+	}
+
+	return nil
+
 }
 
 func waitForSync(jobID string, newreleaseRequest models.ReleaseRequest) {
@@ -109,7 +164,7 @@ func waitForSync(jobID string, newreleaseRequest models.ReleaseRequest) {
 		}
 		if resp == "[]" {
 			releaseResult.Status = "up to date"
-			l.Printf("release for" + newreleaseRequest.Workload + " is done!")
+			l.Printf("release for " + newreleaseRequest.Workload + " is done!")
 			break
 		}
 		time.Sleep(time.Millisecond * 300)
@@ -209,4 +264,27 @@ func Auth(c *context.Context) {
 		c.Abort(401, "Not authorized")
 		return
 	}
+}
+
+func fetchJobstatus(url string) (jobResponse, error) {
+	jobres := jobResponse{}
+	client := http.Client{
+		Timeout: time.Second * 20,
+	}
+	resp, err := client.Get(url)
+	if err != nil {
+		return jobres, err
+	}
+	if resp == nil {
+		return jobres, errors.New("fetchJobStatus, http.Get resp is nil")
+	}
+	data, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return jobres, err
+	}
+	err = json.Unmarshal(data, &jobres)
+	if err != nil {
+		return jobres, err
+	}
+	return jobres, nil
 }
