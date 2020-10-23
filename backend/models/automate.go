@@ -45,7 +45,7 @@ func (i DynamicAutomatedRequest) MarshalJSON() ([]byte, error) {
 	return json.Marshal(b)
 }
 
-func (this *ReleaseRequest) GetAutomatedRequestJSON() ([]byte, error) {
+func (this *ReleaseRequest) GetAutomatedRequestJSON(fluxUser string) ([]byte, error) {
 	req := DynamicAutomatedRequest{}
 	req.Workload = this.Workload
 
@@ -59,7 +59,7 @@ func (this *ReleaseRequest) GetAutomatedRequestJSON() ([]byte, error) {
 	spec[placeHolder] = d
 	req.Payload.Spec = spec
 	req.Payload.Type = "policy"
-	req.Payload.Cause.User = "Red Flux"
+	req.Payload.Cause.User = fluxUser
 
 	return json.Marshal(req)
 }

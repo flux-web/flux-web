@@ -11,6 +11,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/flux-web/flux-web/conf"
+
 	"github.com/flux-web/flux-web/models"
 
 	"github.com/astaxie/beego"
@@ -20,6 +22,7 @@ import (
 )
 
 type WorkloadController struct {
+	Config conf.Config
 	beego.Controller
 }
 
@@ -66,6 +69,7 @@ func (this *WorkloadController) ListWorkloads() {
 }
 
 func (this *WorkloadController) ReleaseWorkloads() {
+
 	releaseRequest, err := models.NewReleseRequest(this.Ctx.Input.RequestBody)
 	if err != nil {
 		l.Printf("Found error: " + err.Error())
@@ -82,7 +86,7 @@ func (this *WorkloadController) ReleaseWorkloads() {
 }
 
 func (this *WorkloadController) updateWorkload(releaseRequest models.ReleaseRequest) {
-	jsonRequest, err := releaseRequest.GetReleaseRequestJSON()
+	jsonRequest, err := releaseRequest.GetReleaseRequestJSON(this.Config.FluxUser)
 	if err != nil {
 		l.Printf("Found error: " + err.Error())
 		this.Ctx.Output.SetStatus(500)
@@ -103,7 +107,7 @@ func (this *WorkloadController) updateWorkload(releaseRequest models.ReleaseRequ
 }
 
 func (this *WorkloadController) automateWorkload(releaseRequest models.ReleaseRequest) error {
-	jsonRequest, err := releaseRequest.GetAutomatedRequestJSON()
+	jsonRequest, err := releaseRequest.GetAutomatedRequestJSON(this.Config.FluxUser)
 	if err != nil {
 		return err
 	}
@@ -112,8 +116,8 @@ func (this *WorkloadController) automateWorkload(releaseRequest models.ReleaseRe
 		return err
 	}
 
-	timeout := time.After(600 * time.Second)
-	ticker := time.Tick(300 * time.Millisecond)
+	timeout := time.After(time.Duration(this.Config.PollTimeout) * time.Second)
+	ticker := time.Tick(time.Duration(this.Config.PollInterval) * time.Millisecond)
 mainLoop:
 	for {
 		select {
@@ -132,9 +136,7 @@ mainLoop:
 			}
 		}
 	}
-
 	return nil
-
 }
 
 func waitForSync(jobID string, newreleaseRequest models.ReleaseRequest) {
@@ -181,8 +183,7 @@ func getSyncID(jobID string) (string, error) {
 	l.Printf("getting syncID...")
 
 	for {
-		url := flux.FluxUrl + flux.JobApi + jobID
-		resp, err := httplib.Get(url).Bytes()
+		resp, err := httplib.Get(flux.FluxUrl + flux.JobApi + jobID).Bytes()
 		if err != nil {
 			l.Println(err.Error())
 			return "", errors.New(err.Error())
@@ -205,8 +206,7 @@ func getSyncID(jobID string) (string, error) {
 }
 
 func triggerJob(requestBody []byte) (string, error) {
-	url := flux.FluxUrl + flux.UpdateManifestsApi
-	resp, err := http.Post(url, "application/json", bytes.NewBuffer(requestBody))
+	resp, err := http.Post(flux.FluxUrl+flux.UpdateManifestsApi, "application/json", bytes.NewBuffer(requestBody))
 	if err != nil {
 		l.Printf("Error_triggerJob_01: " + err.Error())
 		return "", errors.New(err.Error())

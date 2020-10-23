@@ -59,8 +59,7 @@ func NewReleseRequest(data []byte) (ReleaseRequest, error) {
 	return r, err
 }
 
-func (this *ReleaseRequest) GetReleaseRequestJSON() ([]byte, error) {
-
+func (this *ReleaseRequest) GetReleaseRequestJSON(fluxUser string) ([]byte, error) {
 	req := DynamicRequestPayload{}
 	req.Workload = this.Workload
 
@@ -71,19 +70,11 @@ func (this *ReleaseRequest) GetReleaseRequestJSON() ([]byte, error) {
 		Target:    this.Target,
 	}}
 
-	req.Payload.Cause.User = "Red Flux"
+	req.Payload.Cause.User = fluxUser
 	req.Payload.Type = TypeContainers
 	req.Payload.Spec.Kind = kindExecute
 	req.Payload.Spec.SkipMismatches = false
 	req.Payload.Spec.ContainerSpecs = c
 
-	/*
-		spec := "\"" + this.Workload + "\":[{\"Container\":\"" + this.Container + "\",\"Current\":\"" + this.Current + "\",\"Target\":\"" + this.Target + "\"}]"
-		releaseRequest := "{\"Cause\":{\"Message\":\"\", \"User\":\"Flux-web\"},\"Spec\":{\"ContainerSpecs\":{" + spec + "},\"Kind\":\"execute\",\"SkipMismatches\":false},\"Type\":\"containers\"}"
-		var l = logs.GetLogger()
-		l.Println("****************************")
-		l.Println(releaseRequest)
-		l.Println("****************************")
-	*/
 	return json.Marshal(req)
 }
