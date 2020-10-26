@@ -26,23 +26,36 @@ export const workloadsTransformer = (workloads: any[]) => {
         return accWorkloads.concat(workload.Containers.reduce((containerWorkloads: any, container: any) => {
             const current = (container.Current.ID && container.Current) || (container.Available && container.Available[0]) || {}
             const currentTag = parseCurrentTag(current.ID)
+            current.Automated = workload.Automated
 
             let availableTagList = []
             if (container.Available) {
 
                 availableTagList = container.Available.map((available: any) => {
                     const availableTag = available.ID.split(':').pop();
+                    /**
+                     * Update all available workloads with the Automated flag.
+                     * Automated flag from current (aktive) is set with the payload from backend,
+                     * all the other workloads should be false.
+                     */
                     return {
                         tag: available.ID.split(':').pop(),
                         date: available.CreatedAt,
                         current: availableTag === currentTag,
+                        automated: (availableTag === currentTag) ? current.Automated : false,
                     };
                 })
-
+                
+                /**
+                 * The latest workload will get a clone, based on the current active payload.
+                 * This enables us to distinguish whether we want to deploy the latest state with automated true or automated false.
+                 * Latest with automated true should always be on top of the selection.
+                 */
                 if (container.Name === "chart-image") {
                     let availableTag = JSON.parse(JSON.stringify(availableTagList[0]));
-                    availableTag.automated = true;
-                    availableTagList.unshift(availableTag)
+                    availableTag.current = false;
+                    availableTag.automated = !availableTag.automated;
+                    (availableTag.automated) ? availableTagList.splice(0, 0, availableTag) : availableTagList.splice(1, 0, availableTag);
                 }
 
             }
@@ -61,7 +74,7 @@ export const workloadsTransformer = (workloads: any[]) => {
                     tag: currentTag,
                     current: true,
                     date: current.CreatedAt || null,
-                    automated: workload.Automated,
+                    automated: current.Automated,
                 },
                 selected_tag: {},
             };
