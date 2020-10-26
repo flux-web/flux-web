@@ -77,7 +77,7 @@ Basically a roadmap.
 - filter workloads - ✓
 - scroll over workload's versions - ✓
 - readonly mode - ✓
-- turn on/off flux automation on a workload
+- turn on/off flux automation on a workload - ✓
 - features you'd like to see?
 
 ### Maybe in the future, if people want it
