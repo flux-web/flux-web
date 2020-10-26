@@ -61,7 +61,7 @@ export const workloadsTransformer = (workloads: any[]) => {
             }
             const availableTags = availableTagList
 
-            const isStatusUpToDate = (availableTags: Tag[], currentTag: string) => currentTag == 'latest' || ( availableTags.length && currentTag == availableTags[0].tag)
+            const isStatusUpToDate = (availableTags: Tag[], currentTag: string) => currentTag == 'latest' || ( availableTags.length && currentTag == availableTags[0].tag && current.Automated == availableTags[0].automated)
 
             const temp = {
                 id: workload.ID,
