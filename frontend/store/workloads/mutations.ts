@@ -12,6 +12,19 @@ export const mutations: MutationTree<WorkloadsState> = {
         }
         w.selected_tag = tag;
     },
+    UPDATE_AUTOMATED_FLAG: (state: WorkloadsState, {workload, automatedFlag}) =>  {
+        const w = state.workloads.find((w: Workload) => (workload.id == w.id && w.container == workload.container));
+        if (!w) {
+            throw new Error(`Unable to update workload, workload (${workload.id}) not found`);
+        }
+
+        if (w.selected_tag.tag) {
+            w.selected_tag.automated = automatedFlag.automated;
+        } else {
+            w.selected_tag = w.current_tag;
+            w.selected_tag.automated = automatedFlag.automated;
+        }
+    },
     UPDATE_WORKLOAD_STATUS: (state: WorkloadsState, {workload, status}) => {
         const workloadInst = state.workloads.find((w) => w.id == workload.id && w.container == workload.container);
         if (!workloadInst) {
