@@ -25,6 +25,7 @@ export const actions: ActionTree<WorkloadsState, RootState> = {
         })
     },
     updateSelectedTag:  ({commit}, payload) => commit('UPDATE_SELECTED_TAG', payload),
+    updateAutomatedFlag:  ({commit}, payload) => commit('UPDATE_AUTOMATED_FLAG', payload),
     fetchWorkloads: ({commit}, namespace: string): any => axios.get('/workloads/' + namespace).then(
         (response: any) => {
             const workloads = workloadsTransformer(response.data);

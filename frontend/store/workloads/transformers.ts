@@ -45,19 +45,6 @@ export const workloadsTransformer = (workloads: any[]) => {
                         automated: (availableTag === currentTag) ? current.Automated : false,
                     };
                 })
-                
-                /**
-                 * The latest workload will get a clone, based on the current active payload.
-                 * This enables us to distinguish whether we want to deploy the latest state with automated true or automated false.
-                 * Latest with automated true should always be on top of the selection.
-                 */
-                if (container.Name === "chart-image") {
-                    let availableTag = JSON.parse(JSON.stringify(availableTagList[0]));
-                    availableTag.current = false;
-                    availableTag.automated = !availableTag.automated;
-                    (availableTag.automated) ? availableTagList.splice(0, 0, availableTag) : availableTagList.splice(1, 0, availableTag);
-                }
-
             }
             const availableTags = availableTagList
 
