@@ -7,6 +7,7 @@
       label="automated"
       track-by="automated"
       :allow-empty="false"
+      :disabled="isDisabled"
       deselect-label="Can't remove this value"
       @input="valueChanged"
     >
@@ -47,11 +48,25 @@ export default class WorkloadAvailableAutomatedFlag extends Vue {
   @Prop() protected workload: any;
 
   protected value: any = null;
+  protected isDisabled: Boolean = false;
 
   protected possibleOptions: any = [
     { automated: true },
     { automated: false },
   ];
+
+  public updated() {
+    this.refreshSelectedValue();
+  }
+
+  public refreshSelectedValue() {
+    console.dir(this.workload);
+    if (this.workload.selected_tag.tag && this.workload.selected_tag.tag != this.workload.available_tags[0].tag) {
+      this.isDisabled = true;
+    } else {
+      this.isDisabled = false;
+    }
+  }
 
   get options() {
     return this.possibleOptions;
