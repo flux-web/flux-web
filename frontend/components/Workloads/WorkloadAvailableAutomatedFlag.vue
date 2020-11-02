@@ -60,12 +60,8 @@ export default class WorkloadAvailableAutomatedFlag extends Vue {
   }
 
   public refreshSelectedValue() {
-    console.dir(this.workload);
-    if (this.workload.selected_tag.tag && this.workload.selected_tag.tag != this.workload.available_tags[0].tag) {
-      this.isDisabled = true;
-    } else {
-      this.isDisabled = false;
-    }
+    const {selected_tag, available_tags} = this.workload;
+    this.isDisabled = (selected_tag.tag && selected_tag.tag != available_tags[0].tag) ? true : false;
   }
 
   get options() {
