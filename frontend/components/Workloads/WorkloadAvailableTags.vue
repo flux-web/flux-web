@@ -77,10 +77,7 @@ export default class WorkloadAvailableTags extends Vue {
   }
 
   get options() {
-    return this.optionsProp.map((option: any) => {
-      option.$isDisabled = option.current;
-      return option;
-    });
+    return this.optionsProp;
   }
 
   public valueChanged() {
