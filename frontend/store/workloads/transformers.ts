@@ -35,8 +35,6 @@ export const workloadsTransformer = (workloads: any[]) => {
             current.Automated = workload.Automated
             const currentNamespace = parseNamespace(workload.ID);
 
-            console.dir(parseNamespace(workload.ID));
-
             let availableTagList = []
             if (container.Available) {
 
