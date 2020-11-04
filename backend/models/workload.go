@@ -55,20 +55,20 @@ type Labels struct {
 	OrgOpencontainersImageCreated time.Time `json:"org.opencontainers.image.created"`
 }
 
-func NewWorkloads(images []Image, services []Service) []Workload {
+func NewWorkloads(images []Image, services Services) []Workload {
 
 	var workloadsMap = make(map[string]*Workload)
 
 	// generate a map of Workloads from a list of Services
-	for i := range services {
+	for _, v := range services.Services {
 		w := new(Workload)
-		w.ID = services[i].ID
-		w.ReadOnly = services[i].ReadOnly
-		w.Status = services[i].Status
-		w.Automated = services[i].Automated
-		w.Policies.Automated = services[i].Policies.Automated
-		w.Policies.TagChartImage = services[i].Policies.TagChartImage
-		workloadsMap[services[i].ID] = w
+		w.ID = v.ID
+		w.ReadOnly = v.ReadOnly
+		w.Status = v.Status
+		w.Automated = v.Automated
+		w.Policies.Automated = v.Policies.Automated
+		w.Policies.TagChartImage = v.Policies.TagChartImage
+		workloadsMap[v.ID] = w
 	}
 
 	// enrich the Workloads with data from a list of Images

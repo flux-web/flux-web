@@ -21,6 +21,11 @@ import (
 	"github.com/astaxie/beego/logs"
 )
 
+const (
+	statusUpToDate      = "up to date"
+	actionUpdateRelease = "updateRelease"
+)
+
 type WorkloadController struct {
 	Config conf.Config
 	beego.Controller
@@ -45,7 +50,6 @@ var flux = models.Flux{
 
 func (this *WorkloadController) ListWorkloads() {
 	ns := this.Ctx.Input.Param(":ns")
-	l.Printf("in ListWorkloads, executing: " + flux.FluxUrl + flux.ListImagesApi + ns)
 	res, err := httplib.Get(flux.FluxUrl + flux.ListImagesApi + ns).Debug(true).Bytes()
 	if err != nil {
 		l.Panic(err.Error())
@@ -53,12 +57,11 @@ func (this *WorkloadController) ListWorkloads() {
 	var images []models.Image
 	images, err = models.NewImages(res)
 
-	res2, err2 := httplib.Get(flux.FluxUrl + flux.ListServices + ns).Debug(true).Bytes()
-	if err2 != nil {
-		l.Panic(err.Error())
+	services, err := models.NewServices(flux.FluxUrl + flux.ListServices + ns)
+	if err != nil {
+		l.Printf("Found error: " + err.Error())
+		this.Ctx.Output.SetStatus(500)
 	}
-	var services []models.Service
-	services, err = models.NewServices(res2)
 
 	var workloads []models.Workload
 	workloads = models.NewWorkloads(images, services)
@@ -69,20 +72,44 @@ func (this *WorkloadController) ListWorkloads() {
 }
 
 func (this *WorkloadController) ReleaseWorkloads() {
-
 	releaseRequest, err := models.NewReleseRequest(this.Ctx.Input.RequestBody)
 	if err != nil {
 		l.Printf("Found error: " + err.Error())
 		this.Ctx.Output.SetStatus(500)
 		return
 	}
-	err = this.automateWorkload(releaseRequest)
+
+	services, err := models.NewServices(flux.FluxUrl + flux.ListServices + releaseRequest.Namespace)
 	if err != nil {
 		l.Printf("Found error: " + err.Error())
 		this.Ctx.Output.SetStatus(500)
-		return
 	}
-	this.updateWorkload(releaseRequest)
+
+	currentStatusAutomated := services.GetStatusAutomateByWorkload(releaseRequest.Workload)
+	if currentStatusAutomated != releaseRequest.Automated {
+		l.Printf("Switch automated workload stature from %t to %t\n", currentStatusAutomated, releaseRequest.Automated)
+		err = this.automateWorkload(releaseRequest)
+		if err != nil {
+			l.Printf("Found error: " + err.Error())
+			this.Ctx.Output.SetStatus(500)
+			return
+		}
+	}
+
+	if !services.WantedImageAlreadyDeployed(releaseRequest.Workload, releaseRequest.Target) {
+		this.updateWorkload(releaseRequest)
+	} else {
+		r := models.ReleaseResult{
+			Status:    statusUpToDate,
+			Workload:  releaseRequest.Workload,
+			Container: releaseRequest.Container,
+			Tag:       releaseRequest.Target,
+			Action:    actionUpdateRelease,
+		}
+		broadcastReleaseResult(r)
+		l.Printf("Image %s is already deployed!\n", releaseRequest.Target)
+	}
+	this.Ctx.WriteString("Done")
 }
 
 func (this *WorkloadController) updateWorkload(releaseRequest models.ReleaseRequest) {
@@ -147,11 +174,15 @@ func waitForSync(jobID string, newreleaseRequest models.ReleaseRequest) {
 	releaseResult.Container = newreleaseRequest.Container
 	releaseResult.Tag = newreleaseRequest.Target
 	releaseResult.Status = "release failed"
-	releaseResult.Action = "updateRelease"
+	releaseResult.Action = actionUpdateRelease
 
 	syncID, err := getSyncID(jobID)
 	if err != nil {
 		l.Printf(err.Error())
+		if err.Error() == "no changes found" {
+			releaseResult.Status = err.Error()
+			broadcastReleaseResult(releaseResult)
+		}
 		return
 	}
 
@@ -165,18 +196,14 @@ func waitForSync(jobID string, newreleaseRequest models.ReleaseRequest) {
 			break
 		}
 		if resp == "[]" {
-			releaseResult.Status = "up to date"
+			releaseResult.Status = statusUpToDate
 			l.Printf("release for " + newreleaseRequest.Workload + " is done!")
 			break
 		}
 		time.Sleep(time.Millisecond * 300)
 	}
 
-	jsonString, err := json.Marshal(releaseResult)
-	if err != nil {
-		l.Println(err)
-	}
-	h.broadcast <- jsonString
+	broadcastReleaseResult(releaseResult)
 }
 
 func getSyncID(jobID string) (string, error) {
@@ -287,4 +314,12 @@ func fetchJobstatus(url string) (jobResponse, error) {
 		return jobres, err
 	}
 	return jobres, nil
+}
+
+func broadcastReleaseResult(r models.ReleaseResult) {
+	jsonString, err := json.Marshal(r)
+	if err != nil {
+		l.Println(err)
+	}
+	h.broadcast <- jsonString
 }

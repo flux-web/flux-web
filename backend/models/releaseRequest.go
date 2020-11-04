@@ -10,6 +10,7 @@ type ReleaseRequest struct {
 	Current   string `json:"Current"`
 	Target    string `json:"Target"`
 	Automated bool   `json:"Automated"`
+	Namespace string `json:"Namespace"`
 }
 
 type ContainerUpdate struct {
