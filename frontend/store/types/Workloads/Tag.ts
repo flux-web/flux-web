@@ -3,4 +3,5 @@ export interface Tag {
     date: string;
     current: boolean;
     automated: boolean;
+    namespace: string;
 }

@@ -34,6 +34,7 @@ export default class WorkloadRelease extends Vue {
       Current: workload.image + ":" + workload.current_tag.tag,
       Target: workload.image + ":" + workload.selected_tag.tag,
       Automated: workload.selected_tag.automated,
+      Namespace: workload.selected_tag.namespace,
     };
 
     this.releaseVersion({ workload: this.workload, releaseData });
