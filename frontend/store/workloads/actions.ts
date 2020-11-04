@@ -33,8 +33,9 @@ export const actions: ActionTree<WorkloadsState, RootState> = {
         },
     ),
     releaseVersion: ({dispatch}, {workload, releaseData}): any => {
+        dispatch('updateWorkloadStatus', {workload, status: WorkloadStatuses.releasing})
         axios.post('/release', releaseData).then(
-            ()  => dispatch('updateWorkloadStatus', {workload, status: WorkloadStatuses.releasing}),
+            ()  => console.log('/release done!'),
         );
     },
 };
