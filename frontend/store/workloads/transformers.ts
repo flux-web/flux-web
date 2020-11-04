@@ -1,5 +1,6 @@
 import { WorkloadStatuses } from '../types/Workloads/WorkloadStatuses';
 import { Tag } from '../types/Workloads/Tag';
+import { NamespacesState } from '../types/Namespaces/NamespacesState';
 
 function getImageFromUrl(url: any) {
     url = url.split(':');
@@ -12,6 +13,11 @@ function getImageFromUrl(url: any) {
 function parseCurrentTag(currentTag: string): string {
     const tagParts = currentTag.split(':');
     return tagParts.length == 1 ? 'latest' : (tagParts.pop() || 'unknown')
+}
+
+function parseNamespace(currentTag: string): string {
+    const tagParts = currentTag.split(':');
+    return tagParts.length == 1 ? '' : (tagParts[0] || 'unknown')
 }
 
 export const workloadsTransformer = (workloads: any[]) => {
@@ -27,6 +33,9 @@ export const workloadsTransformer = (workloads: any[]) => {
             const current = (container.Current.ID && container.Current) || (container.Available && container.Available[0]) || {}
             const currentTag = parseCurrentTag(current.ID)
             current.Automated = workload.Automated
+            const currentNamespace = parseNamespace(workload.ID);
+
+            console.dir(parseNamespace(workload.ID));
 
             let availableTagList = []
             if (container.Available) {
@@ -43,6 +52,7 @@ export const workloadsTransformer = (workloads: any[]) => {
                         date: available.CreatedAt,
                         current: availableTag === currentTag,
                         automated: (availableTag === currentTag) ? current.Automated : false,
+                        namespace: currentNamespace,
                     };
                 })
             }
@@ -62,6 +72,7 @@ export const workloadsTransformer = (workloads: any[]) => {
                     current: true,
                     date: current.CreatedAt || null,
                     automated: current.Automated,
+                    namespace: currentNamespace,
                 },
                 selected_tag: {},
             };
