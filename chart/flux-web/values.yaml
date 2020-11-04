@@ -14,6 +14,9 @@ backend:
   containerPort: 3000
   env:
     FLUX_URL: http://flux:3030
+    FLUX_USER: "Flux-Web"
+    POLL_INTERVAL: 500
+    POLL_TIMEOUT: 900
   service: {}
     # annotations: ""
 frontend:
