@@ -3,7 +3,7 @@
     <multiselect
       v-model="value"
       :options="options"
-      :placeholder="currentTag ? (currentTag.automated ? 'true' : 'false') : ''"
+      :placeholder="palceholder"
       label="automated"
       track-by="automated"
       :allow-empty="false"
@@ -66,6 +66,19 @@ export default class WorkloadAvailableAutomatedFlag extends Vue {
 
   get options() {
     return this.possibleOptions;
+  }
+
+  get palceholder() {
+    const {current_tag, selected_tag, available_tags} = this.workload;
+    let placeholder = '';
+
+    if (current_tag && !selected_tag){
+      placeholder = current_tag.automated ? 'true' : 'false';
+    } else {
+      placeholder = (selected_tag.tag && selected_tag.tag != available_tags[0].tag) ? 'false' : (available_tags[0].automated) ? 'true' : 'false';
+    }
+
+    return placeholder;
   }
 
   public valueChanged() {
