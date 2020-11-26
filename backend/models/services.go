@@ -11,19 +11,7 @@ type Services struct {
 }
 type Service struct {
 	ID         string `json:"ID"`
-	Containers []struct {
-		Name    string `json:"Name"`
-		Current struct {
-			ID     string `json:"ID"`
-			Labels struct {
-			} `json:"Labels"`
-		} `json:"Current"`
-		LatestFiltered struct {
-			ID     string `json:"ID"`
-			Labels struct {
-			} `json:"Labels"`
-		} `json:"LatestFiltered"`
-	} `json:"Containers"`
+	Containers []Container `json:"Containers"`
 	ReadOnly  string `json:"ReadOnly"`
 	Status    string `json:"Status"`
 	Automated bool   `json:"Automated"`
