@@ -2,7 +2,7 @@ FROM node:alpine
 
 WORKDIR /app
 
-RUN apk add python
+RUN apk add python alpine-sdk
 
 COPY package.json ./
 COPY yarn.lock ./
