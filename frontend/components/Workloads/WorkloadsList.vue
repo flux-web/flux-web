@@ -19,6 +19,12 @@
           @input="tagChanged"
           v-else-if="props.column.field == 'available_tags'"
         />
+        <workload-available-automated-flag
+          :current-tag="props.row.current_tag"
+          :workload="props.row"
+          v-else-if="props.column.field == 'automated'"
+          @input="automatedChanged"
+        />
         <span v-else>{{props.formattedRow[props.column.field]}}</span>
       </template>
     </vue-good-table>
@@ -29,6 +35,7 @@
 import { Component, Vue, Watch } from "vue-property-decorator";
 import { StoreNamespaces } from "../../store/types/StoreNamespaces";
 import WorkloadAvailableTags from "./WorkloadAvailableTags.vue";
+import WorkloadAvailableAutomatedFlag from "./WorkloadAvailableAutomatedFlag.vue";
 import WorkloadRelease from "./WorkloadRelease.vue";
 import NamespaceSelect from "./NamespaceSelect.vue";
 import WorkloadStatus from "./WorkloadStatus.vue";
@@ -40,6 +47,7 @@ import { Tag } from "../../store/types/Workloads/Tag";
 @Component({
   components: {
     WorkloadAvailableTags,
+    WorkloadAvailableAutomatedFlag,
     NamespaceSelect,
     WorkloadRelease,
     WorkloadStatus
@@ -70,6 +78,10 @@ export default class WorkloadsList extends Vue {
     {
       label: "Available tags",
       field: "available_tags"
+    },
+    {
+      label: "Automated Update",
+      field: "automated"
     }
   ];
 
@@ -90,6 +102,9 @@ export default class WorkloadsList extends Vue {
   @Action("updateSelectedTag", { namespace: StoreNamespaces.workloads })
   public updateSelectedTag: any;
 
+  @Action("updateAutomatedFlag", { namespace: StoreNamespaces.workloads })
+  public updateAutomatedFlag: any;
+
   public created() {
     if (this.$env.READ_ONLY != "true") {
       this.columns.push({
@@ -101,6 +116,10 @@ export default class WorkloadsList extends Vue {
 
   public tagChanged(workload: Workload, tag: Tag) {
     this.updateSelectedTag({ workload, tag });
+  }
+
+  public automatedChanged(workload: Workload, automatedFlag: any) {
+    this.updateAutomatedFlag({ workload, automatedFlag });
   }
 }
 </script>
