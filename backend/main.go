@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/flux-web/flux-web/conf"
 	"github.com/flux-web/flux-web/controllers"
 
 	"github.com/astaxie/beego"
@@ -9,6 +10,7 @@ import (
 )
 
 func main() {
+	cfg := conf.Get()
 
 	h := controllers.InitHub()
 	go h.Run()
@@ -26,7 +28,7 @@ func main() {
 	release := beego.NewNamespace("/api",
 		beego.NSNamespace("/v1/release",
 			beego.NSBefore(controllers.Auth),
-			beego.NSRouter("/", &controllers.WorkloadController{}, "post:ReleaseWorkloads"),
+			beego.NSRouter("/", &controllers.WorkloadController{Config: cfg}, "post:ReleaseWorkloads"),
 		),
 	)
 
@@ -37,10 +39,10 @@ func main() {
 
 	beego.InsertFilter("*", beego.BeforeRouter, cors.Allow(&cors.Options{
 		AllowAllOrigins:  true,
-		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Origin", "Authorization", "Access-Control-Allow-Origin"},
-		ExposeHeaders:    []string{"Content-Length", "Access-Control-Allow-Origin"},
 		AllowCredentials: true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Authorization", "Access-Control-Allow-Origin", "Access-Control-Request-Method", "Content-Type"},
+		ExposeHeaders:    []string{"Access-Control-Allow-Origin"},
 	}))
 
 	beego.Run()

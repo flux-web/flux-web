@@ -21,6 +21,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile.dev
     environment:
+      FLUX_USER: "Flux-web"
       FLUX_URL: http://host.docker.internal:3030
       KUBE_CONFIG_PATH: /home/flux-web/.kubeconfig
       READ_ONLY: "false"

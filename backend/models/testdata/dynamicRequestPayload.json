@@ -1,0 +1,1 @@
+{ "Cause": { "Message": "", "User": "Flux" }, "Spec": { "ContainerSpecs": { "lorem:helmrelease/foobar": [ { "Container": "chart-image", "Current": "my-registry.io/images/foobar:7c5106v", "Target": "my-registry.io/images/foobar:42g3z6c" } ] }, "Kind": "execute", "SkipMismatches": false }, "Type": "containers" }
