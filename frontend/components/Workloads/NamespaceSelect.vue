@@ -64,7 +64,7 @@ export default class NamespaceSelect extends Vue {
     } catch (e) {
       throw "Error fetching namespaces";
     }
-    this.options = this.namespaces.map(n => ({name: n}))
+    this.options = this.namespaces.map((n: any) => ({name: n}))
     this.namespace = this.currentNamespace;
     if (this.namespace) {
       this.selectNamespace();
