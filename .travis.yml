@@ -16,5 +16,6 @@ jobs:
       script:
         - docker build -t fluxweb/backend ./backend
         - echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin
+        - docker tag fluxweb/backend fluxweb/backend:$TRAVIS_TAG &&
           docker push fluxweb/backend:$TRAVIS_TAG &&
           docker push fluxweb/backend:latest
