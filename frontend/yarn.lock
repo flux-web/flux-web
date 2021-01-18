@@ -8709,10 +8709,10 @@ vue-client-only@^2.0.0:
   resolved "https://registry.yarnpkg.com/vue-client-only/-/vue-client-only-2.0.0.tgz#ddad8d675ee02c761a14229f0e440e219de1da1c"
   integrity sha512-arhk1wtWAfLsJyxGMoEYhoBowM87/i6HLSG2LH/03Yog6i2d9JEN1peMP0Ceis+/n9DxdenGYZZTxbPPJyHciA==
 
-vue-good-table@2.21.0:
-  version "2.21.0"
-  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.21.0.tgz#78f90ee4e40696b72545e2a198c9398c45f0ba45"
-  integrity sha512-e384AGlmEBG0CfTkZXN/OZe1O58V2mbxQafsKqzVrqvROcMZsa9iSyK11D4YS2JzlJo9mRqsad4/vrV/U/Xbdw==
+vue-good-table@2.21.3:
+  version "2.21.3"
+  resolved "https://registry.yarnpkg.com/vue-good-table/-/vue-good-table-2.21.3.tgz#17006575c67a7885d8ab21e724c44462514b2d0b"
+  integrity sha512-JQOHl4KYadiXdv9wjMq5SL3o7WqMAyJODP5C4QVe09xwYmFh5cEf8dT+ch96Kl8WIW5fFUqW2nKX7zEF8QfazQ==
   dependencies:
     date-fns "^2.0.0-beta.4"
     diacriticless "1.0.1"
