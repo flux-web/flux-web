@@ -3,7 +3,7 @@ module github.com/flux-web/flux-web
 go 1.15
 
 require (
-	github.com/astaxie/beego v1.12.2
+	github.com/astaxie/beego v1.12.3
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/googleapis/gnostic v0.3.1 // indirect
 	github.com/gorilla/websocket v1.4.2
