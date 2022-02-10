@@ -30,7 +30,7 @@
     "@types/node": "16.10.3",
     "@types/webpack-env": "1.15.3",
     "babel-core": "6.26.3",
-    "node-sass": "4.14.1",
+    "node-sass": "7.0.0",
     "sass-loader": "10.0.2"
   },
   "main": "index.js",
