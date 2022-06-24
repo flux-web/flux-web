@@ -10,7 +10,7 @@ require (
 	github.com/nsf/jsondiff v0.0.0-20200515183724-f29ed568f4ce
 	github.com/prometheus/common v0.13.0 // indirect
 	github.com/shiena/ansicolor v0.0.0-20200904210342-c7312218db18 // indirect
-	github.com/stretchr/testify v1.4.0
+	github.com/stretchr/testify v1.7.5
 	golang.org/x/crypto v0.0.0-20200820211705-5c72a883971a // indirect
 	golang.org/x/net v0.0.0-20200904194848-62affa334b73 // indirect
 	golang.org/x/oauth2 v0.0.0-20200902213428-5d25da1a8d43 // indirect
